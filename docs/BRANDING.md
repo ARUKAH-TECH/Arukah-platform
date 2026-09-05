@@ -17,5 +17,29 @@ should replace these so logos can sit on non-matching backgrounds cleanly.
 No dedicated ARUKAH MEDIA logo has been supplied — the master ARUKAH mark is
 used for Media until one is provided.
 
-Per-division colour tokens, typography, and the shared component design
-system are Phase 2 work and are not defined yet.
+## Colour tokens
+
+Each division's colours were sampled directly from its supplied logo file
+(dominant non-background pixels), not chosen freehand, so they stay
+faithful to the actual artwork. They live as CSS custom properties in
+`src/app/globals.css`, scoped under `[data-brand="..."]`, and are exposed as
+Tailwind utilities (`bg-brand-primary`, `text-brand-primary-hover`,
+`bg-brand-secondary`, `text-brand-on-primary`).
+
+| Division | `data-brand` | Primary | Primary hover | Secondary |
+|---|---|---|---|---|
+| ARUKAH (master) | *(default, no attribute needed)* | `#e3a82a` | `#b87800` | `#002b70` |
+| ARUKAH TECH | `tech` | `#ddaf3e` | `#a8790c` | `#ffffff` |
+| ARUKAH WEAR | `footwear` | `#6b3016` | `#401000` | `#c08050` |
+| ZIVA Special Classes | `ziva` | `#0b69a8` | `#002050` | `#e3a82a` |
+| Repent Online Ministries | `ministry` | `#c08000` | `#7a5200` | `#e8d9b5` |
+
+Wrap any section in `<div data-brand="tech">` (etc.) and the shared
+`Button` / `SectionHeading` components automatically pick up that
+division's colours. To preview every division's tokens and components
+side by side, run `npm run dev` and open `/dev/style-guide` (an internal
+route, not linked from site navigation).
+
+Typography, and page-level layout (Header/Footer/Hero), are addressed when
+the pages that need them are built (Phases 3–5) rather than speculatively
+now.

@@ -2,11 +2,13 @@
 
 ## Current phase
 
-**Phase 1: Project architecture and foundation.** This document, the folder
-structure, environment variable reference, and branding asset organization
-are the entire scope of this phase. No business logic, database, homepage
-design, or business-unit pages are built yet — those are later phases (see
-bottom of this file).
+**Phase 2: Brand/design system.** Phase 1 (project structure, environment
+reference, branding asset organization) is done. This phase adds per-division
+colour tokens (sampled from the supplied logos — see `docs/BRANDING.md`) and
+the first shared UI primitives (`Container`, `Button`, `Card`,
+`SectionHeading`) in `src/components/ui`. No homepage, business-unit pages,
+Header/Footer, or database work yet — those are later phases (see bottom of
+this file).
 
 ## Why a modular monolith (not microservices)
 
@@ -98,8 +100,8 @@ but nothing in the application code should assume Vercel-only APIs.
 
 ## Phase roadmap
 
-1. **Project architecture and foundation** *(current)*
-2. Brand/design system using supplied logos
+1. Project architecture and foundation
+2. **Brand/design system using supplied logos** *(current)*
 3. Homepage
 4. Business pages
 5. Projects + Ministry + Contact
