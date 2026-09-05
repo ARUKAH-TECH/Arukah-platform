@@ -12,8 +12,8 @@ export const mainNav: NavLink[] = [
 ];
 
 export const businessNav: NavLink[] = [
-  { label: "ARUKAH TECH", href: "/#tech" },
-  { label: "ARUKAH WEAR", href: "/#footwear" },
-  { label: "ZIVA Special Classes", href: "/#ziva" },
-  { label: "ARUKAH MEDIA", href: "/#media" },
+  { label: "ARUKAH TECH", href: "/tech" },
+  { label: "ARUKAH WEAR", href: "/footwear" },
+  { label: "ZIVA Special Classes", href: "/ziva" },
+  { label: "ARUKAH MEDIA", href: "/media" },
 ];

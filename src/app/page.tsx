@@ -76,28 +76,28 @@ export default function Home() {
               brand="tech"
               name="ARUKAH TECH"
               description="Software, websites, and management systems."
-              href="#tech"
+              href="/tech"
               logo={brands.tech.logo}
             />
             <BusinessCard
               brand="footwear"
               name="ARUKAH WEAR"
               description="Ghana-made, handcrafted footwear."
-              href="#footwear"
+              href="/footwear"
               logo={brands.footwear.logo}
             />
             <BusinessCard
               brand="ziva"
               name="ZIVA Special Classes"
               description="Special classes from Primary 1 to SHS 3."
-              href="#ziva"
+              href="/ziva"
               logo={brands.ziva.logo}
             />
             <BusinessCard
               brand="media"
               name="ARUKAH MEDIA"
               description="Video production and creative media."
-              href="#media"
+              href="/media"
               logo={brands.arukah.logo}
             />
           </div>
@@ -121,7 +121,8 @@ export default function Home() {
                   </li>
                 ))}
               </ul>
-              <div className="mt-6">
+              <div className="mt-6 flex flex-wrap gap-4">
+                <Button href="/tech">Learn more</Button>
                 <Button href="#contact" variant="outline">
                   Discuss a project
                 </Button>
@@ -189,6 +190,9 @@ export default function Home() {
               <p className="mt-4 text-xs text-foreground/50">
                 Product photos and pricing are added once real inventory is ready.
               </p>
+              <div className="mt-6">
+                <Button href="/footwear">Learn more</Button>
+              </div>
             </div>
           </div>
         </Container>
@@ -203,8 +207,11 @@ export default function Home() {
                 title="Excellence our hallmark"
                 description="Special classes for students from Primary 1 to SHS 3, focused on genuine academic growth."
               />
-              <div className="mt-6">
-                <Button href="#contact">Enquire about ZIVA</Button>
+              <div className="mt-6 flex flex-wrap gap-4">
+                <Button href="/ziva">Learn more</Button>
+                <Button href="#contact" variant="outline">
+                  Enquire about ZIVA
+                </Button>
               </div>
             </div>
             <Image
@@ -230,6 +237,9 @@ export default function Home() {
                 {service}
               </div>
             ))}
+          </div>
+          <div className="mt-8 text-center">
+            <Button href="/media">Learn more</Button>
           </div>
         </Container>
       </section>

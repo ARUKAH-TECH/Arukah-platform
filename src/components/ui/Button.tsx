@@ -1,4 +1,5 @@
 import type { AnchorHTMLAttributes, ButtonHTMLAttributes } from "react";
+import Link from "next/link";
 
 type Variant = "primary" | "secondary" | "outline";
 
@@ -27,7 +28,11 @@ export function Button({ variant = "primary", className = "", ...props }: Button
   const classes = `${base} ${variants[variant]} ${className}`;
 
   if (props.href) {
-    return <a {...(props as ButtonAsLink)} className={classes} />;
+    const linkProps = props as ButtonAsLink;
+    if (linkProps.href.startsWith("/")) {
+      return <Link {...linkProps} className={classes} />;
+    }
+    return <a {...linkProps} className={classes} />;
   }
 
   return <button {...(props as ButtonAsButton)} className={classes} />;

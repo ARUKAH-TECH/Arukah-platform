@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 interface BusinessCardProps {
   name: string;
@@ -10,7 +11,7 @@ interface BusinessCardProps {
 
 export function BusinessCard({ name, description, href, logo, brand }: BusinessCardProps) {
   return (
-    <a
+    <Link
       href={href}
       data-brand={brand === "media" ? undefined : brand}
       className="group flex flex-col gap-4 rounded-2xl border border-black/10 bg-white p-6 transition-colors hover:border-brand-primary dark:border-white/10 dark:bg-zinc-900"
@@ -29,6 +30,6 @@ export function BusinessCard({ name, description, href, logo, brand }: BusinessC
         </h3>
         <p className="mt-1 text-sm leading-6 text-foreground/70">{description}</p>
       </div>
-    </a>
+    </Link>
   );
 }

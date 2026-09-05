@@ -2,21 +2,21 @@
 
 ## Current phase
 
-**Phase 3: Homepage.** Phases 1–2 (project structure, environment reference,
-branding assets, colour tokens, and the first UI primitives) are done. This
-phase adds `Header`/`Footer`/`Hero`/`BusinessCard`/`SocialLinks` and the full
-single-page homepage (`src/app/page.tsx`) covering every section from the
-spec: hero, intro, businesses grid, ARUKAH TECH, featured projects, ARUKAH
-WEAR, ZIVA, ARUKAH MEDIA, ministry, "why ARUKAH", and a contact placeholder.
+**Phase 4: Business pages.** Phases 1–3 (project structure, brand tokens,
+UI primitives, and the full homepage) are done. This phase adds dedicated
+routes for each business unit — `/tech`, `/footwear`, `/ziva`, `/media` —
+with fuller content than the homepage teasers, and updates
+`src/config/nav.ts`'s `businessNav` to point at these real routes instead
+of homepage anchors. The homepage's "Our Businesses" cards and each
+business teaser section's "Learn more" button now link to these pages too.
 
-Dedicated business-unit pages (`/tech`, `/footwear`, `/ziva`, `/media`),
-a real `/projects`, `/ministry`, `/contact`, and `/about` route, and the
-actual enquiry form are **not built yet** — those are Phases 4–5. Until
-then, the main nav's About/Businesses/Projects/Ministry/Contact links point
-to in-page anchors (`/#about`, `/#tech`, etc.) on this same homepage, since
-that's genuinely where that content currently lives. When those dedicated
-pages are built, update `src/config/nav.ts` to point at the new routes
-instead of anchors.
+A real `/projects`, `/ministry`, `/contact`, and `/about` route, and the
+actual enquiry form, are **not built yet** — that's Phase 5. Until then,
+the main nav's About/Projects/Ministry/Contact links still point to
+in-page anchors on the homepage (`/#about`, `/#projects`, etc.), since
+that's genuinely where that content currently lives. When those routes are
+built, update `mainNav` in `src/config/nav.ts` the same way `businessNav`
+was updated this phase.
 
 ## Why a modular monolith (not microservices)
 
@@ -110,8 +110,8 @@ but nothing in the application code should assume Vercel-only APIs.
 
 1. Project architecture and foundation
 2. Brand/design system using supplied logos
-3. **Homepage** *(current)*
-4. Business pages
+3. Homepage
+4. **Business pages** *(current)*
 5. Projects + Ministry + Contact
 6. SEO + Accessibility + Performance
 7. Production deployment
