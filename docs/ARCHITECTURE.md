@@ -2,13 +2,21 @@
 
 ## Current phase
 
-**Phase 2: Brand/design system.** Phase 1 (project structure, environment
-reference, branding asset organization) is done. This phase adds per-division
-colour tokens (sampled from the supplied logos — see `docs/BRANDING.md`) and
-the first shared UI primitives (`Container`, `Button`, `Card`,
-`SectionHeading`) in `src/components/ui`. No homepage, business-unit pages,
-Header/Footer, or database work yet — those are later phases (see bottom of
-this file).
+**Phase 3: Homepage.** Phases 1–2 (project structure, environment reference,
+branding assets, colour tokens, and the first UI primitives) are done. This
+phase adds `Header`/`Footer`/`Hero`/`BusinessCard`/`SocialLinks` and the full
+single-page homepage (`src/app/page.tsx`) covering every section from the
+spec: hero, intro, businesses grid, ARUKAH TECH, featured projects, ARUKAH
+WEAR, ZIVA, ARUKAH MEDIA, ministry, "why ARUKAH", and a contact placeholder.
+
+Dedicated business-unit pages (`/tech`, `/footwear`, `/ziva`, `/media`),
+a real `/projects`, `/ministry`, `/contact`, and `/about` route, and the
+actual enquiry form are **not built yet** — those are Phases 4–5. Until
+then, the main nav's About/Businesses/Projects/Ministry/Contact links point
+to in-page anchors (`/#about`, `/#tech`, etc.) on this same homepage, since
+that's genuinely where that content currently lives. When those dedicated
+pages are built, update `src/config/nav.ts` to point at the new routes
+instead of anchors.
 
 ## Why a modular monolith (not microservices)
 
@@ -101,8 +109,8 @@ but nothing in the application code should assume Vercel-only APIs.
 ## Phase roadmap
 
 1. Project architecture and foundation
-2. **Brand/design system using supplied logos** *(current)*
-3. Homepage
+2. Brand/design system using supplied logos
+3. **Homepage** *(current)*
 4. Business pages
 5. Projects + Ministry + Contact
 6. SEO + Accessibility + Performance
