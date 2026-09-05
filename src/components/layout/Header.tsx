@@ -25,11 +25,11 @@ export function Header() {
           {mainNav.map((link, index) =>
             index === 1 ? (
               <span key={link.href} className="flex items-center gap-6">
-                <Link href={link.href} className="hover:text-brand-primary">
+                <Link href={link.href} className="hover:text-brand-primary-text">
                   {link.label}
                 </Link>
                 <details className="group relative">
-                  <summary className="flex cursor-pointer list-none items-center gap-1 hover:text-brand-primary">
+                  <summary className="flex cursor-pointer list-none items-center gap-1 hover:text-brand-primary-text">
                     Businesses
                     <svg
                       viewBox="0 0 20 20"
@@ -54,7 +54,7 @@ export function Header() {
                 </details>
               </span>
             ) : (
-              <Link key={link.href} href={link.href} className="hover:text-brand-primary">
+              <Link key={link.href} href={link.href} className="hover:text-brand-primary-text">
                 {link.label}
               </Link>
             ),

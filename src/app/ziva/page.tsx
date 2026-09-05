@@ -7,6 +7,7 @@ import { brands } from "@/config/brands";
 export const metadata: Metadata = {
   title: "ZIVA Special Classes",
   description: "Special classes from Primary 1 to SHS 3. Excellence our hallmark.",
+  alternates: { canonical: "/ziva" },
 };
 
 const upcoming = [

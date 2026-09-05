@@ -8,6 +8,7 @@ import { brands } from "@/config/brands";
 export const metadata: Metadata = {
   title: "Repent Online Ministries",
   description: "Rescue the Perishing — Repent Online Ministries.",
+  alternates: { canonical: "/ministry" },
 };
 
 const futureContent = [
@@ -26,7 +27,7 @@ export default function MinistryPage() {
       <Container>
         <div className="grid grid-cols-1 items-center gap-10 py-20 lg:grid-cols-2">
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary">
+            <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
               Online Ministry
             </p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">
@@ -56,7 +57,7 @@ export default function MinistryPage() {
         </div>
 
         <div className="border-t border-white/10 py-16">
-          <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
             Coming soon
           </p>
           <h2 className="mt-2 text-2xl font-semibold tracking-tight">

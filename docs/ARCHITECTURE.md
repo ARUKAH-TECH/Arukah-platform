@@ -2,29 +2,65 @@
 
 ## Current phase
 
-**Phase 5: Projects, Ministry, and Contact.** Phases 1–4 (foundation, brand
-system, homepage, business pages) are done. This phase adds `/projects`
-(fuller per-project descriptions than the homepage teaser), `/ministry`
-(full identity plus a "what this ministry will share" roadmap list), and
-`/contact` — a real, working enquiry form (Full Name, Organization, Phone,
-Email, Service Required, Message) built as a Next.js Server Action in
-`src/features/contact/`.
+**Phase 6: SEO, accessibility, and performance.** Phases 1–5 (foundation,
+brand system, homepage, business pages, projects/ministry/contact) are
+done. This phase is an audit-and-fix pass over the existing pages, not new
+pages:
 
-**Contact form backend, by design decision (confirmed with the user):**
-no database or email provider is configured yet (Phase 8 adds that), and
-none were invented. `submitEnquiry` in `src/features/contact/actions.ts`
-validates server-side (required fields, email format, an allow-list check
-on the service value, length limits) and a honeypot field rejects simple
-bots, then **logs the enquiry to the server's own console/function logs**
-and shows the visitor a genuine success message. That means real
-enquiries are currently only retrievable by whoever can read the hosting
-provider's function logs (e.g. the Vercel dashboard) — not a proper inbox
-or database yet. Replace this with real storage/email in Phase 8; don't
+- **Colour contrast (accessibility fix):** an audit found the raw ARUKAH
+  and ARUKAH TECH gold (`--brand-primary`) only reaches ~2.1:1 contrast
+  against white — it was never meant to be text, only a button/swatch
+  fill, but `text-brand-primary` had been used for eyebrow labels, link
+  hovers, and headings since Phase 2. Added `--brand-primary-text` — a
+  proportionally darkened variant of each brand's real gold, computed to
+  clear WCAG AA's 4.5:1, with its own light/dark-mode split (see
+  `src/app/globals.css`) since a text color safe on white can become
+  illegible on a dark body background and vice versa. Every literal
+  text/border use of `text-brand-primary`/`border-brand-primary` was
+  migrated to the `-text` token; `bg-brand-primary` (buttons, swatches)
+  was untouched since that pairing already had good contrast.
+- **Focus visibility:** a global `:focus-visible` outline rule was added
+  in `globals.css` covering every link, button, and form control, so
+  keyboard navigation always shows where focus is.
+- **SEO:** `src/app/sitemap.ts` and `src/app/robots.ts` (file-convention
+  routes), a generated Open Graph image at `src/app/opengraph-image.tsx`
+  (built from the real ARUKAH logo, not a placeholder), `metadataBase` +
+  a `%s · ARUKAH` title template + Open Graph/Twitter defaults in the
+  root layout, and an explicit `alternates.canonical` on every route.
+  **`NEXT_PUBLIC_SITE_URL` must be set in production** or the sitemap and
+  canonical URLs will emit `localhost` — see `docs/ENVIRONMENT.md`.
+- **Performance:** confirmed already in place from earlier phases, not
+  new work — every image goes through `next/image` (automatic
+  optimization/lazy-loading), each page's `Hero` image sets `priority`
+  since it's the likely LCP element, and the only Client Component in the
+  app is `ContactForm` (everything else renders and is generated as
+  static HTML — see the Route list from `npm run build`).
+
+## Notable implementation decisions
+
+### Contact form is temporary (Phase 5), not yet durable storage
+
+`/contact`'s form (Full Name, Organization, Phone, Email, Service
+Required, Message) is a real, working Next.js Server Action in
+`src/features/contact/` — not a placeholder. But **by design decision,
+confirmed with the user**, since no database or email provider is
+configured yet (Phase 8 adds that), and none were invented:
+`submitEnquiry` in `src/features/contact/actions.ts` validates
+server-side (required fields, email format, an allow-list check on the
+service value, length limits, a honeypot field against simple bots) and
+then **logs the enquiry to the server's own console/function logs**,
+showing the visitor a genuine success message. That means real enquiries
+are currently only retrievable by whoever can read the hosting provider's
+function logs (e.g. the Vercel dashboard) — not a proper inbox or
+database yet. Replace this with real storage/email in Phase 8; don't
 mistake "the form works" for "enquiries are safely stored."
 
-`mainNav` in `src/config/nav.ts` now points Projects/Ministry/Contact at
-these real routes. Only `/about` remains a homepage anchor (`/#about`) —
-no dedicated About page has been requested yet.
+### Navigation still has one homepage-anchor holdout
+
+`mainNav` in `src/config/nav.ts` points Home/Projects/Ministry/Contact at
+real routes, and `businessNav` points at the four business-unit pages.
+Only `/about` remains a homepage anchor (`/#about`) — no dedicated About
+page has been requested yet.
 
 ## Why a modular monolith (not microservices)
 
@@ -120,8 +156,8 @@ but nothing in the application code should assume Vercel-only APIs.
 2. Brand/design system using supplied logos
 3. Homepage
 4. Business pages
-5. **Projects + Ministry + Contact** *(current)*
-6. SEO + Accessibility + Performance
+5. Projects + Ministry + Contact
+6. **SEO + Accessibility + Performance** *(current)*
 7. Production deployment
 8. Backend foundation + database + enquiry system
 9. Authentication and ARUKAH Admin

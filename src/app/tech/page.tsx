@@ -6,8 +6,9 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 
 export const metadata: Metadata = {
-  title: "ARUKAH TECH",
+  title: "TECH",
   description: "Custom software, websites, and management systems from ARUKAH TECH.",
+  alternates: { canonical: "/tech" },
 };
 
 const serviceGroups = [
@@ -48,7 +49,7 @@ export default function TechPage() {
           <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-3">
             {serviceGroups.map((group) => (
               <div key={group.title}>
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-primary">
+                <h3 className="text-sm font-semibold uppercase tracking-wide text-brand-primary-text">
                   {group.title}
                 </h3>
                 <ul className="mt-3 flex flex-col gap-2 text-sm text-foreground/70">
@@ -76,7 +77,7 @@ export default function TechPage() {
             />
             <Link
               href="/#projects"
-              className="mt-6 inline-block text-sm font-medium text-brand-primary hover:underline"
+              className="mt-6 inline-block text-sm font-medium text-brand-primary-text hover:underline"
             >
               See project previews on the homepage →
             </Link>

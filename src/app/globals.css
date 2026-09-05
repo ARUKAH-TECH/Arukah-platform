@@ -5,12 +5,16 @@
   --foreground: #171717;
 
   /* Default brand tokens (ARUKAH master), used when no [data-brand]
-     ancestor is present. Values sampled directly from the supplied logo
-     files — see docs/BRANDING.md. */
+     ancestor is present. --brand-primary/-hover/-secondary are sampled
+     directly from the supplied logo files — see docs/BRANDING.md.
+     --brand-primary-text is a WCAG AA-safe (>=4.5:1) variant of primary,
+     for use as literal text/border color rather than a fill — the raw
+     gold primary is only ~2.1:1 against white and fails as text. */
   --brand-primary: #e3a82a;
   --brand-primary-hover: #b87800;
   --brand-secondary: #002b70;
   --brand-on-primary: #14110c;
+  --brand-primary-text: #886519;
 }
 
 /* ARUKAH TECH — gold / black / white */
@@ -19,6 +23,7 @@
   --brand-primary-hover: #a8790c;
   --brand-secondary: #ffffff;
   --brand-on-primary: #14110c;
+  --brand-primary-text: #856925;
 }
 
 /* ARUKAH WEAR (footwear) — leather brown / cream */
@@ -27,6 +32,7 @@
   --brand-primary-hover: #401000;
   --brand-secondary: #c08050;
   --brand-on-primary: #ffffff;
+  --brand-primary-text: #6b3016;
 }
 
 /* ZIVA Special Classes — blue / gold / white */
@@ -35,15 +41,19 @@
   --brand-primary-hover: #002050;
   --brand-secondary: #e3a82a;
   --brand-on-primary: #ffffff;
+  --brand-primary-text: #0b69a8;
 }
 
 /* REPENT ONLINE MINISTRIES — own identity, kept separate from the
-   commercial ARUKAH palette */
+   commercial ARUKAH palette. Always rendered on a forced black section
+   background (see the ministry page/section), so its text token doesn't
+   need a separate light-background-safe variant. */
 [data-brand="ministry"] {
   --brand-primary: #c08000;
   --brand-primary-hover: #7a5200;
   --brand-secondary: #e8d9b5;
   --brand-on-primary: #14110c;
+  --brand-primary-text: #c08000;
 }
 
 @theme inline {
@@ -53,6 +63,7 @@
   --color-brand-primary-hover: var(--brand-primary-hover);
   --color-brand-secondary: var(--brand-secondary);
   --color-brand-on-primary: var(--brand-on-primary);
+  --color-brand-primary-text: var(--brand-primary-text);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
@@ -61,6 +72,24 @@
   :root {
     --background: #0a0a0a;
     --foreground: #ededed;
+    /* Light-mode gold is darkened for contrast on white; on a dark body
+       that same darkening makes it too dim, so use the vivid original. */
+    --brand-primary-text: #e3a82a;
+  }
+
+  [data-brand="tech"] {
+    --brand-primary-text: #ddaf3e;
+  }
+
+  [data-brand="footwear"] {
+    /* The dark leather-brown primary is illegible on a dark background;
+       the existing lighter secondary tone reads clearly instead. */
+    --brand-primary-text: #c08050;
+  }
+
+  [data-brand="ziva"] {
+    /* Lightened so blue-on-near-black still clears 4.5:1. */
+    --brand-primary-text: #3c87b9;
   }
 }
 
@@ -68,4 +97,14 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+}
+
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+summary:focus-visible {
+  outline: 2px solid var(--brand-primary-text);
+  outline-offset: 2px;
 }

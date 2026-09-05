@@ -14,9 +14,26 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000";
+
 export const metadata: Metadata = {
-  title: "ARUKAH",
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: "ARUKAH",
+    template: "%s · ARUKAH",
+  },
   description: "Creating Solutions. Building Skills. Serving Communities.",
+  openGraph: {
+    title: "ARUKAH",
+    description: "Creating Solutions. Building Skills. Serving Communities.",
+    siteName: "ARUKAH",
+    type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "ARUKAH",
+    description: "Creating Solutions. Building Skills. Serving Communities.",
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

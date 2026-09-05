@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 export const metadata: Metadata = {
   title: "Projects",
   description: "Management systems and software projects from ARUKAH TECH.",
+  alternates: { canonical: "/projects" },
 };
 
 const projects = [

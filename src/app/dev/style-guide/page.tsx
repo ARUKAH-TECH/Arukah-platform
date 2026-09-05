@@ -15,6 +15,7 @@ const swatches = [
   { label: "Primary hover", varName: "--brand-primary-hover" },
   { label: "Secondary", varName: "--brand-secondary" },
   { label: "On primary (text)", varName: "--brand-on-primary" },
+  { label: "Primary text (AA-safe)", varName: "--brand-primary-text" },
 ] as const;
 
 export default function StyleGuidePage() {

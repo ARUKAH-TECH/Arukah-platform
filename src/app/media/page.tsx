@@ -5,8 +5,9 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 
 export const metadata: Metadata = {
-  title: "ARUKAH MEDIA",
+  title: "MEDIA",
   description: "Video production, event coverage, and creative media from ARUKAH MEDIA.",
+  alternates: { canonical: "/media" },
 };
 
 const services = ["Video production", "Event coverage", "Video editing", "Promotional videos"];

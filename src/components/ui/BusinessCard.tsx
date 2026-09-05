@@ -14,7 +14,7 @@ export function BusinessCard({ name, description, href, logo, brand }: BusinessC
     <Link
       href={href}
       data-brand={brand === "media" ? undefined : brand}
-      className="group flex flex-col gap-4 rounded-2xl border border-black/10 bg-white p-6 transition-colors hover:border-brand-primary dark:border-white/10 dark:bg-zinc-900"
+      className="group flex flex-col gap-4 rounded-2xl border border-black/10 bg-white p-6 transition-colors hover:border-brand-primary-text dark:border-white/10 dark:bg-zinc-900"
     >
       <Image
         src={logo.src}
@@ -25,7 +25,7 @@ export function BusinessCard({ name, description, href, logo, brand }: BusinessC
         style={{ backgroundColor: "#111" }}
       />
       <div>
-        <h3 className="text-lg font-semibold text-foreground group-hover:text-brand-primary">
+        <h3 className="text-lg font-semibold text-foreground group-hover:text-brand-primary-text">
           {name}
         </h3>
         <p className="mt-1 text-sm leading-6 text-foreground/70">{description}</p>

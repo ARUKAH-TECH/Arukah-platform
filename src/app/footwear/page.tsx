@@ -5,8 +5,9 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 
 export const metadata: Metadata = {
-  title: "ARUKAH WEAR",
+  title: "WEAR",
   description: "Ghana-made, handcrafted footwear from ARUKAH WEAR.",
+  alternates: { canonical: "/footwear" },
 };
 
 const products = [

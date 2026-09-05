@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { Hero } from "@/components/ui/Hero";
 import { Container } from "@/components/ui/Container";
@@ -6,6 +7,10 @@ import { BusinessCard } from "@/components/ui/BusinessCard";
 import { Button } from "@/components/ui/Button";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { brands } from "@/config/brands";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
 
 const techServices = [
   "Website & software development",
@@ -253,7 +258,7 @@ export default function Home() {
         <Container>
           <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-2">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary">
+              <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
                 Online Ministry
               </p>
               <h2 className="mt-2 text-2xl font-semibold tracking-tight sm:text-3xl">
@@ -292,7 +297,7 @@ export default function Home() {
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {whyArukah.map((item) => (
               <div key={item.title} className="rounded-2xl border border-black/10 p-5 dark:border-white/10">
-                <h3 className="text-sm font-semibold text-brand-primary">{item.title}</h3>
+                <h3 className="text-sm font-semibold text-brand-primary-text">{item.title}</h3>
                 <p className="mt-2 text-sm leading-6 text-foreground/70">{item.description}</p>
               </div>
             ))}

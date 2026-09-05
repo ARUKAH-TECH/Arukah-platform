@@ -40,6 +40,27 @@ division's colours. To preview every division's tokens and components
 side by side, run `npm run dev` and open `/dev/style-guide` (an internal
 route, not linked from site navigation).
 
-Typography, and page-level layout (Header/Footer/Hero), are addressed when
-the pages that need them are built (Phases 3–5) rather than speculatively
-now.
+### Using brand colours as text — `brand-primary-text`
+
+**Never use `text-brand-primary` (or `border-brand-primary`) for actual
+text or borders.** Both ARUKAH's and ARUKAH TECH's raw gold only reach
+~2.1:1 contrast against white — WCAG AA requires 4.5:1 for normal text.
+`--brand-primary`/`bg-brand-primary` exist for **fills** (buttons,
+swatches) paired with `--brand-on-primary` as the text color on top of
+them; that pairing is already accessible.
+
+For literal text/border color (eyebrow labels, headings, link hovers, an
+outline button's border+label), use `text-brand-primary-text` /
+`border-brand-primary-text` instead. It's a proportionally darkened
+variant of each brand's real gold in light mode, and swaps to a lighter
+variant in dark mode (`prefers-color-scheme: dark`) — see the two
+`--brand-primary-text` declarations per `[data-brand]` block in
+`globals.css`. Footwear, ZIVA, and ministry's tokens already clear 4.5:1
+as-is, so their `-text` value equals their `primary` value; only ARUKAH
+and ARUKAH TECH needed a genuinely different color for text.
+
+## Typography and layout
+
+Typography and page-level layout (Header/Footer/Hero) were built in
+Phases 3–5 alongside the pages that needed them, rather than
+speculatively in Phase 2.

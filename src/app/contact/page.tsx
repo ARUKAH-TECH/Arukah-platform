@@ -6,6 +6,7 @@ import { ContactForm } from "@/features/contact/ContactForm";
 export const metadata: Metadata = {
   title: "Contact",
   description: "Get in touch with ARUKAH.",
+  alternates: { canonical: "/contact" },
 };
 
 export default function ContactPage() {

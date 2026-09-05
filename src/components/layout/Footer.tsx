@@ -36,7 +36,7 @@ export function Footer() {
             <ul className="mt-3 flex flex-col gap-2 text-sm">
               {mainNav.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="hover:text-brand-primary">
+                  <Link href={link.href} className="hover:text-brand-primary-text">
                     {link.label}
                   </Link>
                 </li>
@@ -51,7 +51,7 @@ export function Footer() {
             <ul className="mt-3 flex flex-col gap-2 text-sm">
               {businessNav.map((link) => (
                 <li key={link.href}>
-                  <Link href={link.href} className="hover:text-brand-primary">
+                  <Link href={link.href} className="hover:text-brand-primary-text">
                     {link.label}
                   </Link>
                 </li>

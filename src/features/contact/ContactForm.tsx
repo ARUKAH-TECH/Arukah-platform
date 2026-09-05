@@ -6,7 +6,7 @@ import { SERVICE_OPTIONS, initialContactFormState } from "@/features/contact/sha
 import { Button } from "@/components/ui/Button";
 
 const inputClasses =
-  "mt-1 w-full rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-brand-primary dark:border-white/15";
+  "mt-1 w-full rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-brand-primary-text dark:border-white/15";
 
 export function ContactForm() {
   const [state, formAction, pending] = useActionState(submitEnquiry, initialContactFormState);

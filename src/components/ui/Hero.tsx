@@ -35,7 +35,7 @@ export function Hero({ logo, title, tagline, supportingLine, primaryCta, seconda
           </h1>
           <p className="max-w-xl text-lg leading-8 text-foreground/70">{tagline}</p>
           {supportingLine && (
-            <p className="text-sm font-medium uppercase tracking-wider text-brand-primary">
+            <p className="text-sm font-medium uppercase tracking-wider text-brand-primary-text">
               {supportingLine}
             </p>
           )}
