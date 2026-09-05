@@ -20,18 +20,21 @@ The ARUKAH, ARUKAH TECH, and ministry logos also have a
 `*-logo-transparent.png` sibling file (e.g.
 `public/branding/arukah/arukah-logo-transparent.png`) — the same artwork
 with the black background made transparent via a brightness-threshold
-chroma-key script, not redrawn or recolored. `src/config/brands.ts` points
-at these transparent versions; the original JPEGs are kept untouched
-alongside them as the source reference. ARUKAH WEAR and ZIVA's logos
-already had light/white backgrounds baked in and didn't need this.
+chroma-key script. `src/config/brands.ts` points at these transparent
+versions; the original JPEGs are kept untouched alongside them as the
+source reference. ARUKAH WEAR and ZIVA's logos already had light/white
+backgrounds baked in and didn't need this.
 
-**Exception — ARUKAH TECH keeps a dark backdrop.** Its wordmark and
-service-category labels are rendered in white, so they're illegible with
-no backdrop on a light page. `brands.tech.logo.background` (`#14110c`) is
-set for this reason, and every component that renders a logo
-(`Hero`, `BusinessCard`, the style guide) checks `logo.background` and
-only adds a rounded dark card when it's present — ARUKAH and ministry's
-logos have no `background` value and render with nothing behind them.
+**ARUKAH TECH's white lettering was recolored, not boxed.** Its wordmark
+and service-category labels are rendered in white in the original artwork,
+which is illegible with no backdrop on a light page. Rather than keep a
+dark box behind the whole logo (tried first, rejected — the founder wanted
+every logo to sit directly on the page with nothing behind it), the same
+processing script also recolors near-white/low-saturation pixels to dark
+charcoal (`#14110c`) while leaving the gold artwork's color untouched, so
+the transparent PNG is legible with genuinely no backdrop. All five logos
+now render with no box, no forced background — see the processing script
+history in git if this needs revisiting for a different logo later.
 
 ## Colour tokens
 

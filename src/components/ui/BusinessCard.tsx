@@ -5,7 +5,7 @@ interface BusinessCardProps {
   name: string;
   description: string;
   href: string;
-  logo: { src: string; width: number; height: number; background?: string };
+  logo: { src: string; width: number; height: number };
   brand: "tech" | "footwear" | "ziva" | "media";
 }
 
@@ -21,8 +21,7 @@ export function BusinessCard({ name, description, href, logo, brand }: BusinessC
         alt={`${name} logo`}
         width={56}
         height={56}
-        className={logo.background ? "h-14 w-14 rounded-lg object-contain p-1.5" : "h-14 w-14 object-contain"}
-        style={logo.background ? { backgroundColor: logo.background } : undefined}
+        className="h-14 w-14 object-contain"
       />
       <div>
         <h3 className="text-lg font-semibold text-foreground group-hover:text-brand-primary-text">

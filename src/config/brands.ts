@@ -7,14 +7,6 @@ export interface Brand {
     src: string;
     width: number;
     height: number;
-    /**
-     * Backdrop color needed behind the logo on light backgrounds. Only set
-     * when the logo's own artwork has white lettering that's illegible
-     * without a dark backdrop (currently just ARUKAH TECH, whose wordmark
-     * and service labels are white) — everything else sits directly on
-     * the page background with no box around it.
-     */
-    background?: string;
   };
 }
 
@@ -27,12 +19,7 @@ export const brands: Record<BrandId, Brand> = {
   tech: {
     id: "tech",
     name: "ARUKAH TECH",
-    logo: {
-      src: "/branding/tech/arukah-tech-logo-transparent.png",
-      width: 1080,
-      height: 1080,
-      background: "#14110c",
-    },
+    logo: { src: "/branding/tech/arukah-tech-logo-transparent.png", width: 1080, height: 1080 },
   },
   footwear: {
     id: "footwear",
