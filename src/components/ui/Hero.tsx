@@ -8,7 +8,7 @@ interface HeroCta {
 }
 
 interface HeroProps {
-  logo: { src: string; width: number; height: number };
+  logo: { src: string; width: number; height: number; background?: string };
   title: string;
   tagline: string;
   supportingLine?: string;
@@ -27,8 +27,8 @@ export function Hero({ logo, title, tagline, supportingLine, primaryCta, seconda
             width={140}
             height={(140 * logo.height) / logo.width}
             priority
-            className="rounded-2xl"
-            style={{ backgroundColor: "#0a0a0a" }}
+            className={logo.background ? "rounded-2xl p-3" : undefined}
+            style={logo.background ? { backgroundColor: logo.background } : undefined}
           />
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             {title}

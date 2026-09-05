@@ -15,8 +15,7 @@ export function Header() {
             alt="ARUKAH"
             width={36}
             height={36}
-            className="h-9 w-9 rounded-md object-contain"
-            style={{ backgroundColor: "#0a0a0a" }}
+            className="h-9 w-9 object-contain"
           />
           <span className="text-lg font-bold tracking-tight">ARUKAH</span>
         </Link>

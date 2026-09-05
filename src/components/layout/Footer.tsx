@@ -19,8 +19,7 @@ export function Footer() {
                 alt="ARUKAH"
                 width={32}
                 height={32}
-                className="h-8 w-8 rounded-md object-contain"
-                style={{ backgroundColor: "#0a0a0a" }}
+                className="h-8 w-8 object-contain"
               />
               <span className="text-base font-bold tracking-tight">ARUKAH</span>
             </div>

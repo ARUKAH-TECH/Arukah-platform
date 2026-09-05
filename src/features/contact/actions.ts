@@ -22,14 +22,21 @@ export async function submitEnquiry(
   const service = String(formData.get("service") ?? "").trim();
   const message = String(formData.get("message") ?? "").trim();
 
-  if (!fullName || !email || !service || !message) {
+  if (!fullName || !service || !message) {
     return {
       status: "error",
-      message: "Please fill in your name, email, service, and message.",
+      message: "Please fill in your name, service, and message.",
     };
   }
 
-  if (!isValidEmail(email)) {
+  if (!phone && !email) {
+    return {
+      status: "error",
+      message: "Please provide a phone number or an email so we can reach you.",
+    };
+  }
+
+  if (email && !isValidEmail(email)) {
     return { status: "error", message: "Please enter a valid email address." };
   }
 
@@ -48,7 +55,7 @@ export async function submitEnquiry(
     fullName,
     organization: organization || undefined,
     phone: phone || undefined,
-    email,
+    email: email || undefined,
     service,
     message,
     receivedAt: new Date().toISOString(),

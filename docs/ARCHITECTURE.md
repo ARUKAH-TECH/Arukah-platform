@@ -2,6 +2,42 @@
 
 ## Current phase
 
+**Phase 7: Production deployment.** Live on Vercel, deployed from
+`ARUKAH-TECH/Arukah-platform` on GitHub (auto-deploys on every push to
+`main`). Alongside the deployment, a batch of founder-requested
+corrections landed: transparent logo backgrounds (see
+`docs/BRANDING.md`), an optional email field on both forms, a rule-based
+FAQ chat widget (see below), and a second, ministry-specific form
+distinct from the general enquiry form.
+
+### Rule-based FAQ widget, not a generative AI
+
+`src/features/support/SupportWidget.tsx` (mounted site-wide in the root
+layout) is a fixed set of keyword-matched Q&A pairs in
+`src/features/support/faq.ts` — **not** an LLM integration. This was a
+deliberate choice made with the founder: the actual requirement was a
+handful of fixed answers (yes we build websites, yes we sell footwear at
+retail, here's our WhatsApp for contact) plus a hard "no" on anything
+about the site's own tech stack. A rule-based matcher can only ever
+return one of its pre-written strings, so there's no risk of it
+hallucinating, leaking implementation details, or going off-script the
+way a generative model could — which made it the *better* fit here, not
+a lesser substitute. If a true LLM-backed assistant is wanted later, it
+needs a server-side API key (Anthropic/OpenAI) that doesn't exist yet.
+
+### Two forms, two audiences
+
+`src/features/contact/` (general business enquiries) and
+`src/features/ministry/` (new/returning converts, prayer requests — for
+ministry follow-up and discipleship tracking, not sales) are intentionally
+separate Server Actions with separate `console.log` prefixes
+(`[ARUKAH enquiry]` vs `[ARUKAH ministry response]`), even though their
+shapes are similar. The ministry form appears on both `/ministry` and
+`/contact` (`MinistryForm` takes a `dark` prop for the black ministry
+page vs. the light contact page). Both forms made email optional per the
+founder's request — only Full Name plus (phone OR email) are required,
+so an enquiry always has a way to be reached.
+
 **Phase 6: SEO, accessibility, and performance.** Phases 1–5 (foundation,
 brand system, homepage, business pages, projects/ministry/contact) are
 done. This phase is an audit-and-fix pass over the existing pages, not new
@@ -157,8 +193,8 @@ but nothing in the application code should assume Vercel-only APIs.
 3. Homepage
 4. Business pages
 5. Projects + Ministry + Contact
-6. **SEO + Accessibility + Performance** *(current)*
-7. Production deployment
+6. SEO + Accessibility + Performance
+7. **Production deployment** *(current)*
 8. Backend foundation + database + enquiry system
 9. Authentication and ARUKAH Admin
 10. Client Portal

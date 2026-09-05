@@ -1,13 +1,18 @@
-const platforms = ["Facebook", "YouTube", "TikTok", "WhatsApp"] as const;
+import { socialLinks } from "@/config/social";
 
 export function SocialLinks() {
   return (
     <ul className="flex flex-wrap gap-3">
-      {platforms.map((platform) => (
-        <li key={platform}>
-          <span className="inline-flex items-center rounded-full border border-black/15 px-3 py-1 text-xs dark:border-white/20">
-            {platform} <span className="ml-1 opacity-60">(link coming soon)</span>
-          </span>
+      {socialLinks.map((link) => (
+        <li key={link.platform}>
+          <a
+            href={link.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center rounded-full border border-black/15 px-3 py-1 text-xs transition-colors hover:border-brand-primary-text hover:text-brand-primary-text dark:border-white/20"
+          >
+            {link.platform}
+          </a>
         </li>
       ))}
     </ul>

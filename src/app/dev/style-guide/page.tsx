@@ -37,8 +37,10 @@ export default function StyleGuidePage() {
                   alt={`${brand.name} logo`}
                   width={64}
                   height={64}
-                  className="h-16 w-16 rounded-lg object-contain"
-                  style={{ backgroundColor: "#111" }}
+                  className={
+                    brand.logo.background ? "h-16 w-16 rounded-lg object-contain p-2" : "h-16 w-16 object-contain"
+                  }
+                  style={brand.logo.background ? { backgroundColor: brand.logo.background } : undefined}
                 />
                 <h3 className="text-lg font-semibold">
                   {brand.name}{" "}

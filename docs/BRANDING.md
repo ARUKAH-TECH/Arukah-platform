@@ -2,7 +2,7 @@
 
 Logos supplied by the founder, stored under `public/branding/`:
 
-| Division | File | Notes |
+| Division | Original file | Notes |
 |---|---|---|
 | ARUKAH (master brand) | `public/branding/arukah/arukah-logo.jpg` | Gold / royal blue / white |
 | ARUKAH TECH | `public/branding/tech/arukah-tech-logo.jpg` | Gold / black / white |
@@ -10,12 +10,28 @@ Logos supplied by the founder, stored under `public/branding/`:
 | ZIVA Special Classes | `public/branding/ziva/ziva-logo.jpg` | Blue / gold / white |
 | REPENT ONLINE MINISTRIES | `public/branding/ministry/repent-online-ministries-logo.jpg` | Own identity, kept separate from commercial ARUKAH palette |
 
-These files were supplied as flattened JPEGs (opaque backgrounds, not
-transparent). If transparent (PNG/SVG) versions become available, they
-should replace these so logos can sit on non-matching backgrounds cleanly.
+These originals were supplied as flattened JPEGs with opaque black
+backgrounds. No dedicated ARUKAH MEDIA logo has been supplied — the master
+ARUKAH mark is used for Media until one is provided.
 
-No dedicated ARUKAH MEDIA logo has been supplied — the master ARUKAH mark is
-used for Media until one is provided.
+## Transparent versions (used on the site)
+
+The ARUKAH, ARUKAH TECH, and ministry logos also have a
+`*-logo-transparent.png` sibling file (e.g.
+`public/branding/arukah/arukah-logo-transparent.png`) — the same artwork
+with the black background made transparent via a brightness-threshold
+chroma-key script, not redrawn or recolored. `src/config/brands.ts` points
+at these transparent versions; the original JPEGs are kept untouched
+alongside them as the source reference. ARUKAH WEAR and ZIVA's logos
+already had light/white backgrounds baked in and didn't need this.
+
+**Exception — ARUKAH TECH keeps a dark backdrop.** Its wordmark and
+service-category labels are rendered in white, so they're illegible with
+no backdrop on a light page. `brands.tech.logo.background` (`#14110c`) is
+set for this reason, and every component that renders a logo
+(`Hero`, `BusinessCard`, the style guide) checks `logo.background` and
+only adds a rounded dark card when it's present — ARUKAH and ministry's
+logos have no `background` value and render with nothing behind them.
 
 ## Colour tokens
 

@@ -138,8 +138,8 @@ export default function Home() {
               alt="ARUKAH TECH logo"
               width={320}
               height={320}
-              className="mx-auto rounded-2xl"
-              style={{ backgroundColor: "#0a0a0a" }}
+              className="mx-auto rounded-2xl p-6"
+              style={{ backgroundColor: brands.tech.logo.background }}
             />
           </div>
         </Container>

@@ -7,9 +7,9 @@ export const contentType = "image/png";
 
 export default async function Image() {
   const logoData = await readFile(
-    join(process.cwd(), "public/branding/arukah/arukah-logo.jpg"),
+    join(process.cwd(), "public/branding/arukah/arukah-logo-transparent.png"),
   );
-  const logoSrc = `data:image/jpeg;base64,${logoData.toString("base64")}`;
+  const logoSrc = `data:image/png;base64,${logoData.toString("base64")}`;
 
   return new ImageResponse(
     (

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { Button } from "@/components/ui/Button";
+import { MinistryForm } from "@/features/ministry/MinistryForm";
 import { brands } from "@/config/brands";
 
 export const metadata: Metadata = {
@@ -44,7 +45,7 @@ export default function MinistryPage() {
               <SocialLinks />
             </div>
             <div className="mt-6">
-              <Button href="/contact">Get in touch</Button>
+              <Button href="#respond">Get in touch</Button>
             </div>
           </div>
           <Image
@@ -72,6 +73,23 @@ export default function MinistryPage() {
                 {item}
               </div>
             ))}
+          </div>
+        </div>
+
+        <div id="respond" className="border-t border-white/10 py-16">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
+            New here, or growing in faith?
+          </p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">
+            Let the ministry know
+          </h2>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-white/70">
+            Whether you just gave your life to Christ, are rededicating, or
+            simply want to grow deeper — tell us a little about where you are
+            so someone from the ministry can follow up and walk with you.
+          </p>
+          <div className="mt-8 max-w-xl">
+            <MinistryForm dark />
           </div>
         </div>
       </Container>
