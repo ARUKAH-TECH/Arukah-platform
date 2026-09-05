@@ -38,7 +38,7 @@ export default function TechPage() {
         logo={brands.tech.logo}
         title="ARUKAH TECH"
         tagline="Innovate. Develop. Empower. Custom software and management systems built for organizations that need reliable, well-maintained technology."
-        primaryCta={{ label: "Discuss a project", href: "/#contact" }}
+        primaryCta={{ label: "Discuss a project", href: "/contact" }}
         secondaryCta={{ label: "Back to ARUKAH", href: "/" }}
       />
 

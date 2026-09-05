@@ -26,7 +26,7 @@ export default function ZivaPage() {
         logo={brands.ziva.logo}
         title="ZIVA Special Classes"
         tagline="Excellence our hallmark. Special classes for students from Primary 1 to SHS 3, focused on genuine academic growth."
-        primaryCta={{ label: "Enquire about ZIVA", href: "/#contact" }}
+        primaryCta={{ label: "Enquire about ZIVA", href: "/contact" }}
         secondaryCta={{ label: "Back to ARUKAH", href: "/" }}
       />
 

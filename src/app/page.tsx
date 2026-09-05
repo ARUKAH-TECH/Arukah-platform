@@ -55,7 +55,7 @@ export default function Home() {
         tagline="Creating Solutions. Building Skills. Serving Communities."
         supportingLine="Technology • Education • Manufacturing • Media"
         primaryCta={{ label: "Explore ARUKAH", href: "#businesses" }}
-        secondaryCta={{ label: "Contact Us", href: "#contact" }}
+        secondaryCta={{ label: "Contact Us", href: "/contact" }}
       />
 
       <section id="about" className="py-16">
@@ -123,7 +123,7 @@ export default function Home() {
               </ul>
               <div className="mt-6 flex flex-wrap gap-4">
                 <Button href="/tech">Learn more</Button>
-                <Button href="#contact" variant="outline">
+                <Button href="/contact" variant="outline">
                   Discuss a project
                 </Button>
               </div>
@@ -159,6 +159,11 @@ export default function Home() {
                 </div>
               ),
             )}
+          </div>
+          <div className="mt-8 text-center">
+            <Button href="/projects" variant="outline">
+              View all projects
+            </Button>
           </div>
         </Container>
       </section>
@@ -209,7 +214,7 @@ export default function Home() {
               />
               <div className="mt-6 flex flex-wrap gap-4">
                 <Button href="/ziva">Learn more</Button>
-                <Button href="#contact" variant="outline">
+                <Button href="/contact" variant="outline">
                   Enquire about ZIVA
                 </Button>
               </div>
@@ -264,6 +269,11 @@ export default function Home() {
               <div className="mt-4">
                 <SocialLinks />
               </div>
+              <div className="mt-6">
+                <Button href="/ministry" variant="outline">
+                  Learn more about the ministry
+                </Button>
+              </div>
             </div>
             <Image
               src={brands.ministry.logo.src}
@@ -297,8 +307,11 @@ export default function Home() {
               align="center"
               eyebrow="Get in touch"
               title="Let's talk about your project"
-              description="Our full enquiry form is launching soon. In the meantime, check back here for updates."
+              description="Tell us a bit about what you need and we'll get back to you."
             />
+            <div className="mt-6">
+              <Button href="/contact">Go to contact form</Button>
+            </div>
           </div>
         </Container>
       </section>

@@ -12,7 +12,7 @@ Copy `.env.example` to `.env.local` for local development. Never commit
 | `SUPABASE_SERVICE_ROLE_KEY` | 8 (if Supabase is chosen) | Bypasses Row Level Security. **Server-only, never sent to the browser, never logged.** |
 | `REDIS_URL` | 15 | Caching layer connection string, once introduced. |
 | `STORAGE_ENDPOINT` / `STORAGE_BUCKET` / `STORAGE_ACCESS_KEY_ID` / `STORAGE_SECRET_ACCESS_KEY` | 12–13 | S3-compatible object storage for product/media files. All server-only. |
-| `EMAIL_FROM` / `EMAIL_PROVIDER_API_KEY` | 8 | Outbound email for the contact/enquiry system. |
+| `EMAIL_FROM` / `EMAIL_PROVIDER_API_KEY` | 8 | Outbound email for the contact/enquiry system. **Not yet used** — the Phase 5 `/contact` form logs to server console instead; see `docs/ARCHITECTURE.md`. |
 | `SENTRY_DSN` | 15 | Error monitoring. |
 
 ## Rules

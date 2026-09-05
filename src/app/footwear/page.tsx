@@ -26,7 +26,7 @@ export default function FootwearPage() {
         logo={brands.footwear.logo}
         title="ARUKAH WEAR"
         tagline="Home of classic and quality wears. Ghana-made footwear, crafted with attention to material and durability."
-        primaryCta={{ label: "Enquire about wholesale", href: "/#contact" }}
+        primaryCta={{ label: "Enquire about wholesale", href: "/contact" }}
         secondaryCta={{ label: "Back to ARUKAH", href: "/" }}
       />
 

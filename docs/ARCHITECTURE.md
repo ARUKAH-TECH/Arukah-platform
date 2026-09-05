@@ -2,21 +2,29 @@
 
 ## Current phase
 
-**Phase 4: Business pages.** Phases 1–3 (project structure, brand tokens,
-UI primitives, and the full homepage) are done. This phase adds dedicated
-routes for each business unit — `/tech`, `/footwear`, `/ziva`, `/media` —
-with fuller content than the homepage teasers, and updates
-`src/config/nav.ts`'s `businessNav` to point at these real routes instead
-of homepage anchors. The homepage's "Our Businesses" cards and each
-business teaser section's "Learn more" button now link to these pages too.
+**Phase 5: Projects, Ministry, and Contact.** Phases 1–4 (foundation, brand
+system, homepage, business pages) are done. This phase adds `/projects`
+(fuller per-project descriptions than the homepage teaser), `/ministry`
+(full identity plus a "what this ministry will share" roadmap list), and
+`/contact` — a real, working enquiry form (Full Name, Organization, Phone,
+Email, Service Required, Message) built as a Next.js Server Action in
+`src/features/contact/`.
 
-A real `/projects`, `/ministry`, `/contact`, and `/about` route, and the
-actual enquiry form, are **not built yet** — that's Phase 5. Until then,
-the main nav's About/Projects/Ministry/Contact links still point to
-in-page anchors on the homepage (`/#about`, `/#projects`, etc.), since
-that's genuinely where that content currently lives. When those routes are
-built, update `mainNav` in `src/config/nav.ts` the same way `businessNav`
-was updated this phase.
+**Contact form backend, by design decision (confirmed with the user):**
+no database or email provider is configured yet (Phase 8 adds that), and
+none were invented. `submitEnquiry` in `src/features/contact/actions.ts`
+validates server-side (required fields, email format, an allow-list check
+on the service value, length limits) and a honeypot field rejects simple
+bots, then **logs the enquiry to the server's own console/function logs**
+and shows the visitor a genuine success message. That means real
+enquiries are currently only retrievable by whoever can read the hosting
+provider's function logs (e.g. the Vercel dashboard) — not a proper inbox
+or database yet. Replace this with real storage/email in Phase 8; don't
+mistake "the form works" for "enquiries are safely stored."
+
+`mainNav` in `src/config/nav.ts` now points Projects/Ministry/Contact at
+these real routes. Only `/about` remains a homepage anchor (`/#about`) —
+no dedicated About page has been requested yet.
 
 ## Why a modular monolith (not microservices)
 
@@ -111,8 +119,8 @@ but nothing in the application code should assume Vercel-only APIs.
 1. Project architecture and foundation
 2. Brand/design system using supplied logos
 3. Homepage
-4. **Business pages** *(current)*
-5. Projects + Ministry + Contact
+4. Business pages
+5. **Projects + Ministry + Contact** *(current)*
 6. SEO + Accessibility + Performance
 7. Production deployment
 8. Backend foundation + database + enquiry system

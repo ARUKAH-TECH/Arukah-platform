@@ -18,7 +18,7 @@ export default function MediaPage() {
         logo={brands.arukah.logo}
         title="ARUKAH MEDIA"
         tagline="Creative media, done well. No dedicated logo has been supplied yet, so ARUKAH MEDIA uses the master ARUKAH identity for now."
-        primaryCta={{ label: "Discuss a video project", href: "/#contact" }}
+        primaryCta={{ label: "Discuss a video project", href: "/contact" }}
         secondaryCta={{ label: "Back to ARUKAH", href: "/" }}
       />
 
