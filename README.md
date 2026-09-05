@@ -1,36 +1,76 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ARUKAH Digital Platform
 
-## Getting Started
+Creating Solutions. Building Skills. Serving Communities.
 
-First, run the development server:
+Public-facing platform for the ARUKAH ecosystem (ARUKAH TECH, ARUKAH WEAR,
+ZIVA Special Classes, ARUKAH MEDIA, and REPENT ONLINE MINISTRIES). Built as a
+modular monolith so it can grow into a multi-organization platform without a
+rewrite. See `docs/ARCHITECTURE.md` for the reasoning behind that choice.
+
+## Tech stack
+
+- **Framework:** Next.js 16 (App Router, TypeScript, Turbopack)
+- **Styling:** Tailwind CSS 4
+- **Database (future phases):** PostgreSQL (Supabase-compatible)
+- **Deployment (initial):** Vercel — architecture kept portable, see `docs/ARCHITECTURE.md`
+
+## Getting started
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Other scripts:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run build   # production build
+npm run start   # run the production build locally
+npm run lint    # ESLint
+npx tsc --noEmit  # type-check without emitting files
+```
 
-## Learn More
+## Project structure
 
-To learn more about Next.js, take a look at the following resources:
+```
+src/
+  app/          Next.js App Router routes (pages, layouts)
+  components/   Shared, reusable UI components (design system)
+  features/     Domain/business-feature modules (e.g. contact, businesses)
+  lib/          Framework-agnostic utilities and helpers
+  server/       Server-only code: business/service layer
+  db/           Database schema, migrations, and data-access (repository) layer
+  types/        Shared TypeScript types
+  config/       App-wide configuration (site metadata, constants)
+public/
+  branding/     Supplied logo assets, organized per division
+    arukah/     ARUKAH master brand
+    tech/       ARUKAH TECH
+    footwear/   ARUKAH WEAR
+    ziva/       ZIVA Special Classes
+    ministry/   REPENT ONLINE MINISTRIES
+docs/           Architecture, environment, and operational documentation
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Within `server/`, keep API route handlers, business/service logic, and data
+access separated as the backend grows — see `docs/ARCHITECTURE.md`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Environment variables
 
-## Deploy on Vercel
+Copy `.env.example` to `.env.local` and fill in real values. Never commit
+`.env.local` or any file containing real secrets — see `docs/ENVIRONMENT.md`
+for what each variable is for and when it's needed.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Documentation
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- `docs/ARCHITECTURE.md` — system design, scaling approach, module boundaries
+- `docs/ENVIRONMENT.md` — environment variable reference
+- `docs/BRANDING.md` — brand assets and per-division identity notes
+
+## Development phases
+
+This project is built incrementally, one phase at a time, to keep changes
+reviewable and avoid unnecessary rework. See `docs/ARCHITECTURE.md` for the
+current phase and what's intentionally deferred.
