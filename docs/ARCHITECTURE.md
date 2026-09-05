@@ -63,8 +63,9 @@ pages:
   (built from the real ARUKAH logo, not a placeholder), `metadataBase` +
   a `%s · ARUKAH` title template + Open Graph/Twitter defaults in the
   root layout, and an explicit `alternates.canonical` on every route.
-  **`NEXT_PUBLIC_SITE_URL` must be set in production** or the sitemap and
-  canonical URLs will emit `localhost` — see `docs/ENVIRONMENT.md`.
+  **`SITE_URL` must be set in production** or the sitemap and canonical
+  URLs will emit `localhost` — see `docs/ENVIRONMENT.md`. Deliberately not
+  `NEXT_PUBLIC_`-prefixed: it's only ever read server-side.
 - **Performance:** confirmed already in place from earlier phases, not
   new work — every image goes through `next/image` (automatic
   optimization/lazy-loading), each page's `Hero` image sets `priority`

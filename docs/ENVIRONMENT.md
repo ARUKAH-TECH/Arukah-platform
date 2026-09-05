@@ -5,8 +5,8 @@ Copy `.env.example` to `.env.local` for local development. Never commit
 
 | Variable | Required from phase | Purpose |
 |---|---|---|
-| `NEXT_PUBLIC_SITE_URL` | 1 | Canonical site URL, used for metadata/SEO and absolute links. Public — safe in browser code. |
-| `DATABASE_URL` | 8 | PostgreSQL connection string. Server-only. |
+| `SITE_URL` | 1 | Canonical site URL, used for metadata/SEO and absolute links (`layout.tsx`, `sitemap.ts`, `robots.ts`). Deliberately **not** `NEXT_PUBLIC_`-prefixed — it's only ever read in server code, never in browser-executed code, so it doesn't need to be exposed to the client. |
+| `DATABASE_URL` | 8 | PostgreSQL connection string — currently a **Neon** project (chosen over Supabase/Railway/Render, see `docs/ARCHITECTURE.md`). Server-only. Set locally in `.env.local` as of Phase 7; not yet used by any code, and not yet added to Vercel's production env vars. |
 | `NEXT_PUBLIC_SUPABASE_URL` | 8 (if Supabase is chosen) | Supabase project URL. Public. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | 8 (if Supabase is chosen) | Supabase anonymous/public key. Safe for the browser — respects Row Level Security. |
 | `SUPABASE_SERVICE_ROLE_KEY` | 8 (if Supabase is chosen) | Bypasses Row Level Security. **Server-only, never sent to the browser, never logged.** |

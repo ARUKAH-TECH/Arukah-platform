@@ -18,7 +18,9 @@ const geistMono = Geist_Mono({
 // `||` (not `??`) deliberately — Vercel's project-import UI can create this
 // var as an empty string rather than leaving it unset, which `??` would not
 // catch, and `new URL("")` throws.
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+// No NEXT_PUBLIC_ prefix: this is only ever read here on the server, never
+// in browser-executed code, so it doesn't need to be exposed to the client.
+const siteUrl = process.env.SITE_URL || "http://localhost:3000";
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
