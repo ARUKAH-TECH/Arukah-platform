@@ -7,8 +7,8 @@ Copy `.env.example` to `.env.local` for local development. Never commit
 |---|---|---|
 | `SITE_URL` | 1 | Canonical site URL, used for metadata/SEO and absolute links (`layout.tsx`, `sitemap.ts`, `robots.ts`). Deliberately **not** `NEXT_PUBLIC_`-prefixed — it's only ever read in server code, never in browser-executed code, so it doesn't need to be exposed to the client. |
 | `DATABASE_URL` | 8 | PostgreSQL connection string for the **Supabase** project `arukah-platform` (ARUKAH-TECH's Org) — used for migrations / direct SQL. Server-only. Replaced an earlier, never-used Neon database on 2026-10-21. Not yet used by any code, and not yet added to Vercel's env vars. |
-| `NEXT_PUBLIC_SUPABASE_URL` | 8 | Supabase project URL. Public. |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | 8 | Supabase anonymous/public key. Safe for the browser — respects Row Level Security. |
+| `NEXT_PUBLIC_SUPABASE_URL` | Foundation | Supabase project URL (`https://frnhrxyyfthbtjjmjxrm.supabase.co`). Public. Required by the admin area (`/admin`) and `src/proxy.ts`. |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Foundation | Holds the project's **publishable** key (`sb_publishable_…`, Supabase's replacement for the legacy anon key). Safe for the browser — every query is limited by Row Level Security. |
 | `SUPABASE_SERVICE_ROLE_KEY` | 8 | Bypasses Row Level Security. **Server-only, never sent to the browser, never logged.** |
 | `REDIS_URL` | 15 | Caching layer connection string, once introduced. |
 | `STORAGE_ENDPOINT` / `STORAGE_BUCKET` / `STORAGE_ACCESS_KEY_ID` / `STORAGE_SECRET_ACCESS_KEY` | 12–13 | S3-compatible object storage for product/media files. All server-only. |
