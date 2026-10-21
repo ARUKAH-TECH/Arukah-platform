@@ -18,9 +18,9 @@ export default function MediaPage() {
       <Hero
         logo={brands.arukah.logo}
         title="ARUKAH MEDIA"
-        tagline="Creative media, done well. No dedicated logo has been supplied yet, so ARUKAH MEDIA uses the master ARUKAH identity for now."
+        tagline="Creative media, done well. No dedicated logo has been supplied yet, so ARUKAH MEDIA uses the master ZIVARUKAH logo for now."
         primaryCta={{ label: "Discuss a video project", href: "/contact" }}
-        secondaryCta={{ label: "Back to ARUKAH", href: "/" }}
+        secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
 
       <section className="py-16">

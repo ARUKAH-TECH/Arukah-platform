@@ -40,7 +40,7 @@ export default function TechPage() {
         title="ARUKAH TECH"
         tagline="Innovate. Develop. Empower. Custom software and management systems built for organizations that need reliable, well-maintained technology."
         primaryCta={{ label: "Discuss a project", href: "/contact" }}
-        secondaryCta={{ label: "Back to ARUKAH", href: "/" }}
+        secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
 
       <section className="py-16">
@@ -73,7 +73,7 @@ export default function TechPage() {
               align="center"
               eyebrow="Featured projects"
               title="Systems in development"
-              description="School, church, and fuel station management systems are in active development. Case studies and screenshots are added here as projects are completed."
+              description="School and church management systems are in active development. Case studies and screenshots are added here as projects are completed."
             />
             <Link
               href="/#projects"

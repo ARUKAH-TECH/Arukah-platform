@@ -49,6 +49,11 @@ const rules: FaqRule[] = [
       "Yes — ZIVA Special Classes covers Primary 1 to SHS 3. Visit /ziva to learn more, or use the contact form to enquire.",
   },
   {
+    keywords: ["book", "bookstore", "ebook", "e-book", "read online", "audiobook"],
+    answer:
+      "ZIVARUKAH BOOKS is coming soon — online reading, digital downloads, and printed copies. Use the contact form if you'd like to hear when it opens.",
+  },
+  {
     keywords: ["video", "media", "photography", "event coverage", "editing"],
     answer:
       "Yes — ARUKAH MEDIA offers video production, event coverage, and video editing. See /media for details.",

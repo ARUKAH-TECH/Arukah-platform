@@ -51,7 +51,7 @@ export async function submitEnquiry(
   // Temporary Phase 5 handling: no database or email provider is configured
   // yet (see docs/ENVIRONMENT.md), so enquiries are logged to the server's
   // own function logs. Phase 8 replaces this with real storage/email.
-  console.log("[ARUKAH enquiry]", {
+  console.log("[ZIVARUKAH enquiry]", {
     fullName,
     organization: organization || undefined,
     phone: phone || undefined,

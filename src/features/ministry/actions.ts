@@ -52,7 +52,7 @@ export async function submitMinistryResponse(
   // or email provider is configured yet, so responses are logged to the
   // server's own function logs for the ministry team to follow up on
   // manually until Phase 8 adds real storage.
-  console.log("[ARUKAH ministry response]", {
+  console.log("[ZIVARUKAH ministry response]", {
     fullName,
     phone: phone || undefined,
     email: email || undefined,

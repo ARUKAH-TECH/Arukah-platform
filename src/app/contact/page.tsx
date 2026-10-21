@@ -6,7 +6,7 @@ import { MinistryForm } from "@/features/ministry/MinistryForm";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with ARUKAH.",
+  description: "Get in touch with ZIVARUKAH.",
   alternates: { canonical: "/contact" },
 };
 
@@ -31,7 +31,7 @@ export default function ContactPage() {
             align="center"
             eyebrow="Online Ministry"
             title="New here, or growing in faith?"
-            description="This is a separate form for the ministry side of ARUKAH — for new and returning converts, or anyone wanting prayer or spiritual follow-up."
+            description="This is a separate form for the ministry side of ZIVARUKAH — for new and returning converts, or anyone wanting prayer or spiritual follow-up."
           />
           <div className="mx-auto mt-10 max-w-xl">
             <MinistryForm />

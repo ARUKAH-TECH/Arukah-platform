@@ -39,7 +39,7 @@ export default function MinistryPage() {
             </p>
             <p className="mt-4 max-w-md text-sm leading-6 text-white/70">
               Kept visually and editorially separate from the commercial
-              ARUKAH businesses. Follow along as content is published across:
+              ZIVARUKAH businesses. Follow along as content is published across:
             </p>
             <div className="mt-4">
               <SocialLinks />

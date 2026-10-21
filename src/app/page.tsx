@@ -56,10 +56,10 @@ export default function Home() {
     <>
       <Hero
         logo={brands.arukah.logo}
-        title="ARUKAH"
+        title="ZIVARUKAH"
         tagline="Creating Solutions. Building Skills. Serving Communities."
-        supportingLine="Technology • Education • Manufacturing • Media"
-        primaryCta={{ label: "Explore ARUKAH", href: "#businesses" }}
+        supportingLine="Technology • Education • Manufacturing • Media • Books"
+        primaryCta={{ label: "Explore ZIVARUKAH", href: "#businesses" }}
         secondaryCta={{ label: "Contact Us", href: "/contact" }}
       />
 
@@ -68,15 +68,15 @@ export default function Home() {
           <SectionHeading
             eyebrow="About"
             title="One brand, several ways to serve"
-            description="ARUKAH brings together technology, education, manufacturing, media and ministry under one identity — each division run with its own craft, but the same purpose: creating solutions, building skills, and serving communities."
+            description="ZIVARUKAH brings together technology, education, manufacturing, media, books and ministry under one identity — each division run with its own craft, but the same purpose: creating solutions, building skills, and serving communities."
           />
         </Container>
       </section>
 
       <section id="businesses" className="py-16">
         <Container>
-          <SectionHeading eyebrow="Our Businesses" title="What ARUKAH builds" align="center" />
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          <SectionHeading eyebrow="Our Businesses" title="What ZIVARUKAH builds" align="center" />
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <BusinessCard
               brand="tech"
               name="ARUKAH TECH"
@@ -103,6 +103,13 @@ export default function Home() {
               name="ARUKAH MEDIA"
               description="Video production and creative media."
               href="/media"
+              logo={brands.arukah.logo}
+            />
+            <BusinessCard
+              brand="books"
+              name="ZIVARUKAH BOOKS"
+              description="Books to read online, download, or order in print. Coming soon."
+              href="/books"
               logo={brands.arukah.logo}
             />
           </div>
@@ -151,8 +158,8 @@ export default function Home() {
             title="Systems in development"
             description="A look at the kind of management systems ARUKAH TECH builds. Screenshots and case studies are added here as projects are completed."
           />
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
-            {["School Management System", "Church Management System", "Fuel Station Management System"].map(
+          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
+            {["School Management System", "Church Management System"].map(
               (project) => (
                 <div
                   key={project}
@@ -267,7 +274,7 @@ export default function Home() {
                 Rescue the Perishing
               </p>
               <p className="mt-4 max-w-md text-sm leading-6 text-white/70">
-                Kept visually and editorially separate from the commercial ARUKAH
+                Kept visually and editorially separate from the commercial ZIVARUKAH
                 businesses. Follow along as content is published across:
               </p>
               <div className="mt-4">
@@ -292,7 +299,7 @@ export default function Home() {
 
       <section id="why" className="py-16">
         <Container>
-          <SectionHeading eyebrow="Why ARUKAH" title="What holds it together" align="center" />
+          <SectionHeading eyebrow="Why ZIVARUKAH" title="What holds it together" align="center" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {whyArukah.map((item) => (
               <div key={item.title} className="rounded-2xl border border-black/10 p-5 dark:border-white/10">

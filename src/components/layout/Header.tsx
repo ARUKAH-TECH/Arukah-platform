@@ -12,12 +12,12 @@ export function Header() {
         <Link href="/#top" className="flex items-center gap-2">
           <Image
             src={logo.src}
-            alt="ARUKAH"
+            alt="ZIVARUKAH"
             width={36}
             height={36}
             className="h-9 w-9 object-contain"
           />
-          <span className="text-lg font-bold tracking-tight">ARUKAH</span>
+          <span className="text-lg font-bold tracking-tight">ZIVARUKAH</span>
         </Link>
 
         <nav aria-label="Primary" className="hidden items-center gap-6 text-sm font-medium md:flex">

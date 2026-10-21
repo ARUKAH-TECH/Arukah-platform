@@ -16,12 +16,12 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <Image
                 src={logo.src}
-                alt="ARUKAH"
+                alt="ZIVARUKAH"
                 width={32}
                 height={32}
                 className="h-8 w-8 object-contain"
               />
-              <span className="text-base font-bold tracking-tight">ARUKAH</span>
+              <span className="text-base font-bold tracking-tight">ZIVARUKAH</span>
             </div>
             <p className="mt-3 max-w-xs text-sm leading-6 text-foreground/70">
               Creating Solutions. Building Skills. Serving Communities.
@@ -60,7 +60,7 @@ export function Footer() {
         </div>
 
         <p className="mt-10 border-t border-black/10 pt-6 text-xs text-foreground/50 dark:border-white/10">
-          &copy; {year} ARUKAH — a ZIVARUKAH VENTURES initiative.
+          &copy; {year} ZIVARUKAH VENTURES.
         </p>
       </Container>
     </footer>

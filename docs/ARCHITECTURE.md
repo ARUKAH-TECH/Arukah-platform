@@ -1,6 +1,17 @@
-# ARUKAH Platform — Architecture
+# ZIVARUKAH Platform — Architecture
 
 ## Current phase
+
+**Umbrella rebrand to ZIVARUKAH (2026-10-21).** The site now runs at
+https://zivarukah.com (Cloudflare DNS → Vercel, `www` 308-redirects to the
+apex) under the ZIVARUKAH name, with a `/books` "coming soon" page for
+ZIVARUKAH BOOKS. The fuel station system was removed from the project
+lists (it remains listed as an ARUKAH TECH service). The founder's
+expansion plan (admin/CMS, ministry outreach projects, `/support`
+donations, advertising, bookstore, international payments) now sets the
+order of later work; the 16-phase roadmap below is kept for history.
+
+## Previous phase
 
 **Phase 7: Production deployment.** Live on Vercel, deployed from
 `ARUKAH-TECH/Arukah-platform` on GitHub (auto-deploys on every push to

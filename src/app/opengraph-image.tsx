@@ -27,7 +27,7 @@ export default async function Image() {
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={logoSrc} width={220} height={147} alt="" />
-        <div style={{ fontSize: 72, fontWeight: 700, color: "#ffffff" }}>ARUKAH</div>
+        <div style={{ fontSize: 72, fontWeight: 700, color: "#ffffff" }}>ZIVARUKAH</div>
         <div style={{ fontSize: 28, color: "#e3a82a" }}>
           Creating Solutions. Building Skills. Serving Communities.
         </div>

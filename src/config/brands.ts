@@ -13,7 +13,7 @@ export interface Brand {
 export const brands: Record<BrandId, Brand> = {
   arukah: {
     id: "arukah",
-    name: "ARUKAH",
+    name: "ZIVARUKAH",
     logo: { src: "/branding/arukah/arukah-logo-transparent.png", width: 1080, height: 720 },
   },
   tech: {

@@ -18,10 +18,6 @@ const projects = [
     name: "Church Management System",
     description: "Membership records, giving, and event coordination for churches.",
   },
-  {
-    name: "Fuel Station Management System",
-    description: "Sales, inventory, and loss-control tracking for fuel stations.",
-  },
 ];
 
 export default function ProjectsPage() {
@@ -35,7 +31,7 @@ export default function ProjectsPage() {
           description="These are the kinds of management systems in active development. Screenshots and case studies are added here as projects are completed — none are presented as finished work for a named client until that's confirmed."
         />
 
-        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3">
+        <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
           {projects.map((project) => (
             <div
               key={project.name}

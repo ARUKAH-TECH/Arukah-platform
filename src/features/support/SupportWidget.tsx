@@ -40,7 +40,7 @@ export function SupportWidget() {
       {open && (
         <div className="mb-3 flex h-96 w-80 flex-col overflow-hidden rounded-2xl border border-black/10 bg-white shadow-xl dark:border-white/10 dark:bg-zinc-900">
           <div className="flex items-center justify-between border-b border-black/10 px-4 py-3 dark:border-white/10">
-            <p className="text-sm font-semibold">ARUKAH Support</p>
+            <p className="text-sm font-semibold">ZIVARUKAH Support</p>
             <button
               type="button"
               onClick={() => setOpen(false)}

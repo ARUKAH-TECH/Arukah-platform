@@ -6,14 +6,14 @@ interface BusinessCardProps {
   description: string;
   href: string;
   logo: { src: string; width: number; height: number };
-  brand: "tech" | "footwear" | "ziva" | "media";
+  brand: "tech" | "footwear" | "ziva" | "media" | "books";
 }
 
 export function BusinessCard({ name, description, href, logo, brand }: BusinessCardProps) {
   return (
     <Link
       href={href}
-      data-brand={brand === "media" ? undefined : brand}
+      data-brand={brand === "media" || brand === "books" ? undefined : brand}
       className="group flex flex-col gap-4 rounded-2xl border border-black/10 bg-white p-6 transition-colors hover:border-brand-primary-text dark:border-white/10 dark:bg-zinc-900"
     >
       <Image

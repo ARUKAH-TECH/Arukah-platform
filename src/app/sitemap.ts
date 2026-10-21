@@ -4,7 +4,7 @@ import type { MetadataRoute } from "next";
 // otherwise the sitemap ships localhost URLs. See docs/ENVIRONMENT.md.
 const baseUrl = process.env.SITE_URL || "http://localhost:3000";
 
-const routes = ["", "/tech", "/footwear", "/ziva", "/media", "/projects", "/ministry", "/contact"];
+const routes = ["", "/tech", "/footwear", "/ziva", "/media", "/books", "/projects", "/ministry", "/contact"];
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return routes.map((route) => ({

@@ -25,19 +25,19 @@ const siteUrl = process.env.SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "ARUKAH",
-    template: "%s · ARUKAH",
+    default: "ZIVARUKAH",
+    template: "%s · ZIVARUKAH",
   },
   description: "Creating Solutions. Building Skills. Serving Communities.",
   openGraph: {
-    title: "ARUKAH",
+    title: "ZIVARUKAH",
     description: "Creating Solutions. Building Skills. Serving Communities.",
-    siteName: "ARUKAH",
+    siteName: "ZIVARUKAH",
     type: "website",
   },
   twitter: {
     card: "summary_large_image",
-    title: "ARUKAH",
+    title: "ZIVARUKAH",
     description: "Creating Solutions. Building Skills. Serving Communities.",
   },
 };

@@ -24,7 +24,7 @@ export default function StyleGuidePage() {
       <Container>
         <SectionHeading
           eyebrow="Internal — not linked from the site"
-          title="ARUKAH design system"
+          title="ZIVARUKAH design system"
           description="Per-division brand tokens and shared components. Wrap any section in data-brand to scope Button/SectionHeading colors to that division."
         />
 

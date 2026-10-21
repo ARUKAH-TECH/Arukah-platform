@@ -1,10 +1,21 @@
 # Branding Assets
 
+## Umbrella brand: ZIVARUKAH (since 2026-10-21)
+
+The public umbrella brand is **ZIVARUKAH** (site name, header, footer,
+metadata, share image), served at https://zivarukah.com. By founder
+decision it uses the **ARUKAH logo** — no separate ZIVARUKAH logo exists.
+Divisions keep their own names: ARUKAH TECH, ARUKAH WEAR, ZIVA Special
+Classes, ARUKAH MEDIA, ZIVARUKAH BOOKS, REPENT ONLINE MINISTRIES. The
+footer names the legal entity, ZIVARUKAH VENTURES; don't add registration
+claims for any brand that haven't been verified. ZIVARUKAH BOOKS has no
+logo of its own yet and uses the ARUKAH logo, like ARUKAH MEDIA.
+
 Logos supplied by the founder, stored under `public/branding/`:
 
 | Division | Original file | Notes |
 |---|---|---|
-| ARUKAH (master brand) | `public/branding/arukah/arukah-logo.jpg` | Gold / royal blue / white |
+| ARUKAH (used as the ZIVARUKAH umbrella logo) | `public/branding/arukah/arukah-logo.jpg` | Gold / royal blue / white |
 | ARUKAH TECH | `public/branding/tech/arukah-tech-logo.jpg` | Gold / black / white |
 | ARUKAH WEAR (footwear) | `public/branding/footwear/arukah-wear-logo.jpg` | Leather brown / cream |
 | ZIVA Special Classes | `public/branding/ziva/ziva-logo.jpg` | Blue / gold / white |
