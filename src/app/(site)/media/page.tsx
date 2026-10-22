@@ -3,6 +3,10 @@ import { Hero } from "@/components/ui/Hero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
+import { ProjectsSection } from "@/features/projects/ProjectsSection";
+
+// Refreshed at most every minute, and immediately after an admin edit.
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "MEDIA",
@@ -38,6 +42,8 @@ export default function MediaPage() {
           </div>
         </Container>
       </section>
+
+      <ProjectsSection branch="media" />
     </div>
   );
 }

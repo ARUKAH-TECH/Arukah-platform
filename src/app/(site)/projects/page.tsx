@@ -2,12 +2,16 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
+import { ProjectsSection } from "@/features/projects/ProjectsSection";
 
 export const metadata: Metadata = {
   title: "Projects",
   description: "Management systems and software projects from ARUKAH TECH.",
   alternates: { canonical: "/projects" },
 };
+
+// Refreshed at most every minute, and immediately after an admin edit.
+export const revalidate = 60;
 
 const projects = [
   {
@@ -22,6 +26,9 @@ const projects = [
 
 export default function ProjectsPage() {
   return (
+    <>
+    {/* Projects published from the admin dashboard; renders nothing until one exists. */}
+    <ProjectsSection eyebrow="Projects" title="Our latest projects" limit={24} />
     <div className="py-16" data-brand="tech">
       <Container>
         <SectionHeading
@@ -53,5 +60,6 @@ export default function ProjectsPage() {
         </div>
       </Container>
     </div>
+    </>
   );
 }

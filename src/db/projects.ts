@@ -85,12 +85,28 @@ function toProject(row: ProjectRow): PublicProject {
 }
 
 /**
+ * The anonymous client, or null when the Supabase settings are missing
+ * (e.g. a preview deployment without them). Public pages then simply show
+ * no projects instead of failing to build or render.
+ */
+function safePublicClient() {
+  try {
+    return createPublicClient();
+  } catch (error) {
+    console.error("[projects] Supabase not configured", (error as Error).message);
+    return null;
+  }
+}
+
+/**
  * Published projects, newest first. Row Level Security already hides drafts,
  * archived, not-yet-scheduled and expired projects from this anonymous
  * client; the query doesn't need to (and shouldn't) re-implement that.
  */
 export async function getPublicProjects(branch?: BranchId, limit = 24): Promise<PublicProject[]> {
-  let query = createPublicClient()
+  const client = safePublicClient();
+  if (!client) return [];
+  let query = client
     .from("projects")
     .select(PROJECT_COLUMNS)
     .order("publish_at", { ascending: false, nullsFirst: false })
@@ -109,7 +125,9 @@ export async function getPublicProjects(branch?: BranchId, limit = 24): Promise<
 }
 
 export async function getPublicProject(slug: string): Promise<PublicProject | null> {
-  const { data, error } = await createPublicClient()
+  const client = safePublicClient();
+  if (!client) return null;
+  const { data, error } = await client
     .from("projects")
     .select(PROJECT_COLUMNS)
     .eq("slug", slug)
