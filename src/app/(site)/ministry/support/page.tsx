@@ -6,6 +6,8 @@ import { SupportForm } from "@/features/payments/SupportForm";
 import { paymentsEnabled } from "@/server/payments";
 import { WhatsAppContact } from "@/components/ui/WhatsAppContact";
 import { ONLINE_FORMS_ENABLED } from "@/config/forms";
+import { QuickGiveForm } from "@/features/payments/QuickGiveForm";
+import { quickPaymentsEnabled } from "@/server/quickPayments";
 
 export const metadata: Metadata = {
   title: "Support the outreach · Repent Online Ministries",
@@ -37,12 +39,17 @@ export default async function SupportPage({ searchParams }: PageProps<"/ministry
             {enabled ? (
               <SupportForm outreaches={outreaches.map(({ id, title }) => ({ id, title }))} preselect={preselect} />
             ) : (
+              <div className="flex flex-col gap-6">
+              {quickPaymentsEnabled() && (
+                <QuickGiveForm outreaches={outreaches.map(({ id, title }) => ({ id, title }))} preselect={preselect} />
+              )}
               <WhatsAppContact
                 dark
                 message={`Hello Repent Online Ministries, I would like to support the outreach${preselectTitle ? ` "${preselectTitle}"` : ""}.`}
                 label="Give via WhatsApp"
                 note="Message or call us and we'll share how to give by Mobile Money. Thank you and God bless you."
               />
+              </div>
             )}
           </div>
         </div>

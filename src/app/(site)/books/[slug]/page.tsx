@@ -6,6 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { getPublishedBook } from "@/db/books";
 import { AddToBasket } from "@/features/books/AddToBasket";
+import { quickPaymentsEnabled } from "@/server/quickPayments";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
@@ -86,7 +87,7 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
 
             <div id="order" className="mt-6">
               {book.prices.length > 0 ? (
-                <AddToBasket book={{ id: book.id, slug: book.slug, title: book.title }} prices={book.prices} />
+                <AddToBasket book={{ id: book.id, slug: book.slug, title: book.title }} prices={book.prices} quickPay={quickPaymentsEnabled()} />
               ) : (
                 <>
                   <Button href="/contact">Ask about this book</Button>

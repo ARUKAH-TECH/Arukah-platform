@@ -11,6 +11,7 @@ Copy `.env.example` to `.env.local` for local development. Never commit
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Foundation | Holds the project's **publishable** key (`sb_publishable_…`, Supabase's replacement for the legacy anon key). Safe for the browser — every query is limited by Row Level Security. |
 | `SUPABASE_SERVICE_ROLE_KEY` | Payments | Supabase **secret** key (`sb_secret_…` or legacy `service_role`). Bypasses Row Level Security, but the database grants it only what payments need (read order totals, write `payments`, mark orders paid). Used only by `src/server/payments.ts`. **Server-only, never sent to the browser, never logged.** |
 | `PAYSTACK_SECRET_KEY` | Payments | Paystack secret key (`sk_test_…` / `sk_live_…`). **Server-only secret.** Online payments stay off until this and the key above are set. See `docs/PAYMENTS.md`. |
+| `PAYSTACK_RECEIPT_EMAIL` | Payments | The owner's business email used for every Paystack payment, so visitors aren't asked for theirs; receipts arrive there. Not secret. |
 | `REDIS_URL` | 15 | Caching layer connection string, once introduced. |
 | `STORAGE_ENDPOINT` / `STORAGE_BUCKET` / `STORAGE_ACCESS_KEY_ID` / `STORAGE_SECRET_ACCESS_KEY` | 12–13 | S3-compatible object storage for product/media files. All server-only. |
 | `EMAIL_FROM` / `EMAIL_PROVIDER_API_KEY` | 8 | Outbound email for the contact/enquiry system. **Not yet used** — the Phase 5 `/contact` form logs to server console instead; see `docs/ARCHITECTURE.md`. |
