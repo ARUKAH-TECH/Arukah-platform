@@ -6,7 +6,13 @@ phase is built, tested, and approved separately before the next begins.
 
 Already done: Phase 1 (inspection), Phase 2 (zivarukah.com connected —
 Cloudflare DNS → Vercel, `www` → apex), Phase 3 (ZIVARUKAH umbrella rebrand,
-`/books` placeholder — on branch `phase3-zivarukah-brand`, awaiting approval).
+`/books` placeholder — live).
+
+**Progress (2026-10-23):** Phase 4 milestones (a) and (b) are done and live —
+admin login with two-factor, projects + media library, projects shown on the
+homepage, each division page, `/projects` and the sitemap. Both database
+migrations are applied to the Supabase project. Milestones (c) and (d) are
+not started.
 
 ---
 
