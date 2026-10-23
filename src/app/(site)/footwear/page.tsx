@@ -14,8 +14,9 @@ import { getPageText, textReader } from "@/db/pageContent";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "WEAR",
-  description: "Ghana-made, handcrafted footwear from ARUKAH WEAR.",
+  title: "ARUKAH WEAR — Handcrafted, Ghana-Made Footwear",
+  description:
+    "ARUKAH WEAR makes quality handcrafted slippers, sandals and men's, women's and children's footwear in Ghana. Custom and wholesale orders welcome.",
   alternates: { canonical: "/footwear" },
 };
 

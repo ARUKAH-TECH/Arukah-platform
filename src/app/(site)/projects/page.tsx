@@ -8,7 +8,7 @@ import { getPageText, textReader } from "@/db/pageContent";
 
 export const metadata: Metadata = {
   title: "Projects",
-  description: "Management systems and software projects from ARUKAH TECH.",
+  description: "School, church and other management systems and software projects built by ARUKAH TECH in Ghana.",
   alternates: { canonical: "/projects" },
 };
 

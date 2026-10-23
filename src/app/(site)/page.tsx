@@ -11,8 +11,12 @@ import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { socialLinks } from "@/config/social";
 import { homePage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
+
+const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -31,6 +35,40 @@ export default async function Home() {
 
   return (
     <>
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "Organization",
+              "@id": `${SITE}/#organization`,
+              name: "ZIVARUKAH",
+              legalName: "ZIVARUKAH VENTURES",
+              url: SITE,
+              logo: `${SITE}${brands.arukah.logo.src}`,
+              slogan: "Creating Solutions. Building Skills. Serving Communities.",
+              areaServed: "GH",
+              // Only real profile pages (search-result links are left out).
+              sameAs: socialLinks.map((link) => link.href).filter((href) => !href.includes("/search/") && !href.includes("wa.me")),
+              department: [
+                { "@type": "Organization", name: "ARUKAH TECH", url: `${SITE}/tech` },
+                { "@type": "Organization", name: "ARUKAH WEAR", url: `${SITE}/footwear` },
+                { "@type": "EducationalOrganization", name: "ZIVA Special Classes", url: `${SITE}/ziva` },
+                { "@type": "Organization", name: "ARUKAH MEDIA", url: `${SITE}/media` },
+                { "@type": "Organization", name: "ZIVARUKAH BOOKS", url: `${SITE}/books` },
+              ],
+            },
+            {
+              "@type": "WebSite",
+              "@id": `${SITE}/#website`,
+              name: "ZIVARUKAH",
+              url: SITE,
+              publisher: { "@id": `${SITE}/#organization` },
+              inLanguage: "en-GH",
+            },
+          ],
+        }}
+      />
       <AnnouncementBar branch="home" />
       <AdBanner branch="home" />
       <Hero

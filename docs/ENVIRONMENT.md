@@ -14,6 +14,7 @@ Copy `.env.example` to `.env.local` for local development. Never commit
 | `STORAGE_ENDPOINT` / `STORAGE_BUCKET` / `STORAGE_ACCESS_KEY_ID` / `STORAGE_SECRET_ACCESS_KEY` | 12–13 | S3-compatible object storage for product/media files. All server-only. |
 | `EMAIL_FROM` / `EMAIL_PROVIDER_API_KEY` | 8 | Outbound email for the contact/enquiry system. **Not yet used** — the Phase 5 `/contact` form logs to server console instead; see `docs/ARCHITECTURE.md`. |
 | `SENTRY_DSN` | 15 | Error monitoring. |
+| `GOOGLE_SITE_VERIFICATION` / `BING_SITE_VERIFICATION` | Search (optional) | The code from Google Search Console / Bing Webmaster Tools' **HTML tag** method, added as a `<meta>` tag on every page. Not needed if the site is verified by a DNS record in Cloudflare (preferred). Not secret. |
 | `FAL_KEY` | Adverts (optional) | fal.ai API key for **Make AI video** on advert requests (Kling 2.6 Pro image-to-video, about US$0.07/second). **Server-only secret** — set in Vercel, never committed, never sent to the browser. Without it the feature shows “not set up”. |
 
 ## Rules

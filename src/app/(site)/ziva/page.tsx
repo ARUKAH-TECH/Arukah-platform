@@ -14,8 +14,9 @@ import { getPageText, textReader } from "@/db/pageContent";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "ZIVA Special Classes",
-  description: "Special classes from Primary 1 to SHS 3. Excellence our hallmark.",
+  title: "ZIVA Special Classes — Extra Classes from Primary 1 to SHS 3",
+  description:
+    "ZIVA Special Classes offers extra tuition and special classes for pupils and students from Primary 1 to SHS 3 in Ghana. Excellence our hallmark.",
   alternates: { canonical: "/ziva" },
 };
 

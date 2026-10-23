@@ -14,8 +14,9 @@ import { getPageText, textReader } from "@/db/pageContent";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "MEDIA",
-  description: "Video production, event coverage, and creative media from ARUKAH MEDIA.",
+  title: "ARUKAH MEDIA — Video Production & Event Coverage in Ghana",
+  description:
+    "ARUKAH MEDIA offers video production, event coverage, video editing and promotional videos for businesses, churches and events in Ghana.",
   alternates: { canonical: "/media" },
 };
 

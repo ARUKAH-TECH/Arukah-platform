@@ -22,15 +22,23 @@ const siteUrl = process.env.SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "ZIVARUKAH",
+    default: "ZIVARUKAH — Technology, Education, Footwear, Media & Books in Ghana",
     template: "%s · ZIVARUKAH",
   },
-  description: "Creating Solutions. Building Skills. Serving Communities.",
+  description:
+    "ZIVARUKAH: ARUKAH TECH software and management systems, ARUKAH WEAR handcrafted footwear, ZIVA Special Classes (Primary 1 to SHS 3), ARUKAH MEDIA video production, ZIVARUKAH BOOKS and Repent Online Ministries.",
+  applicationName: "ZIVARUKAH",
+  // Search engine ownership codes, if the meta-tag method is used (set in Vercel).
+  verification: {
+    google: process.env.GOOGLE_SITE_VERIFICATION || undefined,
+    other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
+  },
   openGraph: {
     title: "ZIVARUKAH",
     description: "Creating Solutions. Building Skills. Serving Communities.",
     siteName: "ZIVARUKAH",
     type: "website",
+    locale: "en_GH",
   },
   twitter: {
     card: "summary_large_image",
