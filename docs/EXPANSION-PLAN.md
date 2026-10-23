@@ -427,3 +427,20 @@ replaced by a single `ad_requests` table (migration `20261023090000`):
 - **Waiting for Phase 6 (Paystack):** online payment, access codes for
   timed reading and protected downloads.
 
+## Phase 10 progress (2026-10-23)
+
+- **Advert reports (PR #17):** `ad_daily_stats` gets views and clicks per
+  advert per day, only while the advert is live, with no personal data.
+  Clicks go through `/ad-click/<id>`.
+- **Spam limits:** `enforce_form_rate_limit()` triggers on `ad_requests`,
+  `inbox_messages` and `book_orders` (per phone/email per hour: 5 / 5 / 10;
+  overall per hour: 40 / 60 / 60). Advert photo uploads are capped at 60
+  an hour via the storage policy. The database can't see visitors' IP
+  addresses (requests come through our server), so the limits are per
+  contact plus an overall cap.
+- **Security headers** on every page: HSTS, nosniff, X-Frame-Options
+  SAMEORIGIN, Referrer-Policy, Permissions-Policy (no camera, mic or
+  location).
+- **Still open:** backups (the free Supabase plan has none), error
+  monitoring, and a content security policy.
+

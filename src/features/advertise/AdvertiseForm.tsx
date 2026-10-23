@@ -38,7 +38,10 @@ export function AdvertiseForm() {
           formData.set("imagePath", path);
         } catch {
           setStep("");
-          setState({ status: "error", message: "Your photo couldn't be uploaded. Try a smaller photo, or send without one." });
+          setState({
+            status: "error",
+            message: "Your photo couldn't be uploaded just now. Try again in a while, try a smaller photo, or send without one.",
+          });
           return;
         }
       }

@@ -1,5 +1,6 @@
 import "server-only";
 import { createPublicClient } from "@/lib/supabase/public";
+import { rateLimitMessage } from "@/lib/friendlyLimit";
 
 export interface NewInboxMessage {
   kind: "enquiry" | "ministry";
@@ -13,16 +14,16 @@ export interface NewInboxMessage {
 
 /**
  * Stores a message from a public form in the admin Inbox. Visitors can only
- * insert (never read) messages, so nothing is returned. Returns false if it
- * couldn't be saved, so the form can ask the visitor to try again.
+ * insert (never read) messages, so nothing is returned. Returns true when
+ * saved, or a message for the visitor when it couldn't be (e.g. a spam limit).
  */
-export async function saveInboxMessage(input: NewInboxMessage): Promise<boolean> {
+export async function saveInboxMessage(input: NewInboxMessage): Promise<true | string> {
   let client;
   try {
     client = createPublicClient();
   } catch {
     console.error("[inbox] Supabase not configured");
-    return false;
+    return "Sorry, your message couldn't be sent just now. Please try again in a moment.";
   }
   const { error } = await client.from("inbox_messages").insert({
     kind: input.kind,
@@ -36,7 +37,7 @@ export async function saveInboxMessage(input: NewInboxMessage): Promise<boolean>
   if (error) {
     // Never log the visitor's details — only that saving failed.
     console.error(`[inbox] saving a ${input.kind} message failed`, error.message);
-    return false;
+    return rateLimitMessage(error) ?? "Sorry, your message couldn't be sent just now. Please try again in a moment.";
   }
   return true;
 }

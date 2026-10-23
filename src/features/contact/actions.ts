@@ -59,11 +59,8 @@ export async function submitEnquiry(
     topic: service,
     message,
   });
-  if (!saved) {
-    return {
-      status: "error",
-      message: "Sorry, your message couldn't be sent just now. Please try again in a moment.",
-    };
+  if (saved !== true) {
+    return { status: "error", message: saved };
   }
 
   return {

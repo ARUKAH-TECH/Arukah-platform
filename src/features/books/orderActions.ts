@@ -63,7 +63,7 @@ export async function placeBookOrder(formData: FormData): Promise<OrderState> {
   });
   if (error || typeof data !== "string") {
     // Messages raised by the database (e.g. "no longer available") are safe to show.
-    const known = error?.message && /not available|no longer available|quantity|basket|delivery or collection/i.test(error.message);
+    const known = error?.message && /not available|no longer available|quantity|basket|delivery or collection|several requests|a lot of requests/i.test(error.message);
     console.error("[books] order failed", error?.message);
     return { status: "error", message: known ? error!.message : "Sorry, the order couldn't be placed. Please try again." };
   }
