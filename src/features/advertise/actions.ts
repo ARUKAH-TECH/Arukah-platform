@@ -1,6 +1,7 @@
 "use server";
 
 import { createPublicClient } from "@/lib/supabase/public";
+import { rateLimitMessage } from "@/lib/friendlyLimit";
 import { REQUEST_IMAGE_PATH, type AdvertiseFormState } from "@/features/advertise/shared";
 
 function field(formData: FormData, key: string) {
@@ -59,7 +60,7 @@ export async function submitAdRequest(formData: FormData): Promise<AdvertiseForm
   });
   if (error) {
     console.error("[advertise] request insert failed", error.message);
-    return { status: "error", message: "Sorry, something went wrong. Please try again in a moment." };
+    return { status: "error", message: rateLimitMessage(error) ?? "Sorry, something went wrong. Please try again in a moment." };
   }
 
   return {

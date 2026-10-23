@@ -11,7 +11,24 @@ const supabaseHost = (() => {
   }
 })();
 
+// Standard browser protections for every page.
+const securityHeaders = [
+  // Browsers must use HTTPS for this site for the next two years.
+  { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains" },
+  // Don't guess file types (stops some upload-based attacks).
+  { key: "X-Content-Type-Options", value: "nosniff" },
+  // Other websites can't show these pages inside a frame (clickjacking).
+  { key: "X-Frame-Options", value: "SAMEORIGIN" },
+  // Send only the site name, not full addresses, to other websites.
+  { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  // The site never needs the camera, microphone or location.
+  { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=(), browsing-topics=()" },
+];
+
 const nextConfig: NextConfig = {
+  async headers() {
+    return [{ source: "/:path*", headers: securityHeaders }];
+  },
   images: {
     remotePatterns: supabaseHost
       ? [
