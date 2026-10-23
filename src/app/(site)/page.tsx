@@ -7,10 +7,14 @@ import { BusinessCard } from "@/components/ui/BusinessCard";
 import { Button } from "@/components/ui/Button";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { brands } from "@/config/brands";
+import { ProjectsSection } from "@/features/projects/ProjectsSection";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
 };
+
+// Refreshed at most every minute, and immediately after an admin edit.
+export const revalidate = 60;
 
 const techServices = [
   "Website & software development",
@@ -178,6 +182,8 @@ export default function Home() {
           </div>
         </Container>
       </section>
+
+      <ProjectsSection branch="home" eyebrow="Latest" title="Recent projects" />
 
       <section id="footwear" data-brand="footwear" className="py-16">
         <Container>
