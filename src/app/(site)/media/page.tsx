@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
+import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -19,6 +20,7 @@ const services = ["Video production", "Event coverage", "Video editing", "Promot
 export default function MediaPage() {
   return (
     <div>
+      <AnnouncementBar branch="media" />
       <Hero
         logo={brands.arukah.logo}
         title="ARUKAH MEDIA"

@@ -5,6 +5,7 @@ const nav = [
   { label: "Dashboard", href: "/admin" },
   { label: "Projects", href: "/admin/projects" },
   { label: "Media", href: "/admin/media" },
+  { label: "Announcements", href: "/admin/announcements" },
 ];
 
 // Rendered only by pages that have already passed requireAdmin().
@@ -15,7 +16,7 @@ export function AdminShell({ email, children }: { email: string; children: React
         <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
           <div className="flex flex-wrap items-center gap-5">
             <span className="text-sm font-bold tracking-tight">ZIVARUKAH Admin</span>
-            <nav aria-label="Admin" className="flex gap-4 text-sm">
+            <nav aria-label="Admin" className="flex flex-wrap gap-4 text-sm">
               {nav.map((item) => (
                 <Link key={item.href} href={item.href} className="hover:text-brand-primary-text">
                   {item.label}

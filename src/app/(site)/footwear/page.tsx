@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
+import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -27,6 +28,7 @@ const products = [
 export default function FootwearPage() {
   return (
     <div data-brand="footwear">
+      <AnnouncementBar branch="wear" />
       <Hero
         logo={brands.footwear.logo}
         title="ARUKAH WEAR"

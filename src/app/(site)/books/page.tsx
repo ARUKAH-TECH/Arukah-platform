@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
+import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -24,6 +25,7 @@ const upcoming = [
 export default function BooksPage() {
   return (
     <div>
+      <AnnouncementBar branch="books" />
       <Hero
         logo={brands.arukah.logo}
         title="ZIVARUKAH BOOKS"
