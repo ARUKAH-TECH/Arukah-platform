@@ -19,7 +19,7 @@ export default async function AdminAdsPage() {
   const [{ data: ads }, { data: advertisers }, { data: settings }] = await Promise.all([
     supabase
       .from("ads")
-      .select("id, headline, advertiser_id, content_status, payment_confirmed, starts_on, ends_on")
+      .select("id, headline, format, advertiser_id, content_status, payment_confirmed, starts_on, ends_on")
       .order("starts_on", { ascending: false }),
     supabase.from("advertisers").select("id, business_name, status"),
     supabase.from("ad_settings").select("branch, accepts_ads"),
@@ -71,6 +71,11 @@ export default async function AdminAdsPage() {
                       <Link href={`/admin/ads/${ad.id}`} className="font-medium hover:text-brand-primary-text">
                         {ad.headline}
                       </Link>
+                      {ad.format === "banner" && (
+                        <span className="ml-2 rounded-full bg-black/5 px-2 py-0.5 text-[11px] text-foreground/60 dark:bg-white/10">
+                          top banner
+                        </span>
+                      )}
                     </td>
                     <td className="px-4 py-3 text-xs text-foreground/70">{advertiser?.business_name ?? "—"}</td>
                     <td className="px-4 py-3 text-xs text-foreground/70">

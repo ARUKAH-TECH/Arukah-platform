@@ -33,6 +33,7 @@ export async function saveAd(_prev: CmsFormState, formData: FormData): Promise<C
   const imageHeight = Number(formData.get("imageHeight")) || null;
   const placements = formData.getAll("placements").map(String).filter((b) => AD_BRANCH_IDS.includes(b));
   const contentStatus = text(formData, "contentStatus", 20);
+  const format = text(formData, "format", 10) === "banner" ? "banner" : "card";
   const paymentConfirmed = formData.get("paymentConfirmed") === "on";
   const startsOn = text(formData, "startsOn", 10);
   const endsOn = text(formData, "endsOn", 10);
@@ -55,6 +56,9 @@ export async function saveAd(_prev: CmsFormState, formData: FormData): Promise<C
   if (!["pending", "approved", "rejected"].includes(contentStatus)) return { status: "error", message: "Choose a content decision." };
   if (!DATE.test(startsOn) || !DATE.test(endsOn)) return { status: "error", message: "Enter a start and end date." };
   if (endsOn < startsOn) return { status: "error", message: "The end date must be on or after the start date." };
+  if (format === "banner" && !imagePath) {
+    return { status: "error", message: "A top banner needs an image. Upload one (ideally 1200 × 150) and save again." };
+  }
   if (placements.length === 0) return { status: "error", message: "Choose at least one page to show the advert on." };
 
   let amount: number | null = null;
@@ -78,6 +82,7 @@ export async function saveAd(_prev: CmsFormState, formData: FormData): Promise<C
     destination_url: destination,
     placements,
     content_status: contentStatus,
+    format,
     payment_confirmed: paymentConfirmed,
     starts_on: startsOn,
     ends_on: endsOn,

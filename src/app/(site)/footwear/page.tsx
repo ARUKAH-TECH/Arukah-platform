@@ -6,6 +6,7 @@ import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
+import { AdBanner } from "@/features/ads/AdBanner";
 import { wearPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -25,6 +26,7 @@ export default async function FootwearPage() {
   return (
     <div data-brand="footwear">
       <AnnouncementBar branch="wear" />
+      <AdBanner branch="wear" />
       <Hero
         logo={brands.footwear.logo}
         title="ARUKAH WEAR"

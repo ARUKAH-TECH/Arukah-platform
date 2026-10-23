@@ -47,6 +47,7 @@ export default async function NewAdPage({ searchParams }: PageProps<"/admin/ads/
             amountGhs: "",
             paymentReference: "",
             paymentNote: "",
+            format: "card",
           }}
         />
       </div>
