@@ -42,7 +42,7 @@ export default async function InboxPage({ searchParams }: PageProps<"/admin/inbo
   if (filter === "enquiry" || filter === "ministry") query = query.eq("kind", filter);
   const [{ data: messages }, { count: pendingAdvertisers }] = await Promise.all([
     query,
-    supabase.from("advertisers").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    supabase.from("ad_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
   ]);
 
   return (
@@ -53,8 +53,8 @@ export default async function InboxPage({ searchParams }: PageProps<"/admin/inbo
         {(pendingAdvertisers ?? 0) > 0 && (
           <>
             {" "}
-            <Link href="/admin/advertisers" className="underline">
-              {pendingAdvertisers} advertiser application{pendingAdvertisers === 1 ? "" : "s"} waiting
+            <Link href="/admin/adverts" className="underline">
+              {pendingAdvertisers} advert request{pendingAdvertisers === 1 ? "" : "s"} waiting
             </Link>
             .
           </>

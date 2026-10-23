@@ -1,5 +1,3 @@
-import { BRANCHES } from "@/config/branches";
-
 export interface AdvertiseFormState {
   status: "idle" | "success" | "error";
   message: string;
@@ -7,5 +5,5 @@ export interface AdvertiseFormState {
 
 export const initialAdvertiseFormState: AdvertiseFormState = { status: "idle", message: "" };
 
-/** Where advertisers may ask to appear. The ministry never carries commercial ads. */
-export const AD_PLACEMENT_OPTIONS = BRANCHES.filter((branch) => branch.id !== "ministry");
+/** Photo paths the request form may submit (uploaded to the private "ad-requests" bucket). */
+export const REQUEST_IMAGE_PATH = /^requests\/[0-9a-f-]{36}\.webp$/;

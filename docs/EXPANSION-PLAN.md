@@ -390,3 +390,23 @@ Applied throughout:
   a private note, call / WhatsApp / email buttons and delete. The dashboard
   shows the counts of new messages and pending advertiser applications.
 
+## Advertising simplified (2026-10-23, at the founder's request)
+
+The three-approval flow was too long to use from a phone. It has been
+replaced by a single `ad_requests` table (migration `20261023090000`):
+- **Requester** (`/advertise`): name, optional business, phone and/or email,
+  what the advert is about, location, and an optional photo. The photo is
+  resized on the phone and uploaded to the PRIVATE `ad-requests` bucket,
+  which visitors can add to but never read.
+- **Admin** (Admin → Adverts): Pending / Approve / Reject, start and end
+  date-time, payment (amount, not paid / part / full, reference), show as
+  image (the requester's photo copied into public `media/ads/`, or an
+  upload) or video (YouTube/TikTok link), an optional link and a note.
+- **Live** = approved and now is within start–end (payment is for the
+  record and doesn't block). The public site reads adverts only through
+  `live_ads()`, which returns display fields only. Image adverts are the
+  top banner; video adverts are a "Sponsored" video lower on the page.
+  Never on the ministry pages.
+- The old `advertisers`, `ads`, `ad_payments` and `ad_settings` tables are
+  retired; the one existing application was carried over.
+

@@ -1,4 +1,4 @@
-// Browser-only helpers shared by the admin image uploaders.
+// Browser-only image helpers, shared by the admin uploaders and the public advert request form.
 
 const MAX_EDGE = 2000; // px — plenty for full-width display, far smaller than phone photos
 export const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/png", "image/webp"];

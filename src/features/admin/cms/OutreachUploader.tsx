@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/browser";
 import { addOutreachVideo, registerOutreachImage } from "@/features/admin/cms/outreachMediaActions";
 import { initialCmsFormState } from "@/features/admin/cms/shared";
-import { ACCEPTED_IMAGE_TYPES, resize } from "@/features/admin/cms/resizeImage";
+import { ACCEPTED_IMAGE_TYPES, resize } from "@/lib/resizeImage";
 import { fieldClasses, primaryButtonClasses, secondaryButtonClasses } from "@/features/admin/ui";
 
 /** Uploads photos to the PRIVATE outreach bucket. New photos start hidden until their consent checklist is done. */
