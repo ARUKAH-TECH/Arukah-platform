@@ -25,7 +25,9 @@ permissions:
 
 jobs:
   backup:
-    runs-on: ubuntu-latest
+    # Pinned: the PostgreSQL apt repository supports this release; "latest"
+    # moves to a brand-new Ubuntu from late October 2026.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - name: Check the secrets are set
