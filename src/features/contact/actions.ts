@@ -1,6 +1,7 @@
 "use server";
 
 import { SERVICE_OPTIONS, type ContactFormState } from "@/features/contact/shared";
+import { saveInboxMessage } from "@/db/inbox";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -44,22 +45,26 @@ export async function submitEnquiry(
     return { status: "error", message: "Please choose a valid service." };
   }
 
-  if (fullName.length > 200 || message.length > 5000) {
+  if (fullName.length > 200 || organization.length > 200 || phone.length > 40 || email.length > 200 || message.length > 5000) {
     return { status: "error", message: "That input is too long." };
   }
 
-  // Temporary Phase 5 handling: no database or email provider is configured
-  // yet (see docs/ENVIRONMENT.md), so enquiries are logged to the server's
-  // own function logs. Phase 8 replaces this with real storage/email.
-  console.log("[ZIVARUKAH enquiry]", {
+  // Saved to Admin → Inbox (visitors can send but never read messages).
+  const saved = await saveInboxMessage({
+    kind: "enquiry",
     fullName,
-    organization: organization || undefined,
-    phone: phone || undefined,
-    email: email || undefined,
-    service,
+    organization,
+    phone,
+    email,
+    topic: service,
     message,
-    receivedAt: new Date().toISOString(),
   });
+  if (!saved) {
+    return {
+      status: "error",
+      message: "Sorry, your message couldn't be sent just now. Please try again in a moment.",
+    };
+  }
 
   return {
     status: "success",
