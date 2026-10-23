@@ -1,11 +1,12 @@
 import type { MetadataRoute } from "next";
 import { getPublicProjects } from "@/db/projects";
+import { getPublicOutreaches } from "@/db/outreaches";
 
 // SITE_URL must be set to the real production domain before deploying —
 // otherwise the sitemap ships localhost URLs. See docs/ENVIRONMENT.md.
 const baseUrl = process.env.SITE_URL || "http://localhost:3000";
 
-const routes = ["", "/tech", "/footwear", "/ziva", "/media", "/books", "/projects", "/ministry", "/contact"];
+const routes = ["", "/tech", "/footwear", "/ziva", "/media", "/books", "/projects", "/ministry", "/ministry/outreach", "/contact"];
 
 // Refreshed at most every hour, and immediately after an admin edit
 // (the CMS actions revalidate /sitemap.xml).
@@ -29,5 +30,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...pages, ...projectPages];
+  const outreaches = await getPublicOutreaches(500);
+  const outreachPages: MetadataRoute.Sitemap = outreaches.map((outreach) => ({
+    url: `${baseUrl}/ministry/outreach/${outreach.slug}`,
+    lastModified: outreach.date ? new Date(`${outreach.date}T00:00:00Z`) : new Date(),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...pages, ...projectPages, ...outreachPages];
 }
