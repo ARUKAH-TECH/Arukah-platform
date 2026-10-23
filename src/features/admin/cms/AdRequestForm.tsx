@@ -6,6 +6,7 @@ import { initialCmsFormState, toInputDateTime } from "@/features/admin/cms/share
 import { ACCEPTED_IMAGE_TYPES, resize } from "@/lib/resizeImage";
 import { createClient } from "@/lib/supabase/browser";
 import { fieldClasses, primaryButtonClasses, secondaryButtonClasses } from "@/features/admin/ui";
+import { BannerCropper, type CropSource } from "@/features/admin/cms/BannerCropper";
 
 export interface AdRequestFormValues {
   id: string;
@@ -22,6 +23,9 @@ export interface AdRequestFormValues {
   linkUrl: string;
   adminNote: string;
   displaySeconds: number;
+  bannerStyle: "roll" | "fit";
+  /** Short-lived link to the requester's private photo, for previewing and cropping. */
+  requesterPhotoUrl: string | null;
 }
 
 function publicImageUrl(path: string) {
@@ -65,6 +69,12 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
+  const [bannerStyle, setBannerStyle] = useState(values.bannerStyle);
+  const cropSources: CropSource[] = [
+    uploaded && { label: "The image you just uploaded", url: publicImageUrl(uploaded.path) },
+    values.displayImagePath && { label: "The current advert image", url: publicImageUrl(values.displayImagePath) },
+    values.requesterPhotoUrl && { label: "The requester's photo", url: values.requesterPhotoUrl },
+  ].filter((source): source is CropSource => Boolean(source));
 
   // After a successful save the chosen image is stored, so the next save keeps it
   // (instead of copying the requester's photo again).
@@ -105,6 +115,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
       <input type="hidden" name="uploadedPath" value={uploaded?.path ?? ""} />
       <input type="hidden" name="uploadedWidth" value={uploaded?.width ?? ""} />
       <input type="hidden" name="uploadedHeight" value={uploaded?.height ?? ""} />
+      <input type="hidden" name="bannerStyle" value={bannerStyle} />
 
       <fieldset>
         <legend className="text-sm font-semibold">Decision</legend>
@@ -223,9 +234,27 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
               )}
               {uploadError && <p className="text-xs text-red-700 dark:text-red-400">{uploadError}</p>}
             </div>
-            <p className="text-xs text-foreground/50">
-              The whole image is shrunk to fit the slim banner. Wide images (about 8 times wider than tall) fill it best.
-            </p>
+            <div className="flex flex-col gap-2 border-t border-black/10 pt-3 dark:border-white/10">
+              <p className="text-xs font-medium">In the slim top banner:</p>
+              <div className="flex flex-wrap gap-2">
+                <Choice name="bannerStyleChoice" value="roll" checked={bannerStyle === "roll"} onChange={() => setBannerStyle("roll")}>
+                  Roll — fill the banner and move through the image
+                </Choice>
+                <Choice name="bannerStyleChoice" value="fit" checked={bannerStyle === "fit"} onChange={() => setBannerStyle("fit")}>
+                  Fit — show the whole image, still
+                </Choice>
+              </div>
+              <p className="text-xs text-foreground/50">
+                Or crop the picture to the exact banner shape (it then fills the banner perfectly either way):
+              </p>
+              <BannerCropper
+                sources={cropSources}
+                onCropped={(image) => {
+                  setUploaded(image);
+                  setImageChoice("uploaded");
+                }}
+              />
+            </div>
           </div>
         ) : (
           <label className="mt-4 block text-sm">
