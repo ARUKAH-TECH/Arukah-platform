@@ -20,7 +20,7 @@ export default async function EditAdPage({ params, searchParams }: PageProps<"/a
     supabase
       .from("ads")
       .select(
-        "id, advertiser_id, headline, body, cta_label, image_path, image_width, image_height, destination_url, placements, content_status, payment_confirmed, starts_on, ends_on",
+        "id, advertiser_id, format, headline, body, cta_label, image_path, image_width, image_height, destination_url, placements, content_status, payment_confirmed, starts_on, ends_on",
       )
       .eq("id", id)
       .maybeSingle(),
@@ -57,6 +57,7 @@ export default async function EditAdPage({ params, searchParams }: PageProps<"/a
             amountGhs: payment?.amount_ghs != null ? String(payment.amount_ghs) : "",
             paymentReference: payment?.reference ?? "",
             paymentNote: payment?.note ?? "",
+            format: ad.format === "banner" ? "banner" : "card",
           }}
         />
       </div>

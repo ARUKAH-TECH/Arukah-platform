@@ -26,6 +26,7 @@ export interface AdFormValues {
   amountGhs: string;
   paymentReference: string;
   paymentNote: string;
+  format: "card" | "banner";
 }
 
 interface AdvertiserOption {
@@ -50,6 +51,7 @@ export function AdForm({
   const [state, formAction, pending] = useActionState(saveAd, initialCmsFormState);
   const [advertiserId, setAdvertiserId] = useState(ad.advertiserId);
   const [contentStatus, setContentStatus] = useState(ad.contentStatus);
+  const [format, setFormat] = useState(ad.format);
   const [paid, setPaid] = useState(ad.paymentConfirmed);
   const [startsOn, setStartsOn] = useState(ad.startsOn);
   const [endsOn, setEndsOn] = useState(ad.endsOn);
@@ -129,11 +131,44 @@ export function AdForm({
         </select>
       </div>
 
+      <fieldset>
+        <legend className="text-sm font-medium">Style</legend>
+        <div className="mt-2 grid grid-cols-1 gap-3 sm:grid-cols-2">
+          {[
+            { value: "card", title: "Card", text: "Image, headline and text in the “Sponsored” section further down the page." },
+            { value: "banner", title: "Top banner", text: "A slim, image-only strip at the top of the page. Upload a wide image, ideally 1200 × 150." },
+          ].map((option) => (
+            <label
+              key={option.value}
+              className={`flex cursor-pointer gap-3 rounded-xl border p-3 text-sm ${
+                format === option.value ? "border-brand-primary-text" : "border-black/10 dark:border-white/10"
+              }`}
+            >
+              <input
+                type="radio"
+                name="format"
+                value={option.value}
+                checked={format === option.value}
+                onChange={() => setFormat(option.value as "card" | "banner")}
+                className="mt-1"
+              />
+              <span>
+                <span className="block font-medium">{option.title}</span>
+                <span className="text-xs text-foreground/60">{option.text}</span>
+              </span>
+            </label>
+          ))}
+        </div>
+      </fieldset>
+
       <fieldset className="flex flex-col gap-4 rounded-2xl border border-black/10 p-5 dark:border-white/10">
         <legend className="px-1 text-sm font-semibold">The advert</legend>
         <div>
           <label htmlFor="headline" className="block text-sm font-medium">
-            Headline <span className="font-normal text-foreground/50">(max 100)</span>
+            Headline{" "}
+            <span className="font-normal text-foreground/50">
+              {format === "banner" ? "(not shown on a banner — used as its description for blind visitors)" : "(max 100)"}
+            </span>
           </label>
           <input id="headline" name="headline" required maxLength={100} defaultValue={ad.headline} className={fieldClasses} />
         </div>
@@ -167,11 +202,20 @@ export function AdForm({
         </div>
 
         <div>
-          <p className="text-sm font-medium">Image <span className="font-normal text-foreground/50">(optional)</span></p>
+          <p className="text-sm font-medium">
+            Image{" "}
+            <span className="font-normal text-foreground/50">
+              {format === "banner" ? "(required — wide landscape, ideally 1200 × 150)" : "(optional)"}
+            </span>
+          </p>
           <div className="mt-2 flex flex-wrap items-center gap-4">
             {image.path && (
               // eslint-disable-next-line @next/next/no-img-element -- admin preview of the uploaded advert image
-              <img src={publicImageUrl(image.path)} alt="" className="h-20 w-28 rounded-lg object-cover" />
+              <img
+                src={publicImageUrl(image.path)}
+                alt=""
+                className={format === "banner" ? "aspect-[8/1] w-full rounded-lg object-cover" : "h-20 w-28 rounded-lg object-cover"}
+              />
             )}
             <input ref={fileInput} type="file" accept={ACCEPTED_IMAGE_TYPES.join(",")} className="text-sm" />
             <button type="button" onClick={uploadImage} disabled={uploading} className={secondaryButtonClasses}>

@@ -6,6 +6,7 @@ import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
+import { AdBanner } from "@/features/ads/AdBanner";
 import { booksPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -25,6 +26,7 @@ export default async function BooksPage() {
   return (
     <div>
       <AnnouncementBar branch="books" />
+      <AdBanner branch="books" />
       <Hero
         logo={brands.arukah.logo}
         title="ZIVARUKAH BOOKS"

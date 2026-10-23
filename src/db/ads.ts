@@ -18,7 +18,11 @@ export interface LiveAd {
  * here we also respect the admin's per-division on/off switch. Any failure
  * means no adverts — never a broken page.
  */
-export async function getLiveAds(branch: BranchId, limit = 2): Promise<LiveAd[]> {
+export async function getLiveAds(
+  branch: BranchId,
+  limit = 2,
+  format: "card" | "banner" = "card",
+): Promise<LiveAd[]> {
   if (branch === "ministry") return [];
   let client;
   try {
@@ -32,7 +36,8 @@ export async function getLiveAds(branch: BranchId, limit = 2): Promise<LiveAd[]>
     client
       .from("ads")
       .select("id, headline, body, image_path, image_width, image_height, destination_url, cta_label")
-      .contains("placements", [branch]),
+      .contains("placements", [branch])
+      .eq("format", format),
   ]);
   if (settingError || adsError) {
     console.error("[ads] read failed", settingError?.message ?? adsError?.message);
@@ -49,4 +54,10 @@ export async function getLiveAds(branch: BranchId, limit = 2): Promise<LiveAd[]>
     destinationUrl: ad.destination_url,
     ctaLabel: ad.cta_label,
   }));
+}
+
+/** At most one live top banner for this page (several live banners take turns). */
+export async function getLiveBanner(branch: BranchId): Promise<LiveAd | null> {
+  const [banner] = await getLiveAds(branch, 1, "banner");
+  return banner?.image ? banner : null;
 }

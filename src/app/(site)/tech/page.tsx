@@ -7,6 +7,7 @@ import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
+import { AdBanner } from "@/features/ads/AdBanner";
 import { techPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -30,6 +31,7 @@ export default async function TechPage() {
   return (
     <div data-brand="tech">
       <AnnouncementBar branch="tech" />
+      <AdBanner branch="tech" />
       <Hero
         logo={brands.tech.logo}
         title="ARUKAH TECH"
