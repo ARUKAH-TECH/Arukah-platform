@@ -6,15 +6,29 @@ import type { BranchId } from "@/config/branches";
 /** A live video advert (YouTube embed or TikTok link). Renders nothing unless one is live. */
 export async function AdSlot({ branch }: { branch: BranchId }) {
   const ad = await getLiveVideoAd(branch);
-  const video = ad?.videoUrl ? parseVideoLink(ad.videoUrl) : null;
-  if (!ad || !video) return null;
+  if (!ad?.videoUrl) return null;
+  // AI-made adverts are MP4 files in our own "ad-videos" bucket.
+  const ownFile = ad.videoUrl.includes("/storage/v1/object/public/ad-videos/") && ad.videoUrl.endsWith(".mp4");
+  const video = ownFile ? null : parseVideoLink(ad.videoUrl);
+  if (!ownFile && !video) return null;
 
   return (
     <aside aria-label="Sponsored" className="py-10">
       <Container>
         <p className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Sponsored · {ad.label}</p>
         <div className="mt-3 max-w-2xl">
-          {video.platform === "youtube" ? (
+          {ownFile ? (
+            <video
+              src={ad.videoUrl}
+              autoPlay
+              muted
+              loop
+              playsInline
+              preload="metadata"
+              aria-label={`Sponsored video: ${ad.label}`}
+              className="aspect-video w-full rounded-xl bg-black object-contain"
+            />
+          ) : video?.platform === "youtube" ? (
             <iframe
               src={video.embedUrl}
               title={`Sponsored: ${ad.label}`}
@@ -25,7 +39,7 @@ export async function AdSlot({ branch }: { branch: BranchId }) {
             />
           ) : (
             <a
-              href={video.url}
+              href={video!.url}
               target="_blank"
               rel="sponsored noopener noreferrer"
               className="block rounded-xl border border-black/10 p-4 text-sm font-medium hover:border-brand-primary-text dark:border-white/10"

@@ -69,9 +69,14 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
 
   let videoUrl: string | null = null;
   if (displayKind === "video") {
-    const video = parseVideoLink(videoRaw);
-    if (!video) return { status: "error", message: "Paste a YouTube or TikTok link for the video." };
-    videoUrl = video.url;
+    const ownVideoPrefix = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ad-videos/ai/`;
+    if (videoRaw.startsWith(ownVideoPrefix) && /\/ai\/[0-9a-f-]{36}\.mp4$/.test(videoRaw)) {
+      videoUrl = videoRaw; // an AI video stored in our own bucket
+    } else {
+      const video = parseVideoLink(videoRaw);
+      if (!video) return { status: "error", message: "Paste a YouTube or TikTok link for the video." };
+      videoUrl = video.url;
+    }
   }
 
   const supabase = await createClient();
@@ -158,7 +163,7 @@ export async function deleteAdRequest(formData: FormData) {
   const supabase = await createClient();
   const { data: row } = await supabase
     .from("ad_requests")
-    .select("request_image_path, display_image_path")
+    .select("request_image_path, display_image_path, ai_video_path")
     .eq("id", id)
     .maybeSingle();
   const { error } = await supabase.from("ad_requests").delete().eq("id", id);
@@ -168,7 +173,135 @@ export async function deleteAdRequest(formData: FormData) {
   }
   if (row?.request_image_path) await supabase.storage.from("ad-requests").remove([row.request_image_path]);
   if (row?.display_image_path) await supabase.storage.from("media").remove([row.display_image_path]);
+  if (row?.ai_video_path) await supabase.storage.from("ad-videos").remove([row.ai_video_path]);
   await audit("ad_request.delete", { id });
   revalidateAdPages();
   redirect("/admin/adverts");
+}
+
+// AI video -------------------------------------------------------------------
+
+function adVideoPublicUrl(path: string) {
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ad-videos/${path}`;
+}
+
+/** Starts an AI video from the advert's image (or the requester's photo). Costs money, so admin-only. */
+export async function startAiVideo(_prev: CmsFormState, formData: FormData): Promise<CmsFormState> {
+  await requireAdmin();
+  const { aiVideoConfigured, submitImageToVideo } = await import("@/server/falVideo");
+  if (!aiVideoConfigured()) {
+    return { status: "error", message: "AI video isn't set up yet — add the fal.ai key in Vercel first." };
+  }
+  const id = text(formData, "id", 64);
+  const prompt = text(formData, "aiPrompt", 1000);
+  if (!UUID.test(id)) return { status: "error", message: "Unknown request." };
+  if (prompt.length < 10) return { status: "error", message: "Describe the video you want in a sentence or two." };
+
+  const supabase = await createClient();
+  const { data: row } = await supabase
+    .from("ad_requests")
+    .select("display_image_path, request_image_path, ai_video_status")
+    .eq("id", id)
+    .maybeSingle();
+  if (!row) return { status: "error", message: "Request not found." };
+  if (row.ai_video_status === "queued") return { status: "error", message: "A video is already being made. Tap “Check progress”." };
+
+  // fal needs a web address for the picture.
+  let imageUrl: string | null = null;
+  if (row.display_image_path) {
+    imageUrl = `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/media/${row.display_image_path}`;
+  } else if (row.request_image_path) {
+    const { data } = await supabase.storage.from("ad-requests").createSignedUrl(row.request_image_path, 3600);
+    imageUrl = data?.signedUrl ?? null;
+  }
+  if (!imageUrl) return { status: "error", message: "This request has no image to turn into a video." };
+
+  try {
+    const job = await submitImageToVideo(imageUrl, prompt);
+    const { error } = await supabase
+      .from("ad_requests")
+      .update({
+        ai_video_status: "queued",
+        ai_video_prompt: prompt,
+        ai_video_status_url: job.statusUrl,
+        ai_video_response_url: job.responseUrl,
+        ai_video_error: "",
+        ai_video_requested_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      })
+      .eq("id", id);
+    if (error) throw new Error(error.message);
+  } catch (error) {
+    console.error("[admin] startAiVideo failed", (error as Error).message);
+    return { status: "error", message: (error as Error).message || "Couldn't start the video." };
+  }
+
+  await audit("ad_request.ai_video_start", { id });
+  revalidatePath(`/admin/adverts/${id}`);
+  return { status: "saved", message: "Started. It usually takes 1–5 minutes — tap “Check progress” in a minute." };
+}
+
+/** Checks the AI job; when it's finished, keeps our own copy of the video. */
+export async function checkAiVideo(_prev: CmsFormState, formData: FormData): Promise<CmsFormState> {
+  await requireAdmin();
+  const { getJobStatus, fetchFinishedVideo } = await import("@/server/falVideo");
+  const id = text(formData, "id", 64);
+  if (!UUID.test(id)) return { status: "error", message: "Unknown request." };
+
+  const supabase = await createClient();
+  const { data: row } = await supabase
+    .from("ad_requests")
+    .select("ai_video_status, ai_video_status_url, ai_video_response_url, ai_video_path")
+    .eq("id", id)
+    .maybeSingle();
+  if (!row || row.ai_video_status !== "queued" || !row.ai_video_status_url || !row.ai_video_response_url) {
+    return { status: "error", message: "No video is being made right now." };
+  }
+
+  try {
+    const status = await getJobStatus(row.ai_video_status_url);
+    if (status === "IN_QUEUE" || status === "IN_PROGRESS") {
+      return { status: "saved", message: status === "IN_QUEUE" ? "Waiting in line… check again in a minute." : "Being made… check again in a minute." };
+    }
+    if (status !== "COMPLETED") throw new Error(`The AI job ended with status ${status}.`);
+
+    const video = await fetchFinishedVideo(row.ai_video_response_url);
+    const path = `ai/${crypto.randomUUID()}.mp4`;
+    const { error: uploadError } = await supabase.storage
+      .from("ad-videos")
+      .upload(path, video, { contentType: "video/mp4", cacheControl: "31536000" });
+    if (uploadError) throw new Error(`Couldn't save the video: ${uploadError.message}`);
+
+    if (row.ai_video_path) await supabase.storage.from("ad-videos").remove([row.ai_video_path]);
+    await supabase
+      .from("ad_requests")
+      .update({ ai_video_status: "ready", ai_video_path: path, ai_video_error: "", updated_at: new Date().toISOString() })
+      .eq("id", id);
+  } catch (error) {
+    const message = ((error as Error).message || "The AI video failed.").slice(0, 500);
+    console.error("[admin] checkAiVideo failed", message);
+    await supabase.from("ad_requests").update({ ai_video_status: "failed", ai_video_error: message }).eq("id", id);
+    revalidatePath(`/admin/adverts/${id}`);
+    return { status: "error", message };
+  }
+
+  await audit("ad_request.ai_video_ready", { id });
+  revalidatePath(`/admin/adverts/${id}`);
+  return { status: "saved", message: "Your AI video is ready — preview it below." };
+}
+
+/** Makes the finished AI video the advert (shown as a video advert). */
+export async function useAiVideo(formData: FormData) {
+  await requireAdmin();
+  const id = text(formData, "id", 64);
+  if (!UUID.test(id)) return;
+  const supabase = await createClient();
+  const { data: row } = await supabase.from("ad_requests").select("ai_video_path").eq("id", id).maybeSingle();
+  if (!row?.ai_video_path) return;
+  await supabase
+    .from("ad_requests")
+    .update({ display_kind: "video", video_url: adVideoPublicUrl(row.ai_video_path), updated_at: new Date().toISOString() })
+    .eq("id", id);
+  await audit("ad_request.ai_video_use", { id });
+  revalidateAdPages(id);
 }

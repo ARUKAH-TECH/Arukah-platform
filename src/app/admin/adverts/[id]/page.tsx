@@ -6,6 +6,8 @@ import { createClient } from "@/lib/supabase/server";
 import { AdminShell } from "@/features/admin/AdminShell";
 import { AdRequestForm } from "@/features/admin/cms/AdRequestForm";
 import { deleteAdRequest } from "@/features/admin/cms/adRequestActions";
+import { AiVideoPanel } from "@/features/admin/cms/AiVideoPanel";
+import { aiVideoConfigured } from "@/server/falVideo";
 
 export const metadata: Metadata = { title: "Advert request" };
 
@@ -18,7 +20,7 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
   const { data: r } = await supabase
     .from("ad_requests")
     .select(
-      "id, contact_name, business_name, phone, email, about, location, request_image_path, status, starts_at, ends_at, amount_ghs, payment_status, payment_reference, display_kind, display_image_path, video_url, link_url, admin_note, display_seconds, created_at",
+      "id, contact_name, business_name, phone, email, about, location, request_image_path, status, starts_at, ends_at, amount_ghs, payment_status, payment_reference, display_kind, display_image_path, video_url, link_url, admin_note, display_seconds, ai_video_status, ai_video_prompt, ai_video_path, ai_video_error, created_at",
     )
     .eq("id", id)
     .maybeSingle();
@@ -30,6 +32,9 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
     const { data } = await supabase.storage.from("ad-requests").createSignedUrl(r.request_image_path, 600);
     requestPhoto = data?.signedUrl ?? null;
   }
+  const aiVideoUrl = r.ai_video_path
+    ? `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/ad-videos/${r.ai_video_path}`
+    : null;
   const received = new Date(r.created_at).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Africa/Accra" });
   const digits = r.phone.replace(/[^\d+]/g, "");
   const whatsapp = digits.startsWith("+") ? digits.slice(1) : digits.startsWith("0") ? `233${digits.slice(1)}` : digits;
@@ -89,6 +94,7 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
           </div>
         </section>
 
+        <div className="flex flex-col gap-8">
         <section className="rounded-2xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
           <AdRequestForm
             values={{
@@ -109,6 +115,19 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
             }}
           />
         </section>
+
+        <AiVideoPanel
+          id={r.id}
+          configured={aiVideoConfigured()}
+          hasImage={Boolean(r.display_image_path || r.request_image_path)}
+          status={r.ai_video_status}
+          prompt={r.ai_video_prompt}
+          error={r.ai_video_error}
+          videoUrl={aiVideoUrl}
+          inUse={Boolean(aiVideoUrl && r.display_kind === "video" && r.video_url === aiVideoUrl)}
+          suggestedPrompt={`Short professional advert video for ${r.business_name || "this business"}: slow cinematic camera push-in, soft light sweeping across, subtle motion. Keep any text and logos sharp and unchanged.`}
+        />
+        </div>
       </div>
 
       <section className="mt-12 max-w-5xl border-t border-black/10 pt-8 dark:border-white/10">
