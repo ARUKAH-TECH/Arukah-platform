@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatGhs } from "@/config/books";
 import type { PublicBook } from "@/db/books";
+import { ApproxPrice } from "@/features/currency/ApproxPrice";
 
 export function BookCard({ book }: { book: PublicBook }) {
   const from = book.prices.length ? Math.min(...book.prices.map((price) => price.amount)) : null;
@@ -27,7 +28,9 @@ export function BookCard({ book }: { book: PublicBook }) {
       <div className="flex flex-1 flex-col gap-1 p-4">
         <h3 className="text-sm font-semibold group-hover:text-brand-primary-text">{book.title}</h3>
         {book.author && <p className="text-xs text-foreground/60">{book.author}</p>}
-        {from !== null && <p className="mt-auto pt-2 text-xs font-medium text-brand-primary-text">From {formatGhs(from)}</p>}
+        {from !== null && <p className="mt-auto pt-2 text-xs font-medium text-brand-primary-text">From {formatGhs(from)}
+            <ApproxPrice ghs={from} />
+          </p>}
       </div>
     </Link>
   );

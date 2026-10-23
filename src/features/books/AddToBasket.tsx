@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { formatGhs, type BookFormat } from "@/config/books";
 import { addToBasket, onBasketChange, readBasket } from "@/features/books/basket";
+import { ApproxPrice } from "@/features/currency/ApproxPrice";
+import { CurrencyNote } from "@/features/currency/CurrencyNote";
 
 interface Props {
   book: { id: string; slug: string; title: string };
@@ -50,10 +52,14 @@ export function AddToBasket({ book, prices }: Props) {
                 />
                 {price.label}
               </span>
-              <span className="font-semibold">{formatGhs(price.amount)}</span>
+              <span className="text-right font-semibold">
+                {formatGhs(price.amount)}
+                <ApproxPrice ghs={price.amount} className="block text-xs" />
+              </span>
             </label>
           ))}
         </div>
+        <CurrencyNote />
       </fieldset>
 
       <div className="flex flex-wrap items-end gap-3">

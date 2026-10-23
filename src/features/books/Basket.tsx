@@ -6,6 +6,8 @@ import { formatGhs } from "@/config/books";
 import { basketTotals, onBasketChange, readBasket, writeBasket, type BasketItem } from "@/features/books/basket";
 import { placeBookOrder, type OrderState } from "@/features/books/orderActions";
 import { PayOrderNow } from "@/features/payments/PayOrderNow";
+import { ApproxPrice } from "@/features/currency/ApproxPrice";
+import { CurrencyNote } from "@/features/currency/CurrencyNote";
 
 const inputClasses =
   "mt-1 w-full rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-brand-primary-text dark:border-white/15";
@@ -113,9 +115,13 @@ export function Basket({ afterOrderText, payOnline }: { afterOrderText: string; 
           )}
           <div className="flex justify-between text-base font-semibold">
             <dt>Total</dt>
-            <dd>{formatGhs(totals.total)}</dd>
+            <dd>
+              {formatGhs(totals.total)}
+              <ApproxPrice ghs={totals.total} className="text-sm" />
+            </dd>
           </div>
         </dl>
+        <CurrencyNote />
         {hasPrint && <p className="mt-2 text-xs text-foreground/50">Any delivery charge for printed copies is confirmed with you.</p>}
         {totals.count <= 3 && <p className="mt-2 text-xs text-foreground/50">Add {4 - totals.count} more to get 10% off.</p>}
       </div>
