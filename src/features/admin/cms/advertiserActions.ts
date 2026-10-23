@@ -49,7 +49,8 @@ export async function deleteAdvertiser(formData: FormData) {
   const { error } = await supabase.from("advertisers").delete().eq("id", id);
   if (error) {
     console.error("[admin] deleteAdvertiser failed", error.message);
-    return;
+    // 23503: adverts still belong to this advertiser (kept on purpose).
+    redirect(`/admin/advertisers/${id}?error=${error.code === "23503" ? "has-ads" : "delete"}`);
   }
   await audit("advertiser.delete", { id });
   revalidatePath("/admin/advertisers");

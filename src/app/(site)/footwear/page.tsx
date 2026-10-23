@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { AdSlot } from "@/features/ads/AdSlot";
 import { wearPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -59,6 +60,9 @@ export default async function FootwearPage() {
           />
         </Container>
       </section>
+
+      <AdSlot branch="wear" />
+
 
       <ProjectsSection branch="wear" />
     </div>

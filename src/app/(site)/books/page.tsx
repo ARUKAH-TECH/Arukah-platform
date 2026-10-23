@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { AdSlot } from "@/features/ads/AdSlot";
 import { booksPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -52,6 +53,9 @@ export default async function BooksPage() {
           </div>
         </Container>
       </section>
+
+      <AdSlot branch="books" />
+
 
       <ProjectsSection branch="books" />
     </div>

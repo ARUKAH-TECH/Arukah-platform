@@ -8,6 +8,7 @@ const nav = [
   { label: "Outreach", href: "/admin/outreach" },
   { label: "Announcements", href: "/admin/announcements" },
   { label: "Advertisers", href: "/admin/advertisers" },
+  { label: "Adverts", href: "/admin/ads" },
   { label: "Page text", href: "/admin/pages" },
 ];
 

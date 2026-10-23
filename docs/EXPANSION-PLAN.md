@@ -357,3 +357,22 @@ Applied throughout:
 - Stripe availability for Ghana: rapyd.net/blog/are-you-located-in-a-stripe-supported-country
 - NGO registration: mondaq.com/corporate-governance/1695406 ; afriwise.com/blog/taxation-for-not-for-profits-ngos-in-ghana
 - Data protection: dataprotection.org.gh/registration ; dlapiperdataprotection.com (Ghana)
+
+---
+
+## Progress log — Phase 7 (2026-10-23)
+
+- **Step 1 (PR #8):** `advertisers` table (migration `20261023050000`).
+  Visitors may only insert a pending application; they can't read, approve
+  or change any. Public `/advertise` page with an application form (wording
+  editable under Page text). Admin → Advertisers to review applications.
+- **Step 2:** `ads` + `ad_settings` + private `ad_payments` (migration
+  `20261023060000`). An advert is visible only when the advertiser is
+  approved, the content is approved, payment is confirmed (recorded by the
+  admin until Phase 6) and today is within its dates. The database
+  enforces this; the page also checks the division's on/off switch. The
+  ministry can't be chosen as a placement. `AdSlot` shows clearly labelled
+  "Sponsored" links (`rel="sponsored noopener noreferrer"`).
+- **Still to do:** server-side click/impression counts and reports, and
+  advertiser self-upload of artwork (currently the admin uploads it).
+
