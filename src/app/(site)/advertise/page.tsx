@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { AdvertiseForm } from "@/features/advertise/AdvertiseForm";
+import { WhatsAppContact } from "@/components/ui/WhatsAppContact";
+import { ONLINE_FORMS_ENABLED } from "@/config/forms";
 import { advertisePage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -39,7 +41,15 @@ export default async function AdvertisePage() {
             <p className="mt-6 text-xs text-foreground/50">{t.text("note")}</p>
           </div>
           <div className="lg:col-span-3">
-            <AdvertiseForm />
+            {ONLINE_FORMS_ENABLED ? (
+              <AdvertiseForm />
+            ) : (
+              <WhatsAppContact
+                message={"Hello ZIVARUKAH, I would like to advertise.\nBusiness / what the advert is about: \nLocation: \n(I will send the picture here.)"}
+                label="Request an advert on WhatsApp"
+                note="Tell us what the advert is about and where you are, and send your picture in the chat. We'll reply with the price and dates."
+              />
+            )}
           </div>
         </div>
       </Container>

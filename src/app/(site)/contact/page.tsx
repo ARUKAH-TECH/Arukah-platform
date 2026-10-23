@@ -3,6 +3,8 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactForm } from "@/features/contact/ContactForm";
 import { MinistryForm } from "@/features/ministry/MinistryForm";
+import { WhatsAppContact } from "@/components/ui/WhatsAppContact";
+import { ONLINE_FORMS_ENABLED } from "@/config/forms";
 import { contactPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -29,7 +31,14 @@ export default async function ContactPage() {
           description={t.text("text")}
         />
         <div className="mx-auto mt-10 max-w-xl">
-          <ContactForm />
+          {ONLINE_FORMS_ENABLED ? (
+            <ContactForm />
+          ) : (
+            <WhatsAppContact
+              message="Hello ZIVARUKAH, I would like to ask about "
+              note="Tell us what you need — software, websites, footwear, ZIVA classes, video production or books — and we'll reply on WhatsApp."
+            />
+          )}
         </div>
       </Container>
 
@@ -42,7 +51,15 @@ export default async function ContactPage() {
             description={t.text("ministryText")}
           />
           <div className="mx-auto mt-10 max-w-xl">
-            <MinistryForm />
+            {ONLINE_FORMS_ENABLED ? (
+              <MinistryForm />
+            ) : (
+              <WhatsAppContact
+                message="Hello Repent Online Ministries, "
+                label="Talk to the ministry on WhatsApp"
+                note="For prayer, counselling or to give your life to Christ, message or call us. Your conversation stays between you and the ministry."
+              />
+            )}
           </div>
         </Container>
       </div>

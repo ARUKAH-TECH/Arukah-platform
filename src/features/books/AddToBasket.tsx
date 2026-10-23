@@ -6,6 +6,7 @@ import { formatGhs, type BookFormat } from "@/config/books";
 import { addToBasket, onBasketChange, readBasket } from "@/features/books/basket";
 import { ApproxPrice } from "@/features/currency/ApproxPrice";
 import { CurrencyNote } from "@/features/currency/CurrencyNote";
+import { ONLINE_FORMS_ENABLED, whatsappLink } from "@/config/forms";
 
 interface Props {
   book: { id: string; slug: string; title: string };
@@ -74,6 +75,7 @@ export function AddToBasket({ book, prices }: Props) {
             className="mt-1 block w-20 rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm dark:border-white/15"
           />
         </label>
+        {ONLINE_FORMS_ENABLED ? (
         <button
           type="button"
           onClick={() => {
@@ -92,9 +94,21 @@ export function AddToBasket({ book, prices }: Props) {
         >
           Add to basket
         </button>
+        ) : (
+          <a
+            href={whatsappLink(
+              `Hello ZIVARUKAH BOOKS, I would like to order:\n${quantity} × "${book.title}" (${chosen.label}) — ${formatGhs(chosen.amount * quantity)}`,
+            )}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center rounded-full bg-[#25D366] px-6 py-2.5 text-sm font-semibold text-black hover:opacity-90"
+          >
+            Order on WhatsApp
+          </a>
+        )}
       </div>
 
-      {(added || count > 0) && (
+      {ONLINE_FORMS_ENABLED && (added || count > 0) && (
         <p className="text-sm">
           {added && <span className="text-green-700 dark:text-green-400">Added. </span>}
           <Link href="/books/basket" className="font-semibold text-brand-primary-text underline">
@@ -102,7 +116,10 @@ export function AddToBasket({ book, prices }: Props) {
           </Link>
         </p>
       )}
-      <p className="text-xs text-foreground/50">Buy more than 3 books in one order and get 10% off.</p>
+      <p className="text-xs text-foreground/50">
+        Buy more than 3 books in one order and get 10% off.
+        {!ONLINE_FORMS_ENABLED && " We confirm your order and how to pay on WhatsApp."}
+      </p>
     </div>
   );
 }

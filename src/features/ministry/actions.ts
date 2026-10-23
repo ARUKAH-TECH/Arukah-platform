@@ -1,5 +1,6 @@
 "use server";
 
+import { FORMS_OFF_MESSAGE, ONLINE_FORMS_ENABLED } from "@/config/forms";
 import { FAITH_STATUS_OPTIONS, type MinistryFormState } from "@/features/ministry/shared";
 import { saveInboxMessage } from "@/db/inbox";
 
@@ -11,6 +12,7 @@ export async function submitMinistryResponse(
   _prevState: MinistryFormState,
   formData: FormData,
 ): Promise<MinistryFormState> {
+  if (!ONLINE_FORMS_ENABLED) return { status: "error", message: FORMS_OFF_MESSAGE };
   // Honeypot: real visitors never see or fill this field.
   if (formData.get("company_website")) {
     return { status: "success", message: "Thank you — someone from the ministry will reach out." };
