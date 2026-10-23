@@ -5,6 +5,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { mediaPage } from "@/config/pages";
+import { getPageText, textReader } from "@/db/pageContent";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -15,25 +17,26 @@ export const metadata: Metadata = {
   alternates: { canonical: "/media" },
 };
 
-const services = ["Video production", "Event coverage", "Video editing", "Promotional videos"];
+export default async function MediaPage() {
+  // Admin-edited text over the original wording (Admin → Page text).
+  const t = textReader(await getPageText(mediaPage));
 
-export default function MediaPage() {
   return (
     <div>
       <AnnouncementBar branch="media" />
       <Hero
         logo={brands.arukah.logo}
         title="ARUKAH MEDIA"
-        tagline="Creative media, done well. No dedicated logo has been supplied yet, so ARUKAH MEDIA uses the master ZIVARUKAH logo for now."
+        tagline={t.text("heroTagline")}
         primaryCta={{ label: "Discuss a video project", href: "/contact" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
 
       <section className="py-16">
         <Container>
-          <SectionHeading eyebrow="What we offer" title="Services" align="center" />
+          <SectionHeading eyebrow="What we offer" title={t.text("servicesTitle")} align="center" />
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {services.map((service) => (
+            {t.list("services").map((service) => (
               <div
                 key={service}
                 className="rounded-xl border border-black/10 p-4 text-center text-sm font-medium dark:border-white/10"

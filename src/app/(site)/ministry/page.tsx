@@ -7,6 +7,8 @@ import { MinistryForm } from "@/features/ministry/MinistryForm";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { ministryPage } from "@/config/pages";
+import { getPageText, textReader } from "@/db/pageContent";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -17,17 +19,10 @@ export const metadata: Metadata = {
   alternates: { canonical: "/ministry" },
 };
 
-const futureContent = [
-  "Sermons",
-  "Teachings",
-  "Videos",
-  "Prayer programs",
-  "Announcements",
-  "Events",
-  "Testimonies",
-];
+export default async function MinistryPage() {
+  // Admin-edited text over the original wording (Admin → Page text).
+  const t = textReader(await getPageText(ministryPage));
 
-export default function MinistryPage() {
   return (
     <div data-brand="ministry" className="bg-black text-white">
       <AnnouncementBar branch="ministry" />
@@ -41,12 +36,9 @@ export default function MinistryPage() {
               Repent Online Ministries
             </h1>
             <p className="mt-2 text-sm font-medium uppercase tracking-wide text-brand-secondary">
-              Rescue the Perishing
+              {t.text("motto")}
             </p>
-            <p className="mt-4 max-w-md text-sm leading-6 text-white/70">
-              Kept visually and editorially separate from the commercial
-              ZIVARUKAH businesses. Follow along as content is published across:
-            </p>
+            <p className="mt-4 max-w-md text-sm leading-6 text-white/70">{t.text("intro")}</p>
             <div className="mt-4">
               <SocialLinks />
             </div>
@@ -67,11 +59,9 @@ export default function MinistryPage() {
           <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
             Coming soon
           </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-            What this ministry will share
-          </h2>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t.text("upcomingTitle")}</h2>
           <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {futureContent.map((item) => (
+            {t.list("upcomingItems").map((item) => (
               <div
                 key={item}
                 className="rounded-xl border border-dashed border-white/15 p-4 text-center text-sm text-white/70"
@@ -84,16 +74,10 @@ export default function MinistryPage() {
 
         <div id="respond" className="border-t border-white/10 py-16">
           <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
-            New here, or growing in faith?
+            {t.text("respondEyebrow")}
           </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">
-            Let the ministry know
-          </h2>
-          <p className="mt-2 max-w-xl text-sm leading-6 text-white/70">
-            Whether you just gave your life to Christ, are rededicating, or
-            simply want to grow deeper — tell us a little about where you are
-            so someone from the ministry can follow up and walk with you.
-          </p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t.text("respondTitle")}</h2>
+          <p className="mt-2 max-w-xl text-sm leading-6 text-white/70">{t.text("respondText")}</p>
           <div className="mt-8 max-w-xl">
             <MinistryForm dark />
           </div>

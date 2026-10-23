@@ -5,6 +5,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { booksPage } from "@/config/pages";
+import { getPageText, textReader } from "@/db/pageContent";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -15,21 +17,17 @@ export const metadata: Metadata = {
   alternates: { canonical: "/books" },
 };
 
-const upcoming = [
-  "Read online",
-  "Digital downloads",
-  "Printed copies",
-  "Read-aloud support",
-];
+export default async function BooksPage() {
+  // Admin-edited text over the original wording (Admin → Page text).
+  const t = textReader(await getPageText(booksPage));
 
-export default function BooksPage() {
   return (
     <div>
       <AnnouncementBar branch="books" />
       <Hero
         logo={brands.arukah.logo}
         title="ZIVARUKAH BOOKS"
-        tagline="An online bookstore is on the way. No books are on sale yet — get in touch if you'd like to hear when it opens."
+        tagline={t.text("heroTagline")}
         primaryCta={{ label: "Get notified", href: "/contact" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
@@ -38,12 +36,12 @@ export default function BooksPage() {
         <Container>
           <SectionHeading
             eyebrow="On the way"
-            title="What the bookstore will offer"
+            title={t.text("upcomingTitle")}
             align="center"
-            description="A future phase of this platform adds the bookstore itself. Until then, nothing here can be purchased."
+            description={t.text("upcomingText")}
           />
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {upcoming.map((item) => (
+            {t.list("upcomingItems").map((item) => (
               <div
                 key={item}
                 className="rounded-xl border border-dashed border-black/15 p-4 text-center text-sm font-medium text-foreground/70 dark:border-white/15"

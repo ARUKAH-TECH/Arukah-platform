@@ -19,7 +19,17 @@ migrations are applied to the Supabase project.
 start/end scheduling and a live preview, and a banner slot at the top of the
 homepage and every division page. Scheduling needs no background job: Row
 Level Security compares against `now()` and the pages refresh every 60
-seconds. Milestone (d) is not started.
+seconds. Live since 2026-10-23 (PR #2).
+
+**Phase 4 complete (2026-10-23):** milestone (d) is live in three steps
+(PRs #3–#5). `page_content` table (migration
+`20261023020000_page_content.sql`) stores only admin-edited fields; every
+field's original wording lives in `src/config/pages/` as its default, and
+`mergePageText` falls back to it for any missing, empty, mistyped or
+over-long value, or if the database is unreachable. Editable: homepage,
+TECH, WEAR, ZIVA, MEDIA, BOOKS, Ministry, Projects and Contact pages, via
+Admin → Page text. Brand names, logos, button labels and navigation stay in
+code by design. Next per the build order: Phase 5 (ministry outreach).
 
 ---
 

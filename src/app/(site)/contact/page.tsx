@@ -3,6 +3,8 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactForm } from "@/features/contact/ContactForm";
 import { MinistryForm } from "@/features/ministry/MinistryForm";
+import { contactPage } from "@/config/pages";
+import { getPageText, textReader } from "@/db/pageContent";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -10,15 +12,21 @@ export const metadata: Metadata = {
   alternates: { canonical: "/contact" },
 };
 
-export default function ContactPage() {
+// Refreshed at most every minute, and immediately after an admin edit.
+export const revalidate = 60;
+
+export default async function ContactPage() {
+  // Admin-edited text over the original wording (Admin → Page text).
+  const t = textReader(await getPageText(contactPage));
+
   return (
     <div className="py-16">
       <Container>
         <SectionHeading
           align="center"
           eyebrow="Get in touch"
-          title="Let's talk about your project"
-          description="Tell us a bit about what you need and we'll get back to you."
+          title={t.text("title")}
+          description={t.text("text")}
         />
         <div className="mx-auto mt-10 max-w-xl">
           <ContactForm />
@@ -30,8 +38,8 @@ export default function ContactPage() {
           <SectionHeading
             align="center"
             eyebrow="Online Ministry"
-            title="New here, or growing in faith?"
-            description="This is a separate form for the ministry side of ZIVARUKAH — for new and returning converts, or anyone wanting prayer or spiritual follow-up."
+            title={t.text("ministryTitle")}
+            description={t.text("ministryText")}
           />
           <div className="mx-auto mt-10 max-w-xl">
             <MinistryForm />

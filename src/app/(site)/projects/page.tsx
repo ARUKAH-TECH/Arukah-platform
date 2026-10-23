@@ -3,6 +3,8 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { Button } from "@/components/ui/Button";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
+import { projectsPage } from "@/config/pages";
+import { getPageText, textReader } from "@/db/pageContent";
 
 export const metadata: Metadata = {
   title: "Projects",
@@ -13,29 +15,25 @@ export const metadata: Metadata = {
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
 
-const projects = [
-  {
-    name: "School Management System",
-    description: "Enrollment, attendance, grading, and communication tools for schools.",
-  },
-  {
-    name: "Church Management System",
-    description: "Membership records, giving, and event coordination for churches.",
-  },
-];
+export default async function ProjectsPage() {
+  // Admin-edited text over the original wording (Admin → Page text).
+  const t = textReader(await getPageText(projectsPage));
+  const projects = [1, 2].map((n) => ({
+    name: t.text(`card${n}Name`),
+    description: t.text(`card${n}Text`),
+  }));
 
-export default function ProjectsPage() {
   return (
     <>
       {/* Projects published from the admin dashboard; renders nothing until one exists. */}
-      <ProjectsSection eyebrow="Projects" title="Our latest projects" limit={24} />
+      <ProjectsSection eyebrow="Projects" title={t.text("latestTitle")} limit={24} />
       <div className="py-16" data-brand="tech">
         <Container>
           <SectionHeading
             align="center"
             eyebrow="Featured Projects"
-            title="Systems ARUKAH TECH builds"
-            description="These are the kinds of management systems in active development. Screenshots and case studies are added here as projects are completed — none are presented as finished work for a named client until that's confirmed."
+            title={t.text("systemsTitle")}
+            description={t.text("systemsText")}
           />
 
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
