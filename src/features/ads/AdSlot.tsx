@@ -2,6 +2,7 @@ import { Container } from "@/components/ui/Container";
 import { getLiveVideoAd } from "@/db/ads";
 import { parseVideoLink } from "@/lib/video";
 import type { BranchId } from "@/config/branches";
+import { AdViewPing } from "@/features/ads/AdViewPing";
 
 /** A live video advert (YouTube embed or TikTok link). Renders nothing unless one is live. */
 export async function AdSlot({ branch }: { branch: BranchId }) {
@@ -15,6 +16,7 @@ export async function AdSlot({ branch }: { branch: BranchId }) {
   return (
     <aside aria-label="Sponsored" className="py-10">
       <Container>
+        <AdViewPing id={ad.id} />
         <p className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Sponsored · {ad.label}</p>
         <div className="mt-3 max-w-2xl">
           {ownFile ? (
@@ -49,7 +51,7 @@ export async function AdSlot({ branch }: { branch: BranchId }) {
           )}
           {ad.linkUrl && (
             <a
-              href={ad.linkUrl}
+              href={`/ad-click/${ad.id}`}
               target="_blank"
               rel="sponsored noopener noreferrer"
               className="mt-2 inline-block text-xs font-semibold text-brand-primary-text hover:underline"

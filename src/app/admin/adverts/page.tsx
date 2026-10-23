@@ -25,10 +25,20 @@ const PAYMENT: Record<string, string> = { unpaid: "Not paid", part: "Part paid",
 export default async function AdvertsPage() {
   const admin = await requireAdmin();
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("ad_requests")
-    .select("id, contact_name, business_name, location, status, starts_at, ends_at, payment_status, created_at")
-    .order("created_at", { ascending: false });
+  const [{ data }, { data: stats }] = await Promise.all([
+    supabase
+      .from("ad_requests")
+      .select("id, contact_name, business_name, location, status, starts_at, ends_at, payment_status, created_at")
+      .order("created_at", { ascending: false }),
+    supabase.from("ad_daily_stats").select("ad_id, views, clicks"),
+  ]);
+  const totals = new Map<string, { views: number; clicks: number }>();
+  for (const row of stats ?? []) {
+    const t = totals.get(row.ad_id) ?? { views: 0, clicks: 0 };
+    t.views += row.views;
+    t.clicks += row.clicks;
+    totals.set(row.ad_id, t);
+  }
   const order: Record<string, number> = { pending: 0, approved: 1, rejected: 2 };
   const rows = [...(data ?? [])].sort((a, b) => (order[a.status] ?? 3) - (order[b.status] ?? 3));
 
@@ -60,6 +70,7 @@ export default async function AdvertsPage() {
                   <span className="text-xs text-foreground/60">
                     {row.status === "approved" ? `${formatDate(row.starts_at)} → ${formatDate(row.ends_at)} · ` : `Received ${formatDate(row.created_at)} · `}
                     {PAYMENT[row.payment_status] ?? row.payment_status}
+                    {totals.has(row.id) && ` · ${totals.get(row.id)!.views} views · ${totals.get(row.id)!.clicks} clicks`}
                   </span>
                 </Link>
               </li>

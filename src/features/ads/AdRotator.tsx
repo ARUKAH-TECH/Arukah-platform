@@ -1,12 +1,14 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { countAdView } from "@/features/ads/adViews";
 
 export interface RotatingAd {
   id: string;
   label: string;
   imageUrl: string;
-  linkUrl: string | null;
+  /** True when the advert has a link; clicks go through /ad-click/<id> so they're counted. */
+  hasLink: boolean;
   seconds: number;
 }
 
@@ -19,6 +21,10 @@ export interface RotatingAd {
 export function AdRotator({ ads }: { ads: RotatingAd[] }) {
   const [index, setIndex] = useState(0);
   const current = ads[index % ads.length];
+
+  useEffect(() => {
+    countAdView(current.id);
+  }, [current.id]);
 
   useEffect(() => {
     if (ads.length < 2) return;
@@ -51,10 +57,10 @@ export function AdRotator({ ads }: { ads: RotatingAd[] }) {
             const layer = `absolute inset-0 block transition-opacity duration-700 motion-reduce:transition-none ${
               visible ? "opacity-100" : "pointer-events-none opacity-0"
             }`;
-            return ad.linkUrl ? (
+            return ad.hasLink ? (
               <a
                 key={ad.id}
-                href={ad.linkUrl}
+                href={`/ad-click/${ad.id}`}
                 target="_blank"
                 rel="sponsored noopener noreferrer"
                 className={layer}

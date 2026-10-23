@@ -17,7 +17,7 @@ export async function AdBanner({ branch }: { branch: BranchId }) {
         id: ad.id,
         label: ad.label,
         imageUrl: ad.image!.url,
-        linkUrl: ad.linkUrl,
+        hasLink: Boolean(ad.linkUrl),
         seconds: ad.seconds,
       }))}
     />
