@@ -7,6 +7,7 @@ import { AdminShell } from "@/features/admin/AdminShell";
 import { AdRequestForm } from "@/features/admin/cms/AdRequestForm";
 import { deleteAdRequest } from "@/features/admin/cms/adRequestActions";
 import { AiVideoPanel } from "@/features/admin/cms/AiVideoPanel";
+import { AdStats } from "@/features/admin/cms/AdStats";
 import { aiVideoConfigured } from "@/server/falVideo";
 
 export const metadata: Metadata = { title: "Advert request" };
@@ -95,6 +96,7 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
         </section>
 
         <div className="flex flex-col gap-8">
+        {r.status === "approved" && <AdStats adId={r.id} />}
         <section className="rounded-2xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
           <AdRequestForm
             values={{
