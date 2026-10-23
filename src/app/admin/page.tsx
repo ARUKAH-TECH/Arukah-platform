@@ -14,6 +14,7 @@ const ready = [
   { title: "Ministry outreach", description: "Hospital, prison, street, community and crusade outreach reports.", href: "/admin/outreach" },
   { title: "Adverts", description: "Approve or reject advert requests, set their dates, and record payment.", href: "/admin/adverts" },
   { title: "Books", description: "Add books with covers, prices per format and a free sample.", href: "/admin/books" },
+  { title: "Book orders", description: "Orders from the books basket: payment, printing and delivery.", href: "/admin/book-orders" },
   { title: "Page text", description: "Change the headings and wording on the website's pages.", href: "/admin/pages" },
 ];
 
@@ -23,15 +24,17 @@ const upcoming = ["Support & donations"];
 export default async function AdminDashboardPage() {
   const admin = await requireAdmin();
   const supabase = await createClient();
-  const [{ count: newMessages }, { count: pendingAdvertisers }] = await Promise.all([
+  const [{ count: newMessages }, { count: pendingAdvertisers }, { count: newOrders }] = await Promise.all([
     supabase.from("inbox_messages").select("id", { count: "exact", head: true }).eq("status", "new"),
     supabase.from("ad_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    supabase.from("book_orders").select("id", { count: "exact", head: true }).eq("status", "new"),
   ]);
   const waiting = [
     newMessages ? { label: `${newMessages} new message${newMessages === 1 ? "" : "s"}`, href: "/admin/inbox" } : null,
     pendingAdvertisers
       ? { label: `${pendingAdvertisers} advert request${pendingAdvertisers === 1 ? "" : "s"} to review`, href: "/admin/adverts" }
       : null,
+    newOrders ? { label: `${newOrders} new book order${newOrders === 1 ? "" : "s"}`, href: "/admin/book-orders" } : null,
   ].filter((item): item is { label: string; href: string } => item !== null);
 
   return (

@@ -60,6 +60,19 @@ export const booksPage: PageDef = {
       fields: [{ key: "booksTitle", label: "Heading (shown once a book is published)", kind: "text", max: 100, default: "Books available now" }],
     },
     {
+      title: "After an order is placed",
+      fields: [
+        {
+          key: "afterOrder",
+          label: "Message shown with the order number (add your MoMo / payment details here)",
+          kind: "textarea",
+          max: 600,
+          default:
+            "We'll call or WhatsApp you shortly to confirm your order and arrange payment. Please quote your order number when you pay.",
+        },
+      ],
+    },
+    {
       title: "Coming soon section",
       fields: [
         { key: "upcomingTitle", label: "Heading", kind: "text", max: 100, default: "What the bookstore will offer" },

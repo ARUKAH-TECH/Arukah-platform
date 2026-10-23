@@ -410,3 +410,20 @@ replaced by a single `ad_requests` table (migration `20261023090000`):
 - The old `advertisers`, `ads`, `ad_payments` and `ad_settings` tables are
   retired; the one existing application was carried over.
 
+## Phase 8 — ZIVARUKAH BOOKS (2026-10-23)
+
+- **Step 1 (PR #15):** `books` catalogue (migration `20261023130000`) with
+  GHS prices for read online / download / print (NULL = not offered), a
+  cover, a free sample and draft/published/archived. `/books` and
+  `/books/[slug]`. Admin → Books.
+- **Step 2:** basket + orders (migration `20261023140000`). The basket
+  lives in the visitor's browser and its prices are display-only. Orders
+  are created only by `place_book_order()` (security definer), which takes
+  prices from `books` (published only), applies 10% off for more than
+  three books, chooses digital/delivery/collection and returns a ZB-XXXXXX
+  number. Visitors can't read orders. Admin → Book orders records payment
+  (unpaid / part / full, amount, reference), a delivery charge and
+  progress (new → paid → printing → ready / sent → done, or cancelled).
+- **Waiting for Phase 6 (Paystack):** online payment, access codes for
+  timed reading and protected downloads.
+
