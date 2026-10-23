@@ -11,8 +11,15 @@ Cloudflare DNS → Vercel, `www` → apex), Phase 3 (ZIVARUKAH umbrella rebrand,
 **Progress (2026-10-23):** Phase 4 milestones (a) and (b) are done and live —
 admin login with two-factor, projects + media library, projects shown on the
 homepage, each division page, `/projects` and the sitemap. Both database
-migrations are applied to the Supabase project. Milestones (c) and (d) are
-not started.
+migrations are applied to the Supabase project.
+
+**Progress (2026-10-23, later):** milestone (c) built on branch
+`phase4c-announcements` — `announcements` table (migration
+`20261023010000_announcements.sql`), admin list/new/edit/delete with
+start/end scheduling and a live preview, and a banner slot at the top of the
+homepage and every division page. Scheduling needs no background job: Row
+Level Security compares against `now()` and the pages refresh every 60
+seconds. Milestone (d) is not started.
 
 ---
 

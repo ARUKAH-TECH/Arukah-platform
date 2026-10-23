@@ -8,10 +8,11 @@ export const metadata: Metadata = { title: "Dashboard" };
 const ready = [
   { title: "Projects", description: "Create, schedule, publish and archive projects, and choose where they appear.", href: "/admin/projects" },
   { title: "Media library", description: "Upload photos and add YouTube or TikTok links, then attach them to projects.", href: "/admin/media" },
+  { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
 ];
 
 // Sections land here one phase at a time (see docs/EXPANSION-PLAN.md).
-const upcoming = ["Banners & announcements", "Ministry outreach", "Support & donations", "Books", "Advertising"];
+const upcoming = ["Ministry outreach", "Support & donations", "Books", "Advertising"];
 
 export default async function AdminDashboardPage() {
   const admin = await requireAdmin();

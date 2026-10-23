@@ -36,3 +36,14 @@ export function slugify(text: string) {
     .slice(0, 80)
     .replace(/-+$/g, "");
 }
+
+// Announcements ---------------------------------------------------------------
+
+export const ANNOUNCEMENT_TONES = ["info", "highlight", "urgent"] as const;
+export type AnnouncementToneValue = (typeof ANNOUNCEMENT_TONES)[number];
+
+export const TONE_LABELS: Record<AnnouncementToneValue, string> = {
+  info: "Standard (dark bar)",
+  highlight: "Highlight (division colour)",
+  urgent: "Urgent (red bar)",
+};

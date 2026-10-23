@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
+import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -58,6 +59,7 @@ const whyArukah = [
 export default function Home() {
   return (
     <>
+      <AnnouncementBar branch="home" />
       <Hero
         logo={brands.arukah.logo}
         title="ZIVARUKAH"

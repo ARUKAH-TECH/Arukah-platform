@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { MinistryForm } from "@/features/ministry/MinistryForm";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
+import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -29,6 +30,7 @@ const futureContent = [
 export default function MinistryPage() {
   return (
     <div data-brand="ministry" className="bg-black text-white">
+      <AnnouncementBar branch="ministry" />
       <Container>
         <div className="grid grid-cols-1 items-center gap-10 py-20 lg:grid-cols-2">
           <div>
