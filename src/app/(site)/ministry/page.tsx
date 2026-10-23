@@ -7,6 +7,7 @@ import { MinistryForm } from "@/features/ministry/MinistryForm";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { OutreachSection } from "@/features/outreach/OutreachSection";
 import { ministryPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -83,6 +84,8 @@ export default async function MinistryPage() {
           </div>
         </div>
       </Container>
+
+      <OutreachSection />
 
       <ProjectsSection branch="ministry" eyebrow="Outreach" title="Recent outreach" dark />
     </div>

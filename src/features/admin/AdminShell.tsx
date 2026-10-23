@@ -5,6 +5,7 @@ const nav = [
   { label: "Dashboard", href: "/admin" },
   { label: "Projects", href: "/admin/projects" },
   { label: "Media", href: "/admin/media" },
+  { label: "Outreach", href: "/admin/outreach" },
   { label: "Announcements", href: "/admin/announcements" },
   { label: "Page text", href: "/admin/pages" },
 ];
