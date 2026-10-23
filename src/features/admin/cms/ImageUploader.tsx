@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/browser";
 import { registerImage } from "@/features/admin/cms/actions";
 import { fieldClasses, primaryButtonClasses } from "@/features/admin/ui";
-import { ACCEPTED_IMAGE_TYPES as ACCEPTED, resize } from "@/features/admin/cms/resizeImage";
+import { ACCEPTED_IMAGE_TYPES as ACCEPTED, resize } from "@/lib/resizeImage";
 
 interface ImageUploaderProps {
   projects: { id: string; title: string }[];

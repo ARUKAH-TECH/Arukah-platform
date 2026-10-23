@@ -4,60 +4,65 @@ import type { BranchId } from "@/config/branches";
 
 export interface LiveAd {
   id: string;
-  headline: string;
-  body: string;
+  kind: "image" | "video";
+  label: string;
   image: { url: string; width: number | null; height: number | null } | null;
-  destinationUrl: string;
-  ctaLabel: string;
+  videoUrl: string | null;
+  linkUrl: string | null;
+}
+
+interface LiveAdRow {
+  id: string;
+  display_kind: "image" | "video";
+  display_image_path: string | null;
+  display_image_width: number | null;
+  display_image_height: number | null;
+  video_url: string | null;
+  link_url: string | null;
+  label: string;
 }
 
 /**
- * Up to `limit` live adverts for one page, in a shuffled order so advertisers
- * share the space. The database (RLS) already returns only adverts whose
- * advertiser, content and payment are approved and whose dates include today;
- * here we also respect the admin's per-division on/off switch. Any failure
- * means no adverts — never a broken page.
+ * Adverts that are approved and inside their start/end time, via the
+ * database's live_ads() function — which exposes display fields only, never
+ * the requester's contact or payment details. Any failure means "no adverts".
  */
-export async function getLiveAds(
-  branch: BranchId,
-  limit = 2,
-  format: "card" | "banner" = "card",
-): Promise<LiveAd[]> {
-  if (branch === "ministry") return [];
+async function getLiveAds(): Promise<LiveAd[]> {
   let client;
   try {
     client = createPublicClient();
   } catch {
     return [];
   }
-
-  const [{ data: setting, error: settingError }, { data: ads, error: adsError }] = await Promise.all([
-    client.from("ad_settings").select("accepts_ads").eq("branch", branch).maybeSingle(),
-    client
-      .from("ads")
-      .select("id, headline, body, image_path, image_width, image_height, destination_url, cta_label")
-      .contains("placements", [branch])
-      .eq("format", format),
-  ]);
-  if (settingError || adsError) {
-    console.error("[ads] read failed", settingError?.message ?? adsError?.message);
+  const { data, error } = await client.rpc("live_ads");
+  if (error) {
+    console.error("[ads] live_ads failed", error.message);
     return [];
   }
-  if (!setting?.accepts_ads || !ads?.length) return [];
-
-  const shuffled = [...ads].sort(() => Math.random() - 0.5).slice(0, limit);
-  return shuffled.map((ad) => ({
-    id: ad.id,
-    headline: ad.headline,
-    body: ad.body,
-    image: ad.image_path ? { url: mediaPublicUrl(ad.image_path), width: ad.image_width, height: ad.image_height } : null,
-    destinationUrl: ad.destination_url,
-    ctaLabel: ad.cta_label,
+  return ((data ?? []) as LiveAdRow[]).map((row) => ({
+    id: row.id,
+    kind: row.display_kind,
+    label: row.label,
+    image: row.display_image_path
+      ? { url: mediaPublicUrl(row.display_image_path), width: row.display_image_width, height: row.display_image_height }
+      : null,
+    videoUrl: row.video_url,
+    linkUrl: row.link_url,
   }));
 }
 
-/** At most one live top banner for this page (several live banners take turns). */
+function pickOne<T>(items: T[]): T | null {
+  return items.length ? items[Math.floor(Math.random() * items.length)] : null;
+}
+
+/** One live image advert for the top banner (several take turns). Never on ministry pages. */
 export async function getLiveBanner(branch: BranchId): Promise<LiveAd | null> {
-  const [banner] = await getLiveAds(branch, 1, "banner");
-  return banner?.image ? banner : null;
+  if (branch === "ministry") return null;
+  return pickOne((await getLiveAds()).filter((ad) => ad.kind === "image" && ad.image));
+}
+
+/** One live video advert. Never on ministry pages. */
+export async function getLiveVideoAd(branch: BranchId): Promise<LiveAd | null> {
+  if (branch === "ministry") return null;
+  return pickOne((await getLiveAds()).filter((ad) => ad.kind === "video" && ad.videoUrl));
 }

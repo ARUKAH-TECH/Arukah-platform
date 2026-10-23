@@ -204,7 +204,7 @@ export const advertisePage: PageDef = {
           kind: "textarea",
           max: 600,
           default:
-            "Reach people who visit ZIVARUKAH's technology, education, footwear, media and books pages. Tell us about your business — every advertiser and every advert is reviewed before anything goes live.",
+            "Reach people who visit ZIVARUKAH's technology, education, footwear, media and books pages. Tell us what your advert is about — we review every request before anything goes live.",
         },
       ],
     },
@@ -218,10 +218,9 @@ export const advertisePage: PageDef = {
           max: 160,
           maxItems: 6,
           default: [
-            "Send the application below.",
-            "We review your business and get back to you with options and pricing.",
-            "We agree the advert's content, placement and dates with you.",
-            "Your advert goes live once it's approved and payment is confirmed.",
+            "Send your request below, with a photo if you have one.",
+            "We contact you to agree the dates and the price.",
+            "Your advert goes live once it's approved.",
           ],
         },
         {

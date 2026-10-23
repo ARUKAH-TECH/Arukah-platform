@@ -12,8 +12,7 @@ const ready = [
   { title: "Media library", description: "Upload photos and add YouTube or TikTok links, then attach them to projects.", href: "/admin/media" },
   { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
   { title: "Ministry outreach", description: "Hospital, prison, street, community and crusade outreach reports.", href: "/admin/outreach" },
-  { title: "Advertisers", description: "Review applications from the Advertise With Us page.", href: "/admin/advertisers" },
-  { title: "Adverts", description: "Create adverts, record the three approvals, and choose which pages show adverts.", href: "/admin/ads" },
+  { title: "Adverts", description: "Approve or reject advert requests, set their dates, and record payment.", href: "/admin/adverts" },
   { title: "Page text", description: "Change the headings and wording on the website's pages.", href: "/admin/pages" },
 ];
 
@@ -25,12 +24,12 @@ export default async function AdminDashboardPage() {
   const supabase = await createClient();
   const [{ count: newMessages }, { count: pendingAdvertisers }] = await Promise.all([
     supabase.from("inbox_messages").select("id", { count: "exact", head: true }).eq("status", "new"),
-    supabase.from("advertisers").select("id", { count: "exact", head: true }).eq("status", "pending"),
+    supabase.from("ad_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
   ]);
   const waiting = [
     newMessages ? { label: `${newMessages} new message${newMessages === 1 ? "" : "s"}`, href: "/admin/inbox" } : null,
     pendingAdvertisers
-      ? { label: `${pendingAdvertisers} advertiser application${pendingAdvertisers === 1 ? "" : "s"} to review`, href: "/admin/advertisers" }
+      ? { label: `${pendingAdvertisers} advert request${pendingAdvertisers === 1 ? "" : "s"} to review`, href: "/admin/adverts" }
       : null,
   ].filter((item): item is { label: string; href: string } => item !== null);
 
