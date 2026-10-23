@@ -9,6 +9,8 @@ export interface LiveAd {
   image: { url: string; width: number | null; height: number | null } | null;
   videoUrl: string | null;
   linkUrl: string | null;
+  /** How long it stays on screen when several adverts take turns. */
+  seconds: number;
 }
 
 interface LiveAdRow {
@@ -20,6 +22,7 @@ interface LiveAdRow {
   video_url: string | null;
   link_url: string | null;
   label: string;
+  display_seconds: number;
 }
 
 /**
@@ -34,7 +37,7 @@ async function getLiveAds(): Promise<LiveAd[]> {
   } catch {
     return [];
   }
-  const { data, error } = await client.rpc("live_ads");
+  const { data, error } = await client.rpc("live_ads_v2");
   if (error) {
     console.error("[ads] live_ads failed", error.message);
     return [];
@@ -48,6 +51,7 @@ async function getLiveAds(): Promise<LiveAd[]> {
       : null,
     videoUrl: row.video_url,
     linkUrl: row.link_url,
+    seconds: row.display_seconds,
   }));
 }
 
@@ -55,10 +59,10 @@ function pickOne<T>(items: T[]): T | null {
   return items.length ? items[Math.floor(Math.random() * items.length)] : null;
 }
 
-/** One live image advert for the top banner (several take turns). Never on ministry pages. */
-export async function getLiveBanner(branch: BranchId): Promise<LiveAd | null> {
-  if (branch === "ministry") return null;
-  return pickOne((await getLiveAds()).filter((ad) => ad.kind === "image" && ad.image));
+/** Every live image advert, in order, for the rotating top banner. Never on ministry pages. */
+export async function getLiveBanners(branch: BranchId): Promise<LiveAd[]> {
+  if (branch === "ministry") return [];
+  return (await getLiveAds()).filter((ad) => ad.kind === "image" && ad.image);
 }
 
 /** One live video advert. Never on ministry pages. */

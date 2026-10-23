@@ -28,7 +28,7 @@ export function AdvertiseForm() {
         try {
           setStep("Preparing your photo…");
           // Shrinks the photo and removes location data before it leaves the phone.
-          const { blob } = await resize(photo);
+          const { blob } = await resize(photo, 1600, 0.8);
           const path = `requests/${crypto.randomUUID()}.webp`;
           setStep("Uploading your photo…");
           const { error } = await createClient()

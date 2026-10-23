@@ -18,7 +18,7 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
   const { data: r } = await supabase
     .from("ad_requests")
     .select(
-      "id, contact_name, business_name, phone, email, about, location, request_image_path, status, starts_at, ends_at, amount_ghs, payment_status, payment_reference, display_kind, display_image_path, video_url, link_url, admin_note, created_at",
+      "id, contact_name, business_name, phone, email, about, location, request_image_path, status, starts_at, ends_at, amount_ghs, payment_status, payment_reference, display_kind, display_image_path, video_url, link_url, admin_note, display_seconds, created_at",
     )
     .eq("id", id)
     .maybeSingle();
@@ -105,6 +105,7 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
               videoUrl: r.video_url ?? "",
               linkUrl: r.link_url ?? "",
               adminNote: r.admin_note,
+              displaySeconds: r.display_seconds,
             }}
           />
         </section>

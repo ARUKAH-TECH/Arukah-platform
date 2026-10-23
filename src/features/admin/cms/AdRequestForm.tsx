@@ -21,6 +21,7 @@ export interface AdRequestFormValues {
   videoUrl: string;
   linkUrl: string;
   adminNote: string;
+  displaySeconds: number;
 }
 
 function publicImageUrl(path: string) {
@@ -82,7 +83,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
     setUploading(true);
     setUploadError("");
     try {
-      const { blob, width, height } = await resize(file);
+      const { blob, width, height } = await resize(file, 1200, 0.82);
       const path = `ads/${crypto.randomUUID()}.webp`;
       const { error } = await createClient()
         .storage.from("media")
@@ -222,7 +223,9 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
               )}
               {uploadError && <p className="text-xs text-red-700 dark:text-red-400">{uploadError}</p>}
             </div>
-            <p className="text-xs text-foreground/50">The banner is wide and slim, so the middle of the photo is what shows.</p>
+            <p className="text-xs text-foreground/50">
+              The whole image is shrunk to fit the slim banner. Wide images (about 8 times wider than tall) fill it best.
+            </p>
           </div>
         ) : (
           <label className="mt-4 block text-sm">
@@ -231,6 +234,19 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
           </label>
         )}
       </fieldset>
+
+      <label className="text-sm">
+        Seconds on screen{" "}
+        <span className="text-foreground/50">(when two or more adverts are showing, each stays this long before the next)</span>
+        <input
+          name="displaySeconds"
+          type="number"
+          min={3}
+          max={120}
+          defaultValue={values.displaySeconds}
+          className={`${fieldClasses} max-w-[8rem]`}
+        />
+      </label>
 
       <label className="text-sm">
         Link when clicked <span className="text-foreground/50">(optional — their website, Facebook or WhatsApp link)</span>
