@@ -444,3 +444,25 @@ replaced by a single `ad_requests` table (migration `20261023090000`):
 - **Still open:** backups (the free Supabase plan has none), error
   monitoring, and a content security policy.
 
+- **Backups (PR #21):** daily encrypted pg_dump workflow (needs the
+  `SUPABASE_DB_URL` and `BACKUP_PASSPHRASE` secrets) — see
+  `docs/BACKUP-AND-RECOVERY.md`.
+- Error monitoring (Sentry) needs an account; not added.
+
+## Phase 6 progress (2026-10-23) — built, switched off
+
+- **Paystack (PR #24):** `payments` table (admin read; server writes with a
+  narrowly granted service key). Pay-now after a book order (amount from the
+  database), `/ministry/support` for outreach gifts, `/payments/done` and a
+  signed `/api/paystack/webhook` that both re-verify with Paystack (GHS +
+  exact amount) and record once. Admin → Payments. Turns on when
+  `PAYSTACK_SECRET_KEY` and `SUPABASE_SERVICE_ROLE_KEY` are set — see
+  `docs/PAYMENTS.md`. TRUNCATE revoked from anon/authenticated.
+- **Still to do after Paystack is live:** access codes for timed reading and
+  protected downloads; paying for adverts online.
+
+## Phase 9 progress (2026-10-23)
+
+- **International prices (PR #25):** ≈ prices in the visitor's currency
+  (Vercel country header, daily rates from open.er-api.com) with a picker;
+  always charged in GHS.
