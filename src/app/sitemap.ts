@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getPublicProjects } from "@/db/projects";
 import { getPublicOutreaches } from "@/db/outreaches";
+import { getPublishedBooks } from "@/db/books";
 
 // SITE_URL must be set to the real production domain before deploying —
 // otherwise the sitemap ships localhost URLs. See docs/ENVIRONMENT.md.
@@ -38,5 +39,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }));
 
-  return [...pages, ...projectPages, ...outreachPages];
+  const books = await getPublishedBooks();
+  const bookPages: MetadataRoute.Sitemap = books.map((book) => ({
+    url: `${baseUrl}/books/${book.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly",
+    priority: 0.6,
+  }));
+
+  return [...pages, ...projectPages, ...outreachPages, ...bookPages];
 }
