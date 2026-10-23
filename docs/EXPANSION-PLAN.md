@@ -29,7 +29,24 @@ field's original wording lives in `src/config/pages/` as its default, and
 over-long value, or if the database is unreachable. Editable: homepage,
 TECH, WEAR, ZIVA, MEDIA, BOOKS, Ministry, Projects and Contact pages, via
 Admin → Page text. Brand names, logos, button labels and navigation stay in
-code by design. Next per the build order: Phase 5 (ministry outreach).
+code by design.
+
+**Phase 5 (2026-10-23):** live except the support switch, which waits for
+Phase 6 payments.
+- Step 1 (PR #6): `outreaches` table (migration `20261023030000`). The
+  database refuses to publish or schedule a hospital or prison outreach
+  without facility permission. The private permission note is in the
+  admin-only `outreach_private_notes`. Public pages: `/ministry/outreach`
+  and a detail page per outreach.
+- Step 2: `outreach_media` (migration `20261023040000`) with a consent
+  checklist (identifiable people / children / patients / prisoners). An
+  item is visible only when it has been reviewed and, if sensitive,
+  written permission is recorded, AND its outreach is public. RLS enforces
+  this for rows, and the storage policy enforces it for files. Images sit
+  in the PRIVATE `outreach-media` bucket and are served only via
+  `/outreach-photo/<id>`, which re-checks as an anonymous visitor and
+  redirects to a 1-hour signed link (cached for 5 minutes). Permission
+  notes are in the admin-only `outreach_media_private_notes`.
 
 ---
 

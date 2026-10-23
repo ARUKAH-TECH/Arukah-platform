@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { getPublicOutreach } from "@/db/outreaches";
+import { getPublicOutreach, getPublicOutreachMedia } from "@/db/outreaches";
+import { parseVideoLink } from "@/lib/video";
 import { formatOutreachDate, outreachTypeLabel } from "@/config/outreach";
 
 // Refreshed at most every minute, and immediately after an admin edit.
@@ -30,6 +31,12 @@ export default async function OutreachPage({ params }: PageProps<"/ministry/outr
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
   const date = formatOutreachDate(outreach.date);
+  const media = await getPublicOutreachMedia(outreach.id);
+  const photos = media.filter((item) => item.kind === "image");
+  const videos = media
+    .filter((item) => item.kind === "video_link")
+    .map((item) => ({ item, video: parseVideoLink(item.url) }))
+    .filter((entry) => entry.video !== null);
 
   return (
     <article data-brand="ministry" className="flex-1 bg-black text-white">
@@ -72,6 +79,59 @@ export default async function OutreachPage({ params }: PageProps<"/ministry/outr
                 </p>
               ))}
             </div>
+          )}
+
+          {photos.length > 0 && (
+            <section className="mt-10">
+              <h2 className="sr-only">Photos</h2>
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                {photos.map((photo) => (
+                  <figure key={photo.id} className="flex flex-col gap-2">
+                    {/* eslint-disable-next-line @next/next/no-img-element -- served via the consent-checked /outreach-photo route */}
+                    <img
+                      src={photo.url}
+                      alt={photo.altText}
+                      width={photo.width ?? undefined}
+                      height={photo.height ?? undefined}
+                      loading="lazy"
+                      className="w-full rounded-xl bg-white/5 object-cover"
+                    />
+                    {photo.caption && <figcaption className="text-xs text-white/60">{photo.caption}</figcaption>}
+                  </figure>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {videos.length > 0 && (
+            <section className="mt-10 flex flex-col gap-6">
+              <h2 className="sr-only">Videos</h2>
+              {videos.map(({ item, video }) =>
+                video?.platform === "youtube" ? (
+                  <figure key={item.id} className="flex flex-col gap-2">
+                    <iframe
+                      src={video.embedUrl}
+                      title={item.caption || outreach.title}
+                      loading="lazy"
+                      allow="accelerometer; encrypted-media; gyroscope; picture-in-picture"
+                      allowFullScreen
+                      className="aspect-video w-full rounded-xl"
+                    />
+                    {item.caption && <figcaption className="text-xs text-white/60">{item.caption}</figcaption>}
+                  </figure>
+                ) : (
+                  <a
+                    key={item.id}
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-xl border border-white/10 bg-zinc-900 p-4 text-sm font-medium hover:border-brand-primary-text"
+                  >
+                    Watch on TikTok ↗{item.caption && <span className="ml-2 font-normal text-white/60">{item.caption}</span>}
+                  </a>
+                ),
+              )}
+            </section>
           )}
 
           {outreach.needs.length > 0 && (
