@@ -10,6 +10,7 @@ const nav = [
   { label: "Announcements", href: "/admin/announcements" },
   { label: "Adverts", href: "/admin/adverts" },
   { label: "Books", href: "/admin/books" },
+  { label: "Book orders", href: "/admin/book-orders" },
   { label: "Page text", href: "/admin/pages" },
 ];
 

@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { getPublishedBook } from "@/db/books";
-import { formatGhs } from "@/config/books";
+import { AddToBasket } from "@/features/books/AddToBasket";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -61,23 +61,14 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
             <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{book.title}</h1>
             {book.author && <p className="mt-2 text-foreground/70">by {book.author}</p>}
 
-            {book.prices.length > 0 && (
-              <ul className="mt-6 flex flex-col gap-2">
-                {book.prices.map((price) => (
-                  <li
-                    key={price.format}
-                    className="flex items-center justify-between rounded-xl border border-black/10 px-4 py-3 text-sm dark:border-white/10"
-                  >
-                    <span>{price.label}</span>
-                    <span className="font-semibold">{formatGhs(price.amount)}</span>
-                  </li>
-                ))}
-              </ul>
-            )}
-
             <div id="order" className="mt-6">
-              <Button href="/contact">Order this book</Button>
-              <p className="mt-2 text-xs text-foreground/50">Online ordering is coming soon — for now, send us a message and we&apos;ll arrange it.</p>
+              {book.prices.length > 0 ? (
+                <AddToBasket book={{ id: book.id, slug: book.slug, title: book.title }} prices={book.prices} />
+              ) : (
+                <>
+                  <Button href="/contact">Ask about this book</Button>
+                </>
+              )}
             </div>
 
             {paragraphs.length > 0 && (
