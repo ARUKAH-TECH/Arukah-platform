@@ -27,6 +27,12 @@ export default async function OutreachListPage() {
           <p className="mt-3 max-w-xl text-sm leading-6 text-white/70">
             Hospital, prison, street, community and crusade outreach — taking the message beyond the screen.
           </p>
+          <Link
+            href="/ministry/support"
+            className="mt-5 inline-flex rounded-full bg-brand-primary px-5 py-2 text-sm font-medium text-brand-on-primary hover:bg-brand-primary-hover"
+          >
+            Support the outreach
+          </Link>
 
           {outreaches.length === 0 ? (
             <p className="mt-10 text-sm text-white/60">Outreach reports will appear here soon.</p>
