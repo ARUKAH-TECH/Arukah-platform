@@ -7,6 +7,7 @@ const nav = [
   { label: "Media", href: "/admin/media" },
   { label: "Outreach", href: "/admin/outreach" },
   { label: "Announcements", href: "/admin/announcements" },
+  { label: "Advertisers", href: "/admin/advertisers" },
   { label: "Page text", href: "/admin/pages" },
 ];
 

@@ -40,6 +40,11 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/advertise" className="hover:text-brand-primary-text">
+                  Advertise with us
+                </Link>
+              </li>
             </ul>
           </div>
 
