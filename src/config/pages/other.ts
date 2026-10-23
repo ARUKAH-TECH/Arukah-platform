@@ -188,3 +188,50 @@ export const contactPage: PageDef = {
     },
   ],
 };
+
+export const advertisePage: PageDef = {
+  id: "advertise",
+  label: "Advertise With Us page",
+  path: "/advertise",
+  groups: [
+    {
+      title: "Introduction",
+      fields: [
+        { key: "title", label: "Heading", kind: "text", max: 100, default: "Advertise With Us" },
+        {
+          key: "intro",
+          label: "Text",
+          kind: "textarea",
+          max: 600,
+          default:
+            "Reach people who visit ZIVARUKAH's technology, education, footwear, media and books pages. Tell us about your business — every advertiser and every advert is reviewed before anything goes live.",
+        },
+      ],
+    },
+    {
+      title: "How it works",
+      fields: [
+        {
+          key: "steps",
+          label: "Steps (one per line)",
+          kind: "list",
+          max: 160,
+          maxItems: 6,
+          default: [
+            "Send the application below.",
+            "We review your business and get back to you with options and pricing.",
+            "We agree the advert's content, placement and dates with you.",
+            "Your advert goes live once it's approved and payment is confirmed.",
+          ],
+        },
+        {
+          key: "note",
+          label: "Small note",
+          kind: "textarea",
+          max: 300,
+          default: "Adverts never appear on the Repent Online Ministries pages.",
+        },
+      ],
+    },
+  ],
+};

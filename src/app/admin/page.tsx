@@ -10,6 +10,7 @@ const ready = [
   { title: "Media library", description: "Upload photos and add YouTube or TikTok links, then attach them to projects.", href: "/admin/media" },
   { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
   { title: "Ministry outreach", description: "Hospital, prison, street, community and crusade outreach reports.", href: "/admin/outreach" },
+  { title: "Advertisers", description: "Review applications from the Advertise With Us page.", href: "/admin/advertisers" },
   { title: "Page text", description: "Change the headings and wording on the website's pages.", href: "/admin/pages" },
 ];
 
