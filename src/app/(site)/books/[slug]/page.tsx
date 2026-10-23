@@ -6,6 +6,9 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { getPublishedBook } from "@/db/books";
 import { AddToBasket } from "@/features/books/AddToBasket";
+import { JsonLd } from "@/components/seo/JsonLd";
+
+const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -32,6 +35,26 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
 
   return (
     <article className="py-12">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "Book",
+          name: book.title,
+          ...(book.author ? { author: { "@type": "Person", name: book.author } } : {}),
+          ...(book.description ? { description: book.description.slice(0, 500) } : {}),
+          ...(book.cover ? { image: book.cover.url } : {}),
+          url: `${SITE}/books/${book.slug}`,
+          publisher: { "@type": "Organization", name: "ZIVARUKAH BOOKS" },
+          offers: book.prices.map((price) => ({
+            "@type": "Offer",
+            name: price.label,
+            price: price.amount.toFixed(2),
+            priceCurrency: "GHS",
+            availability: "https://schema.org/InStock",
+            url: `${SITE}/books/${book.slug}`,
+          })),
+        }}
+      />
       <Container>
         <Link href="/books" className="text-sm text-foreground/60 hover:text-brand-primary-text">
           ← All books

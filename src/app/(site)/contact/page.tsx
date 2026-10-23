@@ -8,7 +8,7 @@ import { getPageText, textReader } from "@/db/pageContent";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Get in touch with ZIVARUKAH.",
+  description: "Contact ZIVARUKAH about software, websites, footwear, special classes, video production, books or the ministry.",
   alternates: { canonical: "/contact" },
 };
 

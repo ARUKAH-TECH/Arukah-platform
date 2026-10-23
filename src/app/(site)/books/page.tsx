@@ -17,7 +17,8 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "ZIVARUKAH BOOKS",
-  description: "Online reading, digital downloads, and printed books from ZIVARUKAH BOOKS. Coming soon.",
+  description:
+    "ZIVARUKAH BOOKS — buy books to read online, download, or order as printed copies in Ghana. 10% off when you buy more than three.",
   alternates: { canonical: "/books" },
 };
 

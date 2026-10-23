@@ -15,8 +15,9 @@ import { getPageText, textReader } from "@/db/pageContent";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "TECH",
-  description: "Custom software, websites, and management systems from ARUKAH TECH.",
+  title: "ARUKAH TECH — Software, Websites & Management Systems in Ghana",
+  description:
+    "ARUKAH TECH builds websites, custom software and school, church, hospital and fuel station management systems in Ghana — with deployment, maintenance and technical support.",
   alternates: { canonical: "/tech" },
 };
 

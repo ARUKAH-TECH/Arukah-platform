@@ -15,8 +15,9 @@ import { getPageText, textReader } from "@/db/pageContent";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Repent Online Ministries",
-  description: "Rescue the Perishing — Repent Online Ministries.",
+  title: "Repent Online Ministries — Rescue the Perishing",
+  description:
+    "Repent Online Ministries: Christian teaching, sermons, prayer and hospital, prison, street and community outreach. New here or growing in faith? Reach out.",
   alternates: { canonical: "/ministry" },
 };
 
