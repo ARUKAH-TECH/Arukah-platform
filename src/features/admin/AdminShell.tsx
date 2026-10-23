@@ -6,6 +6,7 @@ const nav = [
   { label: "Projects", href: "/admin/projects" },
   { label: "Media", href: "/admin/media" },
   { label: "Announcements", href: "/admin/announcements" },
+  { label: "Page text", href: "/admin/pages" },
 ];
 
 // Rendered only by pages that have already passed requireAdmin().

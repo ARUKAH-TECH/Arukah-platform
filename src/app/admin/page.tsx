@@ -9,6 +9,7 @@ const ready = [
   { title: "Projects", description: "Create, schedule, publish and archive projects, and choose where they appear.", href: "/admin/projects" },
   { title: "Media library", description: "Upload photos and add YouTube or TikTok links, then attach them to projects.", href: "/admin/media" },
   { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
+  { title: "Page text", description: "Change the headings and wording on the website's pages.", href: "/admin/pages" },
 ];
 
 // Sections land here one phase at a time (see docs/EXPANSION-PLAN.md).
