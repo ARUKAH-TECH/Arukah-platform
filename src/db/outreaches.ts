@@ -78,3 +78,51 @@ export async function getPublicOutreach(slug: string): Promise<PublicOutreach | 
   }
   return data ? toOutreach(data as OutreachRow) : null;
 }
+
+export interface PublicOutreachMedia {
+  id: string;
+  kind: "image" | "video_link";
+  /** Our own consent-checked address for images; the YouTube/TikTok link for videos. */
+  url: string;
+  altText: string;
+  caption: string;
+  width: number | null;
+  height: number | null;
+}
+
+/**
+ * Media for one outreach that visitors may see. Row Level Security returns
+ * only items whose outreach is published and whose consent is cleared.
+ */
+export async function getPublicOutreachMedia(outreachId: string): Promise<PublicOutreachMedia[]> {
+  const client = safeClient();
+  if (!client) return [];
+  const { data, error } = await client
+    .from("outreach_media")
+    .select("id, kind, video_url, alt_text, caption, width, height")
+    .eq("outreach_id", outreachId)
+    .order("created_at");
+  if (error) {
+    console.error("[outreaches] public media failed", error.message);
+    return [];
+  }
+  return (
+    data as {
+      id: string;
+      kind: "image" | "video_link";
+      video_url: string | null;
+      alt_text: string;
+      caption: string;
+      width: number | null;
+      height: number | null;
+    }[]
+  ).map((row) => ({
+    id: row.id,
+    kind: row.kind,
+    url: row.kind === "image" ? `/outreach-photo/${row.id}` : (row.video_url ?? ""),
+    altText: row.alt_text,
+    caption: row.caption,
+    width: row.width,
+    height: row.height,
+  }));
+}

@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { AdminShell } from "@/features/admin/AdminShell";
 import { OutreachForm } from "@/features/admin/cms/OutreachForm";
 import { deleteOutreach } from "@/features/admin/cms/outreachActions";
+import { OutreachMediaSection } from "@/features/admin/cms/OutreachMediaSection";
 
 export const metadata: Metadata = { title: "Edit outreach" };
 
@@ -67,6 +68,8 @@ export default async function EditOutreachPage({ params, searchParams }: PagePro
           }}
         />
       </div>
+
+      <OutreachMediaSection outreachId={item.id} />
 
       <section className="mt-12 max-w-3xl border-t border-black/10 pt-8 dark:border-white/10">
         <h2 className="text-sm font-semibold">Delete</h2>
