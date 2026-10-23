@@ -52,10 +52,12 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
   const videoRaw = text(formData, "videoUrl", 500);
   const link = httpsOrNull(text(formData, "linkUrl", 500));
   const note = text(formData, "adminNote", 2000);
+  const seconds = Math.round(Number(formData.get("displaySeconds")) || 8);
 
   if (!["pending", "approved", "rejected"].includes(status)) return { status: "error", message: "Choose Pending, Approve or Reject." };
   if (!["unpaid", "part", "full"].includes(paymentStatus)) return { status: "error", message: "Choose how much has been paid." };
   if (startsAt && endsAt && endsAt <= startsAt) return { status: "error", message: "The end must be after the start." };
+  if (seconds < 3 || seconds > 120) return { status: "error", message: "Time on screen must be between 3 and 120 seconds." };
   if (link === "invalid") return { status: "error", message: "The link must be a website address (https://…)." };
 
   let amount: number | null = null;
@@ -130,6 +132,7 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
       video_url: videoUrl,
       link_url: link,
       admin_note: note,
+      display_seconds: seconds,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);
