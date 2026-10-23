@@ -1,11 +1,13 @@
 "use server";
 
+import { FORMS_OFF_MESSAGE, ONLINE_FORMS_ENABLED } from "@/config/forms";
 import { getPublicOutreaches } from "@/db/outreaches";
 import { startBookOrderPayment, startSupportPayment, type StartResult } from "@/server/payments";
 
 const EMAIL = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export async function payForBookOrder(orderReference: string, email: string): Promise<StartResult> {
+  if (!ONLINE_FORMS_ENABLED) return { ok: false, message: FORMS_OFF_MESSAGE };
   const ref = String(orderReference).trim().toUpperCase();
   const mail = String(email).trim();
   if (!/^ZB-[A-Z0-9]{6}$/.test(ref)) return { ok: false, message: "That order number doesn't look right." };
@@ -14,6 +16,7 @@ export async function payForBookOrder(orderReference: string, email: string): Pr
 }
 
 export async function giveToOutreach(formData: FormData): Promise<StartResult> {
+  if (!ONLINE_FORMS_ENABLED) return { ok: false, message: FORMS_OFF_MESSAGE };
   if (formData.get("company_website")) return { ok: false, message: "Thank you." };
   const name = String(formData.get("name") ?? "").trim();
   const email = String(formData.get("email") ?? "").trim();

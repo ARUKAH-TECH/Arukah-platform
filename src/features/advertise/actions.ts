@@ -1,5 +1,6 @@
 "use server";
 
+import { FORMS_OFF_MESSAGE, ONLINE_FORMS_ENABLED } from "@/config/forms";
 import { createPublicClient } from "@/lib/supabase/public";
 import { rateLimitMessage } from "@/lib/friendlyLimit";
 import { REQUEST_IMAGE_PATH, type AdvertiseFormState } from "@/features/advertise/shared";
@@ -10,6 +11,7 @@ function field(formData: FormData, key: string) {
 
 /** Saves a new advert request. Visitors can send requests but never read them. */
 export async function submitAdRequest(formData: FormData): Promise<AdvertiseFormState> {
+  if (!ONLINE_FORMS_ENABLED) return { status: "error", message: FORMS_OFF_MESSAGE };
   // Honeypot: real visitors never see or fill this field.
   if (formData.get("company_website")) {
     return { status: "success", message: "Thank you — we'll get back to you." };

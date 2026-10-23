@@ -1,5 +1,6 @@
 "use server";
 
+import { FORMS_OFF_MESSAGE, ONLINE_FORMS_ENABLED } from "@/config/forms";
 import { SERVICE_OPTIONS, type ContactFormState } from "@/features/contact/shared";
 import { saveInboxMessage } from "@/db/inbox";
 
@@ -11,6 +12,7 @@ export async function submitEnquiry(
   _prevState: ContactFormState,
   formData: FormData,
 ): Promise<ContactFormState> {
+  if (!ONLINE_FORMS_ENABLED) return { status: "error", message: FORMS_OFF_MESSAGE };
   // Honeypot: real visitors never see or fill this field.
   if (formData.get("company_website")) {
     return { status: "success", message: "Thanks — we'll be in touch soon." };

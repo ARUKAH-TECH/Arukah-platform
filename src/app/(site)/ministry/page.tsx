@@ -4,6 +4,8 @@ import { Container } from "@/components/ui/Container";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { Button } from "@/components/ui/Button";
 import { MinistryForm } from "@/features/ministry/MinistryForm";
+import { WhatsAppContact } from "@/components/ui/WhatsAppContact";
+import { ONLINE_FORMS_ENABLED } from "@/config/forms";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
@@ -81,7 +83,16 @@ export default async function MinistryPage() {
           <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t.text("respondTitle")}</h2>
           <p className="mt-2 max-w-xl text-sm leading-6 text-white/70">{t.text("respondText")}</p>
           <div className="mt-8 max-w-xl">
-            <MinistryForm dark />
+            {ONLINE_FORMS_ENABLED ? (
+              <MinistryForm dark />
+            ) : (
+              <WhatsAppContact
+                dark
+                message="Hello Repent Online Ministries, "
+                label="Talk to the ministry on WhatsApp"
+                note="For prayer, counselling or to give your life to Christ, message or call us. Your conversation stays between you and the ministry."
+              />
+            )}
           </div>
         </div>
       </Container>

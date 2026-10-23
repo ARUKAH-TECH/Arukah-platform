@@ -1,5 +1,6 @@
 "use server";
 
+import { FORMS_OFF_MESSAGE, ONLINE_FORMS_ENABLED } from "@/config/forms";
 import { createPublicClient } from "@/lib/supabase/public";
 
 export interface OrderState {
@@ -16,6 +17,7 @@ const FORMATS = ["read", "download", "print"];
  * prices are never used. Visitors can't read orders afterwards.
  */
 export async function placeBookOrder(formData: FormData): Promise<OrderState> {
+  if (!ONLINE_FORMS_ENABLED) return { status: "error", message: FORMS_OFF_MESSAGE };
   if (formData.get("company_website")) return { status: "success", message: "Thank you." };
 
   const name = String(formData.get("name") ?? "").trim();
