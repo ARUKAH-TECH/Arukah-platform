@@ -5,6 +5,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { wearPage } from "@/config/pages";
+import { getPageText, textReader } from "@/db/pageContent";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -15,33 +17,26 @@ export const metadata: Metadata = {
   alternates: { canonical: "/footwear" },
 };
 
-const products = [
-  "Slippers",
-  "Sandals",
-  "Men's footwear",
-  "Women's footwear",
-  "Children's footwear",
-  "Custom footwear",
-  "Wholesale orders",
-];
+export default async function FootwearPage() {
+  // Admin-edited text over the original wording (Admin → Page text).
+  const t = textReader(await getPageText(wearPage));
 
-export default function FootwearPage() {
   return (
     <div data-brand="footwear">
       <AnnouncementBar branch="wear" />
       <Hero
         logo={brands.footwear.logo}
         title="ARUKAH WEAR"
-        tagline="Home of classic and quality wears. Ghana-made footwear, crafted with attention to material and durability."
+        tagline={t.text("heroTagline")}
         primaryCta={{ label: "Enquire about wholesale", href: "/contact" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
 
       <section className="py-16">
         <Container>
-          <SectionHeading eyebrow="What we make" title="Products" align="center" />
+          <SectionHeading eyebrow="What we make" title={t.text("productsTitle")} align="center" />
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {products.map((product) => (
+            {t.list("products").map((product) => (
               <div
                 key={product}
                 className="rounded-xl border border-black/10 p-4 text-center text-sm font-medium dark:border-white/10"
@@ -50,9 +45,7 @@ export default function FootwearPage() {
               </div>
             ))}
           </div>
-          <p className="mt-6 text-center text-xs text-foreground/50">
-            Product photos and pricing are added once real inventory is ready.
-          </p>
+          <p className="mt-6 text-center text-xs text-foreground/50">{t.text("productsNote")}</p>
         </Container>
       </section>
 
@@ -61,8 +54,8 @@ export default function FootwearPage() {
           <SectionHeading
             align="center"
             eyebrow="Craftsmanship"
-            title="Handcrafted, premium, Ghana-made"
-            description="Every pair is made with attention to material and quality, not shortcuts — durable footwear built to last, with style that holds up."
+            title={t.text("craftTitle")}
+            description={t.text("craftText")}
           />
         </Container>
       </section>
