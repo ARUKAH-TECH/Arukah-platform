@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/server/auth";
 import { AdminShell } from "@/features/admin/AdminShell";
+import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
 const ready = [
+  { title: "Inbox", description: "Messages from the Contact page and the Ministry response form.", href: "/admin/inbox" },
   { title: "Projects", description: "Create, schedule, publish and archive projects, and choose where they appear.", href: "/admin/projects" },
   { title: "Media library", description: "Upload photos and add YouTube or TikTok links, then attach them to projects.", href: "/admin/media" },
   { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
@@ -20,10 +22,35 @@ const upcoming = ["Support & donations", "Books"];
 
 export default async function AdminDashboardPage() {
   const admin = await requireAdmin();
+  const supabase = await createClient();
+  const [{ count: newMessages }, { count: pendingAdvertisers }] = await Promise.all([
+    supabase.from("inbox_messages").select("id", { count: "exact", head: true }).eq("status", "new"),
+    supabase.from("advertisers").select("id", { count: "exact", head: true }).eq("status", "pending"),
+  ]);
+  const waiting = [
+    newMessages ? { label: `${newMessages} new message${newMessages === 1 ? "" : "s"}`, href: "/admin/inbox" } : null,
+    pendingAdvertisers
+      ? { label: `${pendingAdvertisers} advertiser application${pendingAdvertisers === 1 ? "" : "s"} to review`, href: "/admin/advertisers" }
+      : null,
+  ].filter((item): item is { label: string; href: string } => item !== null);
 
   return (
     <AdminShell email={admin.email}>
       <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+
+      {waiting.length > 0 && (
+        <div className="mt-6 flex flex-wrap gap-3">
+          {waiting.map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className="rounded-full bg-amber-100 px-4 py-2 text-sm font-medium text-amber-900 hover:bg-amber-200 dark:bg-amber-950 dark:text-amber-200"
+            >
+              {item.label} →
+            </Link>
+          ))}
+        </div>
+      )}
 
       <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {ready.map((section) => (

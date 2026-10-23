@@ -376,3 +376,17 @@ Applied throughout:
 - **Still to do:** server-side click/impression counts and reports, and
   advertiser self-upload of artwork (currently the admin uploads it).
 
+## Inbox and banner adverts (2026-10-23)
+
+- **Top banner adverts (PR #10):** `ads.format` can be `card` or `banner`
+  (migration `20261023070000`). A banner is a slim, image-only 8:1 strip
+  (ideally 1200×150) under the announcement bar. The database refuses a
+  banner with no image.
+- **Inbox:** the Contact and Ministry forms used to write only to temporary
+  server logs (the Phase 5 placeholder). They now save to `inbox_messages`
+  (migration `20261023080000`). Visitors can only insert; only verified
+  admins can read or manage messages. Personal details are no longer
+  logged. Admin → Inbox has filters, status (new / in progress / handled),
+  a private note, call / WhatsApp / email buttons and delete. The dashboard
+  shows the counts of new messages and pending advertiser applications.
+

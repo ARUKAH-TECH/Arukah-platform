@@ -1,6 +1,7 @@
 "use server";
 
 import { FAITH_STATUS_OPTIONS, type MinistryFormState } from "@/features/ministry/shared";
+import { saveInboxMessage } from "@/db/inbox";
 
 function isValidEmail(email: string) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -43,23 +44,26 @@ export async function submitMinistryResponse(
     return { status: "error", message: "Please choose a valid option." };
   }
 
-  if (fullName.length > 200 || message.length > 5000) {
+  if (fullName.length > 200 || phone.length > 40 || email.length > 200 || message.length > 5000) {
     return { status: "error", message: "That input is too long." };
   }
 
-  // Temporary handling, same as the general enquiry form (see
-  // src/features/contact/actions.ts and docs/ARCHITECTURE.md): no database
-  // or email provider is configured yet, so responses are logged to the
-  // server's own function logs for the ministry team to follow up on
-  // manually until Phase 8 adds real storage.
-  console.log("[ZIVARUKAH ministry response]", {
+  // Saved to Admin → Inbox. Faith and prayer details are personal, so only
+  // verified admins can read them, and they are never written to logs.
+  const saved = await saveInboxMessage({
+    kind: "ministry",
     fullName,
-    phone: phone || undefined,
-    email: email || undefined,
-    faithStatus,
-    message: message || undefined,
-    receivedAt: new Date().toISOString(),
+    phone,
+    email,
+    topic: faithStatus,
+    message,
   });
+  if (!saved) {
+    return {
+      status: "error",
+      message: "Sorry, your message couldn't be sent just now. Please try again in a moment.",
+    };
+  }
 
   return {
     status: "success",

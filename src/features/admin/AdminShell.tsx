@@ -3,6 +3,7 @@ import { signOut } from "@/features/admin/actions";
 
 const nav = [
   { label: "Dashboard", href: "/admin" },
+  { label: "Inbox", href: "/admin/inbox" },
   { label: "Projects", href: "/admin/projects" },
   { label: "Media", href: "/admin/media" },
   { label: "Outreach", href: "/admin/outreach" },
