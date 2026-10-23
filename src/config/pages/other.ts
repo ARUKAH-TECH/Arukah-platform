@@ -56,6 +56,10 @@ export const booksPage: PageDef = {
       ],
     },
     {
+      title: "Book list",
+      fields: [{ key: "booksTitle", label: "Heading (shown once a book is published)", kind: "text", max: 100, default: "Books available now" }],
+    },
+    {
       title: "Coming soon section",
       fields: [
         { key: "upcomingTitle", label: "Heading", kind: "text", max: 100, default: "What the bookstore will offer" },
