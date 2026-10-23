@@ -148,7 +148,8 @@ export default async function OutreachPage({ params }: PageProps<"/ministry/outr
             </section>
           )}
 
-          <div className="mt-12">
+          <div className="mt-12 flex flex-wrap gap-3">
+            <Button href={`/ministry/support?outreach=${outreach.slug}`}>Support this outreach</Button>
             <Button href="/ministry#respond" variant="outline">
               Get in touch with the ministry
             </Button>

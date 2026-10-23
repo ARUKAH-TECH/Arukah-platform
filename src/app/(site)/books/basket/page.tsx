@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { Basket } from "@/features/books/Basket";
 import { booksPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
+import { paymentsEnabled } from "@/server/payments";
 
 export const metadata: Metadata = {
   title: "Your basket · ZIVARUKAH BOOKS",
@@ -22,7 +23,7 @@ export default async function BasketPage() {
         </Link>
         <h1 className="mt-4 text-3xl font-bold tracking-tight">Your basket</h1>
         <div className="mt-8">
-          <Basket afterOrderText={t.text("afterOrder")} />
+          <Basket afterOrderText={t.text("afterOrder")} payOnline={paymentsEnabled()} />
         </div>
       </Container>
     </div>

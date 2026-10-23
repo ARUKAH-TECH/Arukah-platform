@@ -9,7 +9,8 @@ Copy `.env.example` to `.env.local` for local development. Never commit
 | `DATABASE_URL` | 8 | PostgreSQL connection string for the **Supabase** project `arukah-platform` (ARUKAH-TECH's Org) — used for migrations / direct SQL. Server-only. Replaced an earlier, never-used Neon database on 2026-10-21. Not yet used by any code, and not yet added to Vercel's env vars. |
 | `NEXT_PUBLIC_SUPABASE_URL` | Foundation | Supabase project URL (`https://frnhrxyyfthbtjjmjxrm.supabase.co`). Public. Required by the admin area (`/admin`) and `src/proxy.ts`. |
 | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Foundation | Holds the project's **publishable** key (`sb_publishable_…`, Supabase's replacement for the legacy anon key). Safe for the browser — every query is limited by Row Level Security. |
-| `SUPABASE_SERVICE_ROLE_KEY` | 8 | Bypasses Row Level Security. **Server-only, never sent to the browser, never logged.** |
+| `SUPABASE_SERVICE_ROLE_KEY` | Payments | Supabase **secret** key (`sb_secret_…` or legacy `service_role`). Bypasses Row Level Security, but the database grants it only what payments need (read order totals, write `payments`, mark orders paid). Used only by `src/server/payments.ts`. **Server-only, never sent to the browser, never logged.** |
+| `PAYSTACK_SECRET_KEY` | Payments | Paystack secret key (`sk_test_…` / `sk_live_…`). **Server-only secret.** Online payments stay off until this and the key above are set. See `docs/PAYMENTS.md`. |
 | `REDIS_URL` | 15 | Caching layer connection string, once introduced. |
 | `STORAGE_ENDPOINT` / `STORAGE_BUCKET` / `STORAGE_ACCESS_KEY_ID` / `STORAGE_SECRET_ACCESS_KEY` | 12–13 | S3-compatible object storage for product/media files. All server-only. |
 | `EMAIL_FROM` / `EMAIL_PROVIDER_API_KEY` | 8 | Outbound email for the contact/enquiry system. **Not yet used** — the Phase 5 `/contact` form logs to server console instead; see `docs/ARCHITECTURE.md`. |

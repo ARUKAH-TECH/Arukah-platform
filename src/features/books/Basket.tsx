@@ -5,16 +5,18 @@ import { useEffect, useState, useTransition } from "react";
 import { formatGhs } from "@/config/books";
 import { basketTotals, onBasketChange, readBasket, writeBasket, type BasketItem } from "@/features/books/basket";
 import { placeBookOrder, type OrderState } from "@/features/books/orderActions";
+import { PayOrderNow } from "@/features/payments/PayOrderNow";
 
 const inputClasses =
   "mt-1 w-full rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-brand-primary-text dark:border-white/15";
 
-export function Basket({ afterOrderText }: { afterOrderText: string }) {
+export function Basket({ afterOrderText, payOnline }: { afterOrderText: string; payOnline: boolean }) {
   const [items, setItems] = useState<BasketItem[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [fulfilment, setFulfilment] = useState("collection");
   const [state, setState] = useState<OrderState>({ status: "idle", message: "" });
   const [pending, startTransition] = useTransition();
+  const [orderEmail, setOrderEmail] = useState("");
 
   useEffect(() => {
     const update = () => setItems(readBasket());
@@ -30,6 +32,7 @@ export function Basket({ afterOrderText }: { afterOrderText: string }) {
         <p className="mt-3 text-sm">
           Your order number is <span className="font-mono text-lg font-bold">{state.reference}</span>. Please keep it.
         </p>
+        {payOnline && <PayOrderNow orderReference={state.reference} email={orderEmail} />}
         <p className="mt-3 text-sm whitespace-pre-line">{afterOrderText}</p>
         <Link href="/books" className="mt-4 inline-block text-sm font-semibold underline">
           Back to books
@@ -61,6 +64,7 @@ export function Basket({ afterOrderText }: { afterOrderText: string }) {
   }
 
   function submit(formData: FormData) {
+    setOrderEmail(String(formData.get("email") ?? ""));
     formData.set("items", JSON.stringify(items.map(({ bookId, format, quantity }) => ({ bookId, format, quantity }))));
     startTransition(async () => {
       const result = await placeBookOrder(formData);
@@ -172,7 +176,11 @@ export function Basket({ afterOrderText }: { afterOrderText: string }) {
         >
           {pending ? "Placing order…" : `Place order · ${formatGhs(totals.total)}`}
         </button>
-        <p className="text-xs text-foreground/50">No payment is taken online. We&apos;ll contact you to confirm and arrange payment.</p>
+        <p className="text-xs text-foreground/50">
+          {payOnline
+            ? "After placing the order you can pay securely online (Mobile Money or card), or pay later when we contact you."
+            : "No payment is taken online. We'll contact you to confirm and arrange payment."}
+        </p>
       </form>
     </div>
   );
