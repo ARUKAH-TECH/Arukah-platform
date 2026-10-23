@@ -7,6 +7,10 @@ export interface RotatingAd {
   id: string;
   label: string;
   imageUrl: string;
+  width: number | null;
+  height: number | null;
+  /** "roll": fill the strip and glide through the image; "fit": whole image, still. */
+  style: "roll" | "fit";
   /** True when the advert has a link; clicks go through /ad-click/<id> so they're counted. */
   hasLink: boolean;
   seconds: number;
@@ -41,19 +45,30 @@ export function AdRotator({ ads }: { ads: RotatingAd[] }) {
         <div className="relative aspect-[8/1] w-full overflow-hidden rounded-lg bg-black/5 dark:bg-white/5">
           {ads.map((ad, i) => {
             const visible = i === index % ads.length;
-            const picture = (
-              <>
-                {/* Blurred fill so a flyer that isn't 8:1 still looks intentional. */}
-                {/* eslint-disable-next-line @next/next/no-img-element -- decorative background copy */}
-                <img src={ad.imageUrl} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-40 blur-md" />
-                {/* eslint-disable-next-line @next/next/no-img-element -- advert image from our media bucket */}
+            // Wider than the 8:1 strip → glide sideways; otherwise (or unknown) glide top-to-bottom.
+            const wide = ad.width && ad.height ? ad.width / ad.height > 8 : false;
+            const picture =
+              ad.style === "roll" ? (
+                // eslint-disable-next-line @next/next/no-img-element -- advert image from our media bucket
                 <img
                   src={ad.imageUrl}
                   alt={ad.label === "Sponsored" ? "Sponsored advert" : `Sponsored: ${ad.label}`}
-                  className="ad-drift relative h-full w-full object-contain"
+                  className={`h-full w-full object-cover ${wide ? "ad-roll-x" : "ad-roll-y"}`}
+                  style={{ animationDuration: `${Math.max(6, ad.seconds)}s` }}
                 />
-              </>
-            );
+              ) : (
+                <>
+                  {/* Blurred fill so a flyer that isn't 8:1 still looks intentional. */}
+                  {/* eslint-disable-next-line @next/next/no-img-element -- decorative background copy */}
+                  <img src={ad.imageUrl} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-40 blur-md" />
+                  {/* eslint-disable-next-line @next/next/no-img-element -- advert image from our media bucket */}
+                  <img
+                    src={ad.imageUrl}
+                    alt={ad.label === "Sponsored" ? "Sponsored advert" : `Sponsored: ${ad.label}`}
+                    className="ad-drift relative h-full w-full object-contain"
+                  />
+                </>
+              );
             const layer = `absolute inset-0 block transition-opacity duration-700 motion-reduce:transition-none ${
               visible ? "opacity-100" : "pointer-events-none opacity-0"
             }`;

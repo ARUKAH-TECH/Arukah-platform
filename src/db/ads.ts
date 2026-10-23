@@ -11,6 +11,8 @@ export interface LiveAd {
   linkUrl: string | null;
   /** How long it stays on screen when several adverts take turns. */
   seconds: number;
+  /** Top banner: "roll" fills the strip and moves through the image; "fit" shows it whole and still. */
+  bannerStyle: "roll" | "fit";
 }
 
 interface LiveAdRow {
@@ -23,6 +25,7 @@ interface LiveAdRow {
   link_url: string | null;
   label: string;
   display_seconds: number;
+  banner_style: string;
 }
 
 /**
@@ -37,7 +40,7 @@ async function getLiveAds(): Promise<LiveAd[]> {
   } catch {
     return [];
   }
-  const { data, error } = await client.rpc("live_ads_v2");
+  const { data, error } = await client.rpc("live_ads_v3");
   if (error) {
     console.error("[ads] live_ads failed", error.message);
     return [];
@@ -52,6 +55,7 @@ async function getLiveAds(): Promise<LiveAd[]> {
     videoUrl: row.video_url,
     linkUrl: row.link_url,
     seconds: row.display_seconds,
+    bannerStyle: row.banner_style === "fit" ? "fit" : "roll",
   }));
 }
 

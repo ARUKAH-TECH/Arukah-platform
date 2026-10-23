@@ -120,3 +120,19 @@ summary:focus-visible {
   .ad-drift { animation: ad-drift 14s ease-in-out infinite; }
 }
 
+/* Advert banner "roll": the image fills the slim strip and glides from one
+   end to the other and back, so a tall flyer is shown in full over time.
+   Visitors who prefer less motion see the middle of the image, still. */
+@keyframes ad-roll-y {
+  from { object-position: 50% 0%; }
+  to { object-position: 50% 100%; }
+}
+@keyframes ad-roll-x {
+  from { object-position: 0% 50%; }
+  to { object-position: 100% 50%; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ad-roll-y { animation: ad-roll-y 8s ease-in-out infinite alternate; }
+  .ad-roll-x { animation: ad-roll-x 8s ease-in-out infinite alternate; }
+}
+

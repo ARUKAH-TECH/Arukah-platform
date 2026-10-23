@@ -53,6 +53,7 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
   const link = httpsOrNull(text(formData, "linkUrl", 500));
   const note = text(formData, "adminNote", 2000);
   const seconds = Math.round(Number(formData.get("displaySeconds")) || 8);
+  const bannerStyle = text(formData, "bannerStyle", 10) === "fit" ? "fit" : "roll";
 
   if (!["pending", "approved", "rejected"].includes(status)) return { status: "error", message: "Choose Pending, Approve or Reject." };
   if (!["unpaid", "part", "full"].includes(paymentStatus)) return { status: "error", message: "Choose how much has been paid." };
@@ -138,6 +139,7 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
       link_url: link,
       admin_note: note,
       display_seconds: seconds,
+      banner_style: bannerStyle,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);
