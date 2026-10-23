@@ -6,6 +6,8 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { techPage } from "@/config/pages";
+import { getPageText, textReader } from "@/db/pageContent";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -16,42 +18,28 @@ export const metadata: Metadata = {
   alternates: { canonical: "/tech" },
 };
 
-const serviceGroups = [
-  {
-    title: "Management systems",
-    items: [
-      "School management systems",
-      "Church management systems",
-      "Fuel station management systems",
-      "Hospital management systems",
-      "Organization management systems",
-    ],
-  },
-  {
-    title: "Software & web",
-    items: ["Website development", "Custom software"],
-  },
-  {
-    title: "Deployment & support",
-    items: ["System deployment", "System management", "Maintenance", "Technical support"],
-  },
-];
+export default async function TechPage() {
+  // Admin-edited text over the original wording (Admin → Page text).
+  const t = textReader(await getPageText(techPage));
+  const serviceGroups = [1, 2, 3].map((n) => ({
+    title: t.text(`group${n}Title`),
+    items: t.list(`group${n}Items`),
+  }));
 
-export default function TechPage() {
   return (
     <div data-brand="tech">
       <AnnouncementBar branch="tech" />
       <Hero
         logo={brands.tech.logo}
         title="ARUKAH TECH"
-        tagline="Innovate. Develop. Empower. Custom software and management systems built for organizations that need reliable, well-maintained technology."
+        tagline={t.text("heroTagline")}
         primaryCta={{ label: "Discuss a project", href: "/contact" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
 
       <section className="py-16">
         <Container>
-          <SectionHeading eyebrow="What we build" title="Services" align="center" />
+          <SectionHeading eyebrow="What we build" title={t.text("servicesTitle")} align="center" />
           <div className="mt-10 grid grid-cols-1 gap-8 sm:grid-cols-3">
             {serviceGroups.map((group) => (
               <div key={group.title}>
@@ -78,8 +66,8 @@ export default function TechPage() {
             <SectionHeading
               align="center"
               eyebrow="Featured projects"
-              title="Systems in development"
-              description="School and church management systems are in active development. Case studies and screenshots are added here as projects are completed."
+              title={t.text("projectsTitle")}
+              description={t.text("projectsText")}
             />
             <Link
               href="/#projects"
