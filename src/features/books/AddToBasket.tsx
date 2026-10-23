@@ -1,23 +1,28 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { formatGhs, type BookFormat } from "@/config/books";
 import { addToBasket, onBasketChange, readBasket } from "@/features/books/basket";
 import { ApproxPrice } from "@/features/currency/ApproxPrice";
 import { CurrencyNote } from "@/features/currency/CurrencyNote";
 import { ONLINE_FORMS_ENABLED, whatsappLink } from "@/config/forms";
+import { payForBook } from "@/features/payments/quickActions";
 
 interface Props {
   book: { id: string; slug: string; title: string };
   prices: { format: BookFormat; label: string; amount: number }[];
+  /** Paystack "quantity → pay" is switched on. */
+  quickPay?: boolean;
 }
 
-export function AddToBasket({ book, prices }: Props) {
+export function AddToBasket({ book, prices, quickPay = false }: Props) {
   const [format, setFormat] = useState<BookFormat>(prices[0]?.format ?? "read");
   const [quantity, setQuantity] = useState(1);
   const [count, setCount] = useState(0);
   const [added, setAdded] = useState(false);
+  const [payError, setPayError] = useState("");
+  const [paying, startPaying] = useTransition();
 
   useEffect(() => {
     const update = () => setCount(readBasket().reduce((sum, item) => sum + item.quantity, 0));
@@ -95,6 +100,24 @@ export function AddToBasket({ book, prices }: Props) {
           Add to basket
         </button>
         ) : (
+          <>
+          {quickPay && (
+            <button
+              type="button"
+              disabled={paying}
+              onClick={() => {
+                setPayError("");
+                startPaying(async () => {
+                  const result = await payForBook(book.slug, chosen.format, quantity);
+                  if (result.ok) window.location.assign(result.url);
+                  else setPayError(result.message);
+                });
+              }}
+              className="inline-flex items-center justify-center rounded-full bg-brand-primary px-6 py-2.5 text-sm font-medium text-brand-on-primary hover:bg-brand-primary-hover disabled:opacity-50"
+            >
+              {paying ? "Opening secure payment…" : `Pay now · ${formatGhs(quantity > 3 ? Math.round(chosen.amount * quantity * 90) / 100 : chosen.amount * quantity)}`}
+            </button>
+          )}
           <a
             href={whatsappLink(
               `Hello ZIVARUKAH BOOKS, I would like to order:\n${quantity} × "${book.title}" (${chosen.label}) — ${formatGhs(chosen.amount * quantity)}`,
@@ -105,6 +128,7 @@ export function AddToBasket({ book, prices }: Props) {
           >
             Order on WhatsApp
           </a>
+          </>
         )}
       </div>
 
@@ -116,8 +140,18 @@ export function AddToBasket({ book, prices }: Props) {
           </Link>
         </p>
       )}
+      {payError && (
+        <p role="alert" className="text-sm font-medium text-red-700 dark:text-red-400">
+          {payError}
+        </p>
+      )}
+      {!ONLINE_FORMS_ENABLED && quickPay && (
+        <p className="text-xs text-foreground/50">
+          Pay securely with Mobile Money (approve with your PIN) or card on Paystack&apos;s page. We don&apos;t ask for your details here.
+        </p>
+      )}
       <p className="text-xs text-foreground/50">
-        Buy more than 3 books in one order and get 10% off.
+        Buy more than 3 copies and get 10% off.
         {!ONLINE_FORMS_ENABLED && " We confirm your order and how to pay on WhatsApp."}
       </p>
     </div>
