@@ -9,6 +9,8 @@ import { SocialLinks } from "@/components/ui/SocialLinks";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { homePage } from "@/config/pages";
+import { getPageText, textReader } from "@/db/pageContent";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -17,54 +19,22 @@ export const metadata: Metadata = {
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
 
-const techServices = [
-  "Website & software development",
-  "School, church & fuel station management systems",
-  "Cloud & deployment support",
-  "Ongoing maintenance & technical support",
-];
+export default async function Home() {
+  // Admin-edited text over the original wording (Admin → Page text).
+  const t = textReader(await getPageText(homePage));
+  const whyArukah = [1, 2, 3, 4].map((n) => ({
+    title: t.text(`why${n}Title`),
+    description: t.text(`why${n}Text`),
+  }));
 
-const footwearHighlights = [
-  "Slippers & sandals",
-  "Men's, women's & children's footwear",
-  "Custom & wholesale orders",
-];
-
-const mediaServices = [
-  "Video production",
-  "Event coverage",
-  "Video editing",
-  "Promotional videos",
-];
-
-const whyArukah = [
-  {
-    title: "Solutions built for real needs",
-    description: "Technology and systems designed around how organizations actually work.",
-  },
-  {
-    title: "Skills that last",
-    description: "Education and training focused on genuine, lasting excellence.",
-  },
-  {
-    title: "Craftsmanship you can trust",
-    description: "Footwear made with attention to material and quality, not shortcuts.",
-  },
-  {
-    title: "Communities, not just customers",
-    description: "Every division exists to serve people first — commercially and in ministry.",
-  },
-];
-
-export default function Home() {
   return (
     <>
       <AnnouncementBar branch="home" />
       <Hero
         logo={brands.arukah.logo}
         title="ZIVARUKAH"
-        tagline="Creating Solutions. Building Skills. Serving Communities."
-        supportingLine="Technology • Education • Manufacturing • Media • Books"
+        tagline={t.text("heroTagline")}
+        supportingLine={t.text("heroSupportingLine")}
         primaryCta={{ label: "Explore ZIVARUKAH", href: "#businesses" }}
         secondaryCta={{ label: "Contact Us", href: "/contact" }}
       />
@@ -73,48 +43,48 @@ export default function Home() {
         <Container>
           <SectionHeading
             eyebrow="About"
-            title="One brand, several ways to serve"
-            description="ZIVARUKAH brings together technology, education, manufacturing, media, books and ministry under one identity — each division run with its own craft, but the same purpose: creating solutions, building skills, and serving communities."
+            title={t.text("aboutTitle")}
+            description={t.text("aboutText")}
           />
         </Container>
       </section>
 
       <section id="businesses" className="py-16">
         <Container>
-          <SectionHeading eyebrow="Our Businesses" title="What ZIVARUKAH builds" align="center" />
+          <SectionHeading eyebrow="Our Businesses" title={t.text("businessesTitle")} align="center" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
             <BusinessCard
               brand="tech"
               name="ARUKAH TECH"
-              description="Software, websites, and management systems."
+              description={t.text("techCard")}
               href="/tech"
               logo={brands.tech.logo}
             />
             <BusinessCard
               brand="footwear"
               name="ARUKAH WEAR"
-              description="Ghana-made, handcrafted footwear."
+              description={t.text("wearCard")}
               href="/footwear"
               logo={brands.footwear.logo}
             />
             <BusinessCard
               brand="ziva"
               name="ZIVA Special Classes"
-              description="Special classes from Primary 1 to SHS 3."
+              description={t.text("zivaCard")}
               href="/ziva"
               logo={brands.ziva.logo}
             />
             <BusinessCard
               brand="media"
               name="ARUKAH MEDIA"
-              description="Video production and creative media."
+              description={t.text("mediaCard")}
               href="/media"
               logo={brands.arukah.logo}
             />
             <BusinessCard
               brand="books"
               name="ZIVARUKAH BOOKS"
-              description="Books to read online, download, or order in print. Coming soon."
+              description={t.text("booksCard")}
               href="/books"
               logo={brands.arukah.logo}
             />
@@ -128,11 +98,11 @@ export default function Home() {
             <div>
               <SectionHeading
                 eyebrow="ARUKAH TECH"
-                title="Innovate. Develop. Empower."
-                description="Custom software and management systems built for schools, churches, fuel stations, and other organizations that need reliable, well-maintained technology."
+                title={t.text("techTitle")}
+                description={t.text("techText")}
               />
               <ul className="mt-6 flex flex-col gap-2 text-sm text-foreground/70">
-                {techServices.map((service) => (
+                {t.list("techServices").map((service) => (
                   <li key={service} className="flex items-start gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary" />
                     {service}
@@ -161,8 +131,8 @@ export default function Home() {
         <Container>
           <SectionHeading
             eyebrow="Featured Projects"
-            title="Systems in development"
-            description="A look at the kind of management systems ARUKAH TECH builds. Screenshots and case studies are added here as projects are completed."
+            title={t.text("projectsTitle")}
+            description={t.text("projectsText")}
           />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
             {["School Management System", "Church Management System"].map(
@@ -200,20 +170,18 @@ export default function Home() {
             <div className="order-1 lg:order-2">
               <SectionHeading
                 eyebrow="ARUKAH WEAR"
-                title="Home of classic and quality wears"
-                description="Ghana-made footwear, crafted with attention to material and durability — from everyday slippers to custom pairs."
+                title={t.text("wearTitle")}
+                description={t.text("wearText")}
               />
               <ul className="mt-6 flex flex-col gap-2 text-sm text-foreground/70">
-                {footwearHighlights.map((item) => (
+                {t.list("wearHighlights").map((item) => (
                   <li key={item} className="flex items-start gap-2">
                     <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-brand-primary" />
                     {item}
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-xs text-foreground/50">
-                Product photos and pricing are added once real inventory is ready.
-              </p>
+              <p className="mt-4 text-xs text-foreground/50">{t.text("wearNote")}</p>
               <div className="mt-6">
                 <Button href="/footwear">Learn more</Button>
               </div>
@@ -228,8 +196,8 @@ export default function Home() {
             <div>
               <SectionHeading
                 eyebrow="ZIVA Special Classes"
-                title="Excellence our hallmark"
-                description="Special classes for students from Primary 1 to SHS 3, focused on genuine academic growth."
+                title={t.text("zivaTitle")}
+                description={t.text("zivaText")}
               />
               <div className="mt-6 flex flex-wrap gap-4">
                 <Button href="/ziva">Learn more</Button>
@@ -251,9 +219,9 @@ export default function Home() {
 
       <section id="media" className="py-16">
         <Container>
-          <SectionHeading eyebrow="ARUKAH MEDIA" title="Creative media, done well" align="center" />
+          <SectionHeading eyebrow="ARUKAH MEDIA" title={t.text("mediaTitle")} align="center" />
           <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {mediaServices.map((service) => (
+            {t.list("mediaServices").map((service) => (
               <div
                 key={service}
                 className="rounded-xl border border-black/10 p-4 text-center text-sm font-medium dark:border-white/10"
@@ -279,12 +247,9 @@ export default function Home() {
                 Repent Online Ministries
               </h2>
               <p className="mt-2 text-sm font-medium uppercase tracking-wide text-brand-secondary">
-                Rescue the Perishing
+                {t.text("ministryMotto")}
               </p>
-              <p className="mt-4 max-w-md text-sm leading-6 text-white/70">
-                Kept visually and editorially separate from the commercial ZIVARUKAH
-                businesses. Follow along as content is published across:
-              </p>
+              <p className="mt-4 max-w-md text-sm leading-6 text-white/70">{t.text("ministryText")}</p>
               <div className="mt-4">
                 <SocialLinks />
               </div>
@@ -307,7 +272,7 @@ export default function Home() {
 
       <section id="why" className="py-16">
         <Container>
-          <SectionHeading eyebrow="Why ZIVARUKAH" title="What holds it together" align="center" />
+          <SectionHeading eyebrow="Why ZIVARUKAH" title={t.text("whyTitle")} align="center" />
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {whyArukah.map((item) => (
               <div key={item.title} className="rounded-2xl border border-black/10 p-5 dark:border-white/10">
@@ -325,8 +290,8 @@ export default function Home() {
             <SectionHeading
               align="center"
               eyebrow="Get in touch"
-              title="Let's talk about your project"
-              description="Tell us a bit about what you need and we'll get back to you."
+              title={t.text("contactTitle")}
+              description={t.text("contactText")}
             />
             <div className="mt-6">
               <Button href="/contact">Go to contact form</Button>
