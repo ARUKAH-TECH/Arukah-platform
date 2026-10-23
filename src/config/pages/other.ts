@@ -235,8 +235,8 @@ export const advertisePage: PageDef = {
           max: 160,
           maxItems: 6,
           default: [
-            "Send your request below, with a photo if you have one.",
-            "We contact you to agree the dates and the price.",
+            "Message us on WhatsApp: what the advert is about, your location, and a photo if you have one.",
+            "We reply to agree the dates and the price.",
             "Your advert goes live once it's approved.",
           ],
         },
