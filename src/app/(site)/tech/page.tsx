@@ -6,6 +6,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { AdSlot } from "@/features/ads/AdSlot";
 import { techPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -78,6 +79,9 @@ export default async function TechPage() {
           </div>
         </Container>
       </section>
+
+      <AdSlot branch="tech" />
+
 
       <ProjectsSection branch="tech" />
     </div>

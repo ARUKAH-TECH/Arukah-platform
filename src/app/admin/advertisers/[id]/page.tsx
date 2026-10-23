@@ -10,9 +10,10 @@ import { branchLabel } from "@/config/branches";
 
 export const metadata: Metadata = { title: "Advertiser application" };
 
-export default async function AdvertiserPage({ params }: PageProps<"/admin/advertisers/[id]">) {
+export default async function AdvertiserPage({ params, searchParams }: PageProps<"/admin/advertisers/[id]">) {
   const admin = await requireAdmin();
   const { id } = await params;
+  const { error: errorCode } = await searchParams;
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
 
   const supabase = await createClient();
@@ -96,10 +97,25 @@ export default async function AdvertiserPage({ params }: PageProps<"/admin/adver
 
         <div className="rounded-2xl border border-black/10 bg-white p-6 dark:border-white/10 dark:bg-zinc-900">
           <AdvertiserReviewForm id={item.id} status={item.status} reviewNote={item.review_note} />
+          {item.status === "approved" && (
+            <Link
+              href={`/admin/ads/new?advertiser=${item.id}`}
+              className="mt-6 inline-block text-sm font-semibold text-brand-primary-text hover:underline"
+            >
+              Create an advert for this advertiser →
+            </Link>
+          )}
         </div>
       </div>
 
       <section className="mt-12 max-w-4xl border-t border-black/10 pt-8 dark:border-white/10">
+        {errorCode && (
+          <p role="alert" className="mb-3 text-sm text-red-700 dark:text-red-400">
+            {errorCode === "has-ads"
+              ? "This advertiser still has adverts. Delete those adverts first (or reject the advertiser instead)."
+              : "Couldn't delete. Please try again."}
+          </p>
+        )}
         <details className="text-sm">
           <summary className="cursor-pointer text-red-700 dark:text-red-400">Delete this application…</summary>
           <form action={deleteAdvertiser} className="mt-3">

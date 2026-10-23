@@ -11,11 +11,12 @@ const ready = [
   { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
   { title: "Ministry outreach", description: "Hospital, prison, street, community and crusade outreach reports.", href: "/admin/outreach" },
   { title: "Advertisers", description: "Review applications from the Advertise With Us page.", href: "/admin/advertisers" },
+  { title: "Adverts", description: "Create adverts, record the three approvals, and choose which pages show adverts.", href: "/admin/ads" },
   { title: "Page text", description: "Change the headings and wording on the website's pages.", href: "/admin/pages" },
 ];
 
 // Sections land here one phase at a time (see docs/EXPANSION-PLAN.md).
-const upcoming = ["Support & donations", "Books", "Advertising"];
+const upcoming = ["Support & donations", "Books"];
 
 export default async function AdminDashboardPage() {
   const admin = await requireAdmin();

@@ -9,6 +9,7 @@ import { SocialLinks } from "@/components/ui/SocialLinks";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
+import { AdSlot } from "@/features/ads/AdSlot";
 import { homePage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -154,6 +155,9 @@ export default async function Home() {
           </div>
         </Container>
       </section>
+
+      <AdSlot branch="home" />
+
 
       <ProjectsSection branch="home" eyebrow="Latest" title="Recent projects" />
 
