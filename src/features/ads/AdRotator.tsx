@@ -41,7 +41,11 @@ export function AdRotator({ ads }: { ads: RotatingAd[] }) {
                 {/* eslint-disable-next-line @next/next/no-img-element -- decorative background copy */}
                 <img src={ad.imageUrl} alt="" aria-hidden="true" className="absolute inset-0 h-full w-full scale-110 object-cover opacity-40 blur-md" />
                 {/* eslint-disable-next-line @next/next/no-img-element -- advert image from our media bucket */}
-                <img src={ad.imageUrl} alt={`Sponsored: ${ad.label}`} className="relative h-full w-full object-contain" />
+                <img
+                  src={ad.imageUrl}
+                  alt={ad.label === "Sponsored" ? "Sponsored advert" : `Sponsored: ${ad.label}`}
+                  className="ad-drift relative h-full w-full object-contain"
+                />
               </>
             );
             const layer = `absolute inset-0 block transition-opacity duration-700 motion-reduce:transition-none ${
