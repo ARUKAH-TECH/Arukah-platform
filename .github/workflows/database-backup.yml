@@ -1,0 +1,104 @@
+# Daily encrypted backup of the Supabase database.
+#
+# Why encrypted: this repository is public, and GitHub lets signed-in users
+# download a public repository's workflow artifacts. The dump contains
+# personal details (messages, orders), so it is locked with a passphrase
+# BEFORE it is uploaded. Without the passphrase the file is useless.
+#
+# Needs two repository secrets (Settings → Secrets and variables → Actions):
+#   SUPABASE_DB_URL     – the "Session pooler" connection string from
+#                         Supabase → Connect (includes the database password)
+#   BACKUP_PASSPHRASE   – a long passphrase you choose and keep safe
+# If either is missing, the job explains and stops without failing.
+#
+# Restore steps: docs/BACKUP-AND-RECOVERY.md
+
+name: Database backup
+
+on:
+  schedule:
+    - cron: "17 2 * * *" # every day at 02:17 Ghana time (UTC)
+  workflow_dispatch: {} # "Run workflow" button for an on-demand backup
+
+permissions:
+  contents: read
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - name: Check the secrets are set
+        id: check
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          if [ -z "$DB_URL" ] || [ -z "$PASSPHRASE" ]; then
+            echo "::warning::Backups are not set up yet: add SUPABASE_DB_URL and BACKUP_PASSPHRASE as repository secrets."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          elif [ "${#PASSPHRASE}" -lt 16 ]; then
+            echo "::error::BACKUP_PASSPHRASE is too short — use at least 16 characters."
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+            exit 1
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Install PostgreSQL 17 client tools
+        if: steps.check.outputs.ready == 'true'
+        run: |
+          sudo install -d /usr/share/postgresql-common/pgdg
+          sudo curl -fsSL -o /usr/share/postgresql-common/pgdg/apt.postgresql.org.asc https://www.postgresql.org/media/keys/ACCC4CF8.asc
+          echo "deb [signed-by=/usr/share/postgresql-common/pgdg/apt.postgresql.org.asc] https://apt.postgresql.org/pub/repos/apt $(lsb_release -cs)-pgdg main" | sudo tee /etc/apt/sources.list.d/pgdg.list
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq postgresql-client-17
+          /usr/lib/postgresql/17/bin/pg_dump --version
+
+      - name: Dump, encrypt and check
+        if: steps.check.outputs.ready == 'true'
+        env:
+          DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+          PASSPHRASE: ${{ secrets.BACKUP_PASSPHRASE }}
+        run: |
+          set -euo pipefail
+          umask 077
+          PG_DUMP=/usr/lib/postgresql/17/bin/pg_dump
+          STAMP=$(date -u +%Y-%m-%d)
+          WORK=$(mktemp -d)
+          mkdir -p "$WORK/zivarukah-backup-$STAMP" out
+
+          # 1. Everything we created: tables, functions, policies and all their rows.
+          "$PG_DUMP" "$DB_URL" --schema=public --no-owner --no-privileges \
+            --file="$WORK/zivarukah-backup-$STAMP/public.sql"
+
+          # 2. Rows Supabase manages for us: admin logins and file records.
+          "$PG_DUMP" "$DB_URL" --data-only --no-owner --no-privileges \
+            --table=auth.users --table=auth.identities --table=auth.mfa_factors \
+            --table=storage.buckets --table=storage.objects \
+            --file="$WORK/zivarukah-backup-$STAMP/auth-and-storage-data.sql"
+
+          # Sanity check: the public dump must contain our core tables.
+          for table in projects page_content inbox_messages ad_requests books book_orders; do
+            grep -q "CREATE TABLE public.$table " "$WORK/zivarukah-backup-$STAMP/public.sql" \
+              || { echo "::error::Backup looks incomplete (no table $table)."; exit 1; }
+          done
+
+          tar -C "$WORK" -czf "$WORK/backup.tar.gz" "zivarukah-backup-$STAMP"
+          gpg --batch --yes --pinentry-mode loopback --passphrase "$PASSPHRASE" \
+            --symmetric --cipher-algo AES256 \
+            --output "out/zivarukah-backup-$STAMP.tar.gz.gpg" "$WORK/backup.tar.gz"
+
+          # Prove the encrypted file opens with the passphrase, then wipe plain copies.
+          gpg --batch --pinentry-mode loopback --passphrase "$PASSPHRASE" --decrypt "out/zivarukah-backup-$STAMP.tar.gz.gpg" | tar -tz > /dev/null
+          rm -rf "$WORK"
+          ls -lh out
+
+      - name: Keep the encrypted backup for 30 days
+        if: steps.check.outputs.ready == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: zivarukah-db-backup
+          path: out/*.gpg
+          retention-days: 30
+          if-no-files-found: error
