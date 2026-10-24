@@ -166,3 +166,33 @@ export async function confirmQuickPayment(reference: string): Promise<QuickConfi
   }
   return { state: "pending" };
 }
+
+/**
+ * For a paid "Read online" / "Digital download" purchase: a link to the book
+ * PDF that works for one hour. Available for 30 days after payment, so the
+ * buyer can come back to the same page (bookmark) to open it again.
+ */
+export async function bookFileLink(reference: string): Promise<{ url: string; download: boolean } | null> {
+  if (!/^ZS-[A-Z0-9]{10}$/.test(reference) || !quickPaymentsEnabled()) return null;
+  const supabase = createServiceClient();
+  const { data: row } = await supabase
+    .from("quick_payments")
+    .select("kind, status, book_id, book_format, paid_at")
+    .eq("reference", reference)
+    .maybeSingle();
+  if (!row || row.kind !== "book" || row.status !== "success" || !row.book_id) return null;
+  if (row.book_format !== "read" && row.book_format !== "download") return null;
+  if (row.paid_at && Date.now() - new Date(row.paid_at).getTime() > 30 * 24 * 3600 * 1000) return null;
+  const { data: book } = await supabase.from("books").select("book_file_path, book_file_name").eq("id", row.book_id).maybeSingle();
+  if (!book?.book_file_path) return null;
+  const download = row.book_format === "download";
+  const name = (book.book_file_name || "book.pdf").replace(/[^\w .()-]/g, "_");
+  const { data, error } = await supabase.storage
+    .from("book-files")
+    .createSignedUrl(book.book_file_path, 3600, download ? { download: name } : undefined);
+  if (error || !data?.signedUrl) {
+    console.error("[quick-pay] signed link failed", error?.message);
+    return null;
+  }
+  return { url: data.signedUrl, download };
+}

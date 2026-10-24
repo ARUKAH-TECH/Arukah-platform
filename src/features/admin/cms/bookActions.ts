@@ -8,6 +8,7 @@ import { slugify, type CmsFormState } from "@/features/admin/cms/shared";
 
 const UUID = /^[0-9a-f-]{36}$/;
 const COVER = /^books\/[0-9a-f-]{36}\.webp$/;
+const PDF = /^books\/[0-9a-f-]{36}\.pdf$/;
 
 function text(formData: FormData, key: string, max: number) {
   return String(formData.get(key) ?? "").trim().slice(0, max);
@@ -36,6 +37,7 @@ export async function saveBook(_prev: CmsFormState, formData: FormData): Promise
   const slug = slugify(text(formData, "slug", 80) || title);
   const status = text(formData, "status", 20);
   const coverPath = text(formData, "coverPath", 120) || null;
+  const filePath = text(formData, "filePath", 120) || null;
   const prices = {
     price_read_ghs: price(formData, "priceRead"),
     price_download_ghs: price(formData, "priceDownload"),
@@ -46,6 +48,7 @@ export async function saveBook(_prev: CmsFormState, formData: FormData): Promise
   if (!slug) return { status: "error", message: "The web address needs at least one letter or number." };
   if (!["draft", "published", "archived"].includes(status)) return { status: "error", message: "Choose a status." };
   if (coverPath && !COVER.test(coverPath)) return { status: "error", message: "Upload the cover again, please." };
+  if (filePath && !PDF.test(filePath)) return { status: "error", message: "Upload the PDF again, please." };
   if (Object.values(prices).includes("invalid")) return { status: "error", message: "Prices must be numbers, e.g. 45 or 45.50." };
   if (status === "published" && Object.values(prices).every((value) => value === null)) {
     return { status: "error", message: "Set at least one price before publishing." };
@@ -60,6 +63,9 @@ export async function saveBook(_prev: CmsFormState, formData: FormData): Promise
     cover_path: coverPath,
     cover_width: coverPath ? Number(formData.get("coverWidth")) || null : null,
     cover_height: coverPath ? Number(formData.get("coverHeight")) || null : null,
+    book_file_path: filePath,
+    book_file_name: filePath ? text(formData, "fileName", 200) : "",
+    book_file_size: filePath ? Math.round(Number(formData.get("fileSize")) || 0) || null : null,
     ...prices,
     status,
     sort_order: Math.round(Number(formData.get("sortOrder")) || 0),
@@ -68,7 +74,7 @@ export async function saveBook(_prev: CmsFormState, formData: FormData): Promise
 
   const supabase = await createClient();
   const previous = id
-    ? (await supabase.from("books").select("cover_path, slug").eq("id", id).maybeSingle()).data
+    ? (await supabase.from("books").select("cover_path, slug, book_file_path").eq("id", id).maybeSingle()).data
     : null;
   const result = id
     ? await supabase.from("books").update(row).eq("id", id).select("id").single()
@@ -80,6 +86,9 @@ export async function saveBook(_prev: CmsFormState, formData: FormData): Promise
   }
   if (previous?.cover_path && previous.cover_path !== coverPath) {
     await supabase.storage.from("media").remove([previous.cover_path]);
+  }
+  if (previous?.book_file_path && previous.book_file_path !== filePath) {
+    await supabase.storage.from("book-files").remove([previous.book_file_path]);
   }
 
   await audit(id ? "book.update" : "book.create", { id: result.data.id, slug, status });
@@ -94,13 +103,14 @@ export async function deleteBook(formData: FormData) {
   const id = text(formData, "id", 64);
   if (!UUID.test(id)) return;
   const supabase = await createClient();
-  const { data: book } = await supabase.from("books").select("cover_path, slug").eq("id", id).maybeSingle();
+  const { data: book } = await supabase.from("books").select("cover_path, slug, book_file_path").eq("id", id).maybeSingle();
   const { error } = await supabase.from("books").delete().eq("id", id);
   if (error) {
     console.error("[admin] deleteBook failed", error.message);
     return;
   }
   if (book?.cover_path) await supabase.storage.from("media").remove([book.cover_path]);
+  if (book?.book_file_path) await supabase.storage.from("book-files").remove([book.book_file_path]);
   await audit("book.delete", { id });
   revalidateBooks(book?.slug);
   redirect("/admin/books");

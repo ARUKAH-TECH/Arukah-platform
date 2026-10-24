@@ -3,7 +3,7 @@
 import { useActionState, useRef, useState } from "react";
 import { saveBook } from "@/features/admin/cms/bookActions";
 import { initialCmsFormState, slugify } from "@/features/admin/cms/shared";
-import { ACCEPTED_IMAGE_TYPES, resize } from "@/lib/resizeImage";
+import { IMAGE_PICKER_ACCEPT, resize } from "@/lib/resizeImage";
 import { createClient } from "@/lib/supabase/browser";
 import { fieldClasses, primaryButtonClasses, secondaryButtonClasses } from "@/features/admin/ui";
 
@@ -17,6 +17,9 @@ export interface BookFormValues {
   coverPath: string | null;
   coverWidth: number | null;
   coverHeight: number | null;
+  filePath: string | null;
+  fileName: string;
+  fileSize: number | null;
   priceRead: string;
   priceDownload: string;
   pricePrint: string;
@@ -37,27 +40,68 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
+  const [coverStep, setCoverStep] = useState("");
+  const [pdf, setPdf] = useState({ path: book.filePath, name: book.fileName, size: book.fileSize });
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const [pdfStep, setPdfStep] = useState("");
+  const [pdfError, setPdfError] = useState("");
+  const pdfInput = useRef<HTMLInputElement>(null);
   const shown = state.status !== "idle" ? state : justSaved ? { status: "saved", message: "Saved." } : null;
 
+  // Runs as soon as a photo is picked — no second button to press.
   async function uploadCover() {
     const file = fileInput.current?.files?.[0];
     if (!file) return;
-    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) return setUploadError("Use a JPEG, PNG or WebP image.");
     setUploading(true);
     setUploadError("");
+    setCoverStep("Preparing the photo…");
     try {
       const { blob, width, height } = await resize(file, 1200, 0.85);
+      setCoverStep("Uploading…");
       const path = `books/${crypto.randomUUID()}.webp`;
       const { error } = await createClient()
         .storage.from("media")
         .upload(path, blob, { contentType: "image/webp", cacheControl: "31536000" });
       if (error) throw new Error(error.message);
       setCover({ path, width, height });
+      setCoverStep("Cover uploaded ✓ — now press Save book.");
     } catch (error) {
+      setCoverStep("");
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
       setUploading(false);
       if (fileInput.current) fileInput.current.value = "";
+    }
+  }
+
+  async function uploadPdf() {
+    const file = pdfInput.current?.files?.[0];
+    if (!file) return;
+    setPdfError("");
+    if (file.type && file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+      if (pdfInput.current) pdfInput.current.value = "";
+      return setPdfError("Choose a PDF file.");
+    }
+    if (file.size > 50 * 1024 * 1024) {
+      if (pdfInput.current) pdfInput.current.value = "";
+      return setPdfError(`This PDF is ${(file.size / 1048576).toFixed(0)} MB. The limit is 50 MB — try a compressed PDF.`);
+    }
+    setPdfBusy(true);
+    setPdfStep(`Uploading ${(file.size / 1048576).toFixed(1)} MB… keep this page open.`);
+    try {
+      const path = `books/${crypto.randomUUID()}.pdf`;
+      const { error } = await createClient()
+        .storage.from("book-files")
+        .upload(path, file, { contentType: "application/pdf" });
+      if (error) throw new Error(error.message);
+      setPdf({ path, name: file.name.slice(0, 200), size: file.size });
+      setPdfStep("PDF uploaded ✓ — now press Save book.");
+    } catch (error) {
+      setPdfStep("");
+      setPdfError(error instanceof Error ? error.message : "Upload failed.");
+    } finally {
+      setPdfBusy(false);
+      if (pdfInput.current) pdfInput.current.value = "";
     }
   }
 
@@ -67,6 +111,9 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
       <input type="hidden" name="coverPath" value={cover.path ?? ""} />
       <input type="hidden" name="coverWidth" value={cover.width ?? ""} />
       <input type="hidden" name="coverHeight" value={cover.height ?? ""} />
+      <input type="hidden" name="filePath" value={pdf.path ?? ""} />
+      <input type="hidden" name="fileName" value={pdf.name} />
+      <input type="hidden" name="fileSize" value={pdf.size ?? ""} />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <label className="text-sm font-medium">
@@ -114,10 +161,10 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
             <img src={coverUrl(cover.path)} alt="" className="h-36 w-24 rounded-md object-cover shadow" />
           )}
           <div className="flex flex-col gap-2">
-            <input ref={fileInput} type="file" accept={ACCEPTED_IMAGE_TYPES.join(",")} className="text-sm" />
+            <input ref={fileInput} type="file" accept={IMAGE_PICKER_ACCEPT} onChange={uploadCover} className="hidden" />
             <div className="flex gap-3">
-              <button type="button" onClick={uploadCover} disabled={uploading} className={secondaryButtonClasses}>
-                {uploading ? "Uploading…" : cover.path ? "Replace cover" : "Upload cover"}
+              <button type="button" onClick={() => fileInput.current?.click()} disabled={uploading} className={secondaryButtonClasses}>
+                {uploading ? "Uploading…" : cover.path ? "Change cover photo" : "Choose cover photo"}
               </button>
               {cover.path && (
                 <button type="button" onClick={() => setCover({ path: null, width: null, height: null })} className="text-xs underline">
@@ -127,8 +174,37 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
             </div>
           </div>
         </div>
-        {uploadError && <p className="mt-1 text-xs text-red-700 dark:text-red-400">{uploadError}</p>}
-        <p className="mt-1 text-xs text-foreground/50">Portrait book covers (2:3) look best. Press Save after uploading.</p>
+        {coverStep && <p className="mt-2 text-sm text-green-700 dark:text-green-400">{coverStep}</p>}
+        {uploadError && <p role="alert" className="mt-2 text-sm font-medium text-red-700 dark:text-red-400">{uploadError}</p>}
+        <p className="mt-1 text-xs text-foreground/50">Portrait book covers (2:3) look best. It uploads as soon as you pick it.</p>
+      </div>
+
+      <div className="rounded-2xl border border-black/10 p-4 dark:border-white/10">
+        <p className="text-sm font-semibold">Book file (PDF)</p>
+        <p className="mt-1 text-xs text-foreground/60">
+          Kept private. Buyers of &quot;Read online&quot; or &quot;Digital download&quot; get a link to it after paying. Up to 50 MB.
+        </p>
+        {pdf.path ? (
+          <p className="mt-3 text-sm">
+            📄 <span className="font-medium">{pdf.name || "Book PDF"}</span>
+            {pdf.size ? <span className="text-foreground/50"> · {(pdf.size / 1048576).toFixed(1)} MB</span> : null}
+          </p>
+        ) : (
+          <p className="mt-3 text-sm text-foreground/60">No PDF yet.</p>
+        )}
+        <input ref={pdfInput} type="file" accept="application/pdf,.pdf" onChange={uploadPdf} className="hidden" />
+        <div className="mt-3 flex flex-wrap gap-3">
+          <button type="button" onClick={() => pdfInput.current?.click()} disabled={pdfBusy} className={secondaryButtonClasses}>
+            {pdfBusy ? "Uploading…" : pdf.path ? "Replace PDF" : "Choose PDF"}
+          </button>
+          {pdf.path && !pdfBusy && (
+            <button type="button" onClick={() => setPdf({ path: null, name: "", size: null })} className="text-xs underline">
+              Remove
+            </button>
+          )}
+        </div>
+        {pdfStep && <p className="mt-2 text-sm text-green-700 dark:text-green-400">{pdfStep}</p>}
+        {pdfError && <p role="alert" className="mt-2 text-sm font-medium text-red-700 dark:text-red-400">{pdfError}</p>}
       </div>
 
       <fieldset className="rounded-2xl border border-black/10 p-4 dark:border-white/10">
@@ -185,7 +261,7 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
       )}
 
       <div>
-        <button type="submit" disabled={pending || uploading} className={primaryButtonClasses}>
+        <button type="submit" disabled={pending || uploading || pdfBusy} className={primaryButtonClasses}>
           {pending ? "Saving…" : "Save book"}
         </button>
       </div>

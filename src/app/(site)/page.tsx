@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { SocialLinks } from "@/components/ui/SocialLinks";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
+import { GallerySection } from "@/features/gallery/GallerySection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
@@ -199,6 +200,7 @@ export default async function Home() {
       <AdSlot branch="home" />
 
 
+      <GallerySection branch="home" />
       <ProjectsSection branch="home" eyebrow="Latest" title="Recent projects" />
 
       <section id="footwear" data-brand="footwear" className="py-16">

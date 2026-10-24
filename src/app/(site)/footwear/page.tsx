@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
+import { GallerySection } from "@/features/gallery/GallerySection";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
@@ -67,6 +68,7 @@ export default async function FootwearPage() {
       <AdSlot branch="wear" />
 
 
+      <GallerySection branch="wear" />
       <ProjectsSection branch="wear" />
     </div>
   );

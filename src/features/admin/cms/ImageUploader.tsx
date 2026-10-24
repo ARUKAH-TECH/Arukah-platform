@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/browser";
 import { registerImage } from "@/features/admin/cms/actions";
 import { fieldClasses, primaryButtonClasses } from "@/features/admin/ui";
-import { ACCEPTED_IMAGE_TYPES as ACCEPTED, resize } from "@/lib/resizeImage";
+import { IMAGE_PICKER_ACCEPT, resize } from "@/lib/resizeImage";
 
 interface ImageUploaderProps {
   projects: { id: string; title: string }[];
@@ -22,14 +22,7 @@ export function ImageUploader({ projects, defaultProjectId }: ImageUploaderProps
 
   async function upload() {
     const files = Array.from(fileInput.current?.files ?? []);
-    if (files.length === 0) {
-      setMessage({ ok: false, text: "Choose at least one image." });
-      return;
-    }
-    if (files.some((file) => !ACCEPTED.includes(file.type))) {
-      setMessage({ ok: false, text: "Only JPEG, PNG or WebP images can be uploaded." });
-      return;
-    }
+    if (files.length === 0) return;
 
     setBusy(true);
     setMessage(null);
@@ -37,6 +30,7 @@ export function ImageUploader({ projects, defaultProjectId }: ImageUploaderProps
     let done = 0;
     try {
       for (const file of files) {
+        setMessage({ ok: true, text: `Preparing and uploading image ${done + 1} of ${files.length}…` });
         const { blob, width, height } = await resize(file);
         const storagePath = `${crypto.randomUUID()}.webp`;
         const { error } = await supabase.storage
@@ -57,17 +51,13 @@ export function ImageUploader({ projects, defaultProjectId }: ImageUploaderProps
       setMessage({ ok: false, text: `Uploaded ${done} of ${files.length}. ${reason}` });
     } finally {
       setBusy(false);
+      if (fileInput.current) fileInput.current.value = "";
     }
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <label htmlFor="images" className="block text-sm font-medium">
-          Images <span className="font-normal text-foreground/50">(JPEG, PNG or WebP — resized automatically)</span>
-        </label>
-        <input id="images" ref={fileInput} type="file" accept={ACCEPTED.join(",")} multiple className="mt-1 text-sm" />
-      </div>
+      <input id="images" ref={fileInput} type="file" accept={IMAGE_PICKER_ACCEPT} multiple onChange={upload} className="hidden" />
       <div>
         <label htmlFor="altText" className="block text-sm font-medium">
           Describe the image <span className="font-normal text-foreground/50">(for blind visitors and Google)</span>
@@ -102,9 +92,10 @@ export function ImageUploader({ projects, defaultProjectId }: ImageUploaderProps
         </p>
       )}
       <div>
-        <button type="button" onClick={upload} disabled={busy} className={primaryButtonClasses}>
-          {busy ? "Uploading…" : "Upload"}
+        <button type="button" onClick={() => fileInput.current?.click()} disabled={busy} className={primaryButtonClasses}>
+          {busy ? "Uploading…" : "Choose images"}
         </button>
+        <p className="mt-2 text-xs text-foreground/50">Fill in the boxes above first — images upload as soon as you pick them.</p>
       </div>
     </div>
   );
