@@ -3,7 +3,7 @@
 import { useActionState, useEffect, useRef, useState } from "react";
 import { saveAdRequest } from "@/features/admin/cms/adRequestActions";
 import { initialCmsFormState, toInputDateTime } from "@/features/admin/cms/shared";
-import { ACCEPTED_IMAGE_TYPES, resize } from "@/lib/resizeImage";
+import { IMAGE_PICKER_ACCEPT, resize } from "@/lib/resizeImage";
 import { createClient } from "@/lib/supabase/browser";
 import { fieldClasses, primaryButtonClasses, secondaryButtonClasses } from "@/features/admin/ui";
 import { BannerCropper, type CropSource } from "@/features/admin/cms/BannerCropper";
@@ -89,7 +89,6 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
   async function upload() {
     const file = fileInput.current?.files?.[0];
     if (!file) return;
-    if (!ACCEPTED_IMAGE_TYPES.includes(file.type)) return setUploadError("Use a JPEG, PNG or WebP image.");
     setUploading(true);
     setUploadError("");
     try {
@@ -105,6 +104,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
       setUploading(false);
+      if (fileInput.current) fileInput.current.value = "";
     }
   }
 
@@ -223,9 +223,9 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
                 Upload a different image <span className="text-foreground/50">(wide, ideally 1200 × 150)</span>
               </span>
               <div className="flex flex-wrap items-center gap-3">
-                <input ref={fileInput} type="file" accept={ACCEPTED_IMAGE_TYPES.join(",")} className="text-sm" />
-                <button type="button" onClick={upload} disabled={uploading} className={secondaryButtonClasses}>
-                  {uploading ? "Uploading…" : "Upload"}
+                <input ref={fileInput} type="file" accept={IMAGE_PICKER_ACCEPT} onChange={upload} className="hidden" />
+                <button type="button" onClick={() => fileInput.current?.click()} disabled={uploading} className={secondaryButtonClasses}>
+                  {uploading ? "Uploading…" : "Choose image"}
                 </button>
               </div>
               {uploaded && (

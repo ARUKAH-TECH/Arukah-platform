@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/browser";
 import { addOutreachVideo, registerOutreachImage } from "@/features/admin/cms/outreachMediaActions";
 import { initialCmsFormState } from "@/features/admin/cms/shared";
-import { ACCEPTED_IMAGE_TYPES, resize } from "@/lib/resizeImage";
+import { IMAGE_PICKER_ACCEPT, resize } from "@/lib/resizeImage";
 import { fieldClasses, primaryButtonClasses, secondaryButtonClasses } from "@/features/admin/ui";
 
 /** Uploads photos to the PRIVATE outreach bucket. New photos start hidden until their consent checklist is done. */
@@ -18,10 +18,7 @@ export function OutreachImageUploader({ outreachId }: { outreachId: string }) {
 
   async function upload() {
     const files = Array.from(fileInput.current?.files ?? []);
-    if (files.length === 0) return setMessage({ ok: false, text: "Choose at least one photo." });
-    if (files.some((file) => !ACCEPTED_IMAGE_TYPES.includes(file.type))) {
-      return setMessage({ ok: false, text: "Only JPEG, PNG or WebP photos can be uploaded." });
-    }
+    if (files.length === 0) return;
 
     setBusy(true);
     setMessage(null);
@@ -29,6 +26,7 @@ export function OutreachImageUploader({ outreachId }: { outreachId: string }) {
     let done = 0;
     try {
       for (const file of files) {
+        setMessage({ ok: true, text: `Preparing and uploading photo ${done + 1} of ${files.length}…` });
         const { blob, width, height } = await resize(file);
         const storagePath = `${outreachId}/${crypto.randomUUID()}.webp`;
         const { error } = await supabase.storage
@@ -51,27 +49,16 @@ export function OutreachImageUploader({ outreachId }: { outreachId: string }) {
       setMessage({ ok: false, text: `Uploaded ${done} of ${files.length}. ${reason}` });
     } finally {
       setBusy(false);
+      if (fileInput.current) fileInput.current.value = "";
     }
   }
 
   return (
     <div className="flex flex-col gap-4">
-      <div>
-        <label htmlFor="outreachImages" className="block text-sm font-medium">
-          Photos <span className="font-normal text-foreground/50">(resized, and location data removed, on your phone)</span>
-        </label>
-        <input
-          id="outreachImages"
-          ref={fileInput}
-          type="file"
-          accept={ACCEPTED_IMAGE_TYPES.join(",")}
-          multiple
-          className="mt-1 text-sm"
-        />
-      </div>
+      <input id="outreachImages" ref={fileInput} type="file" accept={IMAGE_PICKER_ACCEPT} multiple onChange={upload} className="hidden" />
       <div>
         <label htmlFor="outreachAlt" className="block text-sm font-medium">
-          Describe the photo <span className="font-normal text-foreground/50">(for blind visitors and Google)</span>
+          Describe the photo <span className="font-normal text-foreground/50">(optional — type this first; for blind visitors and Google)</span>
         </label>
         <input
           id="outreachAlt"
@@ -90,9 +77,10 @@ export function OutreachImageUploader({ outreachId }: { outreachId: string }) {
         </p>
       )}
       <div>
-        <button type="button" onClick={upload} disabled={busy} className={primaryButtonClasses}>
-          {busy ? "Uploading…" : "Upload"}
+        <button type="button" onClick={() => fileInput.current?.click()} disabled={busy} className={primaryButtonClasses}>
+          {busy ? "Uploading…" : "Choose photos"}
         </button>
+        <p className="mt-2 text-xs text-foreground/50">They upload as soon as you pick them (resized, and location data removed, on your phone).</p>
       </div>
     </div>
   );

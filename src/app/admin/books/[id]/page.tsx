@@ -21,7 +21,7 @@ export default async function EditBookPage({ params, searchParams }: PageProps<"
   const { data: b } = await supabase
     .from("books")
     .select(
-      "id, slug, title, author, description, sample_text, cover_path, cover_width, cover_height, price_read_ghs, price_download_ghs, price_print_ghs, status, sort_order",
+      "id, slug, title, author, description, sample_text, cover_path, cover_width, cover_height, book_file_path, book_file_name, book_file_size, price_read_ghs, price_download_ghs, price_print_ghs, status, sort_order",
     )
     .eq("id", id)
     .maybeSingle();
@@ -51,6 +51,9 @@ export default async function EditBookPage({ params, searchParams }: PageProps<"
             description: b.description,
             sampleText: b.sample_text,
             coverPath: b.cover_path,
+            filePath: b.book_file_path,
+            fileName: b.book_file_name ?? "",
+            fileSize: b.book_file_size,
             coverWidth: b.cover_width,
             coverHeight: b.cover_height,
             priceRead: asText(b.price_read_ghs),

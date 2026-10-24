@@ -6,6 +6,7 @@ const nav = [
   { label: "Inbox", href: "/admin/inbox" },
   { label: "Projects", href: "/admin/projects" },
   { label: "Media", href: "/admin/media" },
+  { label: "Gallery", href: "/admin/gallery" },
   { label: "Outreach", href: "/admin/outreach" },
   { label: "Announcements", href: "/admin/announcements" },
   { label: "Adverts", href: "/admin/adverts" },

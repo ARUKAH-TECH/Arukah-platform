@@ -4,12 +4,12 @@ import { Container } from "@/components/ui/Container";
 import { BOOK_FORMATS, formatGhs } from "@/config/books";
 import { whatsappLink } from "@/config/forms";
 import { confirmPayment } from "@/server/payments";
-import { confirmQuickPayment } from "@/server/quickPayments";
+import { bookFileLink, confirmQuickPayment } from "@/server/quickPayments";
 
 export const metadata: Metadata = { title: "Payment", robots: { index: false } };
 
 type View =
-  | { state: "paid"; amountGhs: number; heading: string; lines: string[]; whatsapp: string | null }
+  | { state: "paid"; amountGhs: number; heading: string; lines: string[]; whatsapp: string | null; file?: { url: string; download: boolean } | null }
   | { state: "pending" | "failed" | "unknown" };
 
 async function load(reference: string): Promise<View> {
@@ -20,6 +20,20 @@ async function load(reference: string): Promise<View> {
       const format = BOOK_FORMATS.find((f) => f.id === r.bookFormat)?.label ?? "";
       const item = `${r.quantity} × "${r.bookTitle}"${format ? ` (${format})` : ""}`;
       const isPrint = r.bookFormat === "print";
+      const file = isPrint ? null : await bookFileLink(reference);
+      if (file) {
+        return {
+          state: "paid",
+          amountGhs: r.amountGhs,
+          heading: "Thank you — your book is ready",
+          lines: [
+            `You paid for ${item}.`,
+            "Tap the button to open your book. Bookmark this page: you can come back to it for 30 days to open the book again.",
+          ],
+          whatsapp: null,
+          file,
+        };
+      }
       return {
         state: "paid",
         amountGhs: r.amountGhs,
@@ -78,6 +92,16 @@ export default async function PaymentDonePage({ searchParams }: PageProps<"/paym
               <p className="mt-4 text-sm">
                 Payment reference: <span className="font-mono font-bold">{reference}</span> — please keep it.
               </p>
+              {view.file && (
+                <a
+                  href={view.file.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-5 inline-flex rounded-full bg-brand-primary px-6 py-2.5 text-sm font-semibold text-brand-on-primary"
+                >
+                  {view.file.download ? "Download your book (PDF)" : "Open your book (PDF)"}
+                </a>
+              )}
               {view.whatsapp && (
                 <a
                   href={view.whatsapp}
