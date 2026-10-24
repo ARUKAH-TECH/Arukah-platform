@@ -8,6 +8,7 @@ import { getPublishedBook } from "@/db/books";
 import { AddToBasket } from "@/features/books/AddToBasket";
 import { quickPaymentsEnabled } from "@/server/quickPayments";
 import { JsonLd } from "@/components/seo/JsonLd";
+import { ContinueReading } from "@/features/books/ReaderBits";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
@@ -84,6 +85,32 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
             <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">ZIVARUKAH BOOKS</p>
             <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">{book.title}</h1>
             {book.author && <p className="mt-2 text-foreground/70">by {book.author}</p>}
+
+            {book.prices.some((p) => p.format === "read") && (
+              <div className="mt-5 flex flex-wrap items-center gap-3">
+                <ContinueReading slug={book.slug} />
+                <Link
+                  href={`/books/${book.slug}/read`}
+                  className="inline-flex items-center justify-center rounded-full border border-brand-primary-text px-5 py-2 text-sm font-semibold text-brand-primary-text"
+                >
+                  📖 Read online now — with read-aloud 🔊
+                </Link>
+              </div>
+            )}
+
+            {book.highlights.length > 0 && (
+              <section aria-label="Lines readers love" className="mt-8">
+                <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">Lines readers love</p>
+                <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                  {book.highlights.slice(0, 4).map((line) => (
+                    <blockquote key={line} className="rounded-2xl bg-brand-primary/10 p-4 font-serif text-base italic leading-7">
+                      <span aria-hidden="true" className="mr-1 font-sans text-2xl leading-none text-brand-primary-text">“</span>
+                      {line}
+                    </blockquote>
+                  ))}
+                </div>
+              </section>
+            )}
 
             <div id="order" className="mt-6">
               {book.prices.length > 0 ? (

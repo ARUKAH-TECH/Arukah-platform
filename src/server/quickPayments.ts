@@ -100,6 +100,7 @@ export type QuickConfirm =
       state: "paid";
       kind: "book" | "gift";
       amountGhs: number;
+      bookId: string | null;
       bookTitle: string;
       bookFormat: string | null;
       quantity: number | null;
@@ -113,7 +114,7 @@ export async function confirmQuickPayment(reference: string): Promise<QuickConfi
   const supabase = createServiceClient();
   const { data: row } = await supabase
     .from("quick_payments")
-    .select("id, kind, amount_ghs, status, book_title, book_format, quantity, outreach_title")
+    .select("id, kind, amount_ghs, status, book_id, book_title, book_format, quantity, outreach_title")
     .eq("reference", reference)
     .maybeSingle();
   if (!row) return { state: "unknown" };
@@ -122,6 +123,7 @@ export async function confirmQuickPayment(reference: string): Promise<QuickConfi
     state: "paid",
     kind: row.kind,
     amountGhs: Number(row.amount_ghs),
+    bookId: row.book_id,
     bookTitle: row.book_title,
     bookFormat: row.book_format,
     quantity: row.quantity,
@@ -195,4 +197,10 @@ export async function bookFileLink(reference: string): Promise<{ url: string; do
     return null;
   }
   return { url: data.signedUrl, download };
+}
+
+export async function bookSlug(bookId: string | null) {
+  if (!bookId || !quickPaymentsEnabled()) return null;
+  const { data } = await createServiceClient().from("books").select("slug").eq("id", bookId).maybeSingle();
+  return (data?.slug as string | undefined) ?? null;
 }

@@ -4,7 +4,8 @@ import { Container } from "@/components/ui/Container";
 import { BOOK_FORMATS, formatGhs } from "@/config/books";
 import { whatsappLink } from "@/config/forms";
 import { confirmPayment } from "@/server/payments";
-import { bookFileLink, confirmQuickPayment } from "@/server/quickPayments";
+import { redirect } from "next/navigation";
+import { bookFileLink, bookSlug, confirmQuickPayment } from "@/server/quickPayments";
 
 export const metadata: Metadata = { title: "Payment", robots: { index: false } };
 
@@ -20,6 +21,11 @@ async function load(reference: string): Promise<View> {
       const format = BOOK_FORMATS.find((f) => f.id === r.bookFormat)?.label ?? "";
       const item = `${r.quantity} × "${r.bookTitle}"${format ? ` (${format})` : ""}`;
       const isPrint = r.bookFormat === "print";
+      // "Read online": go straight into the reader.
+      if (r.bookFormat === "read") {
+        const slug = await bookSlug(r.bookId);
+        if (slug) redirect(`/books/${slug}/read?ref=${reference}`);
+      }
       const file = isPrint ? null : await bookFileLink(reference);
       if (file) {
         return {

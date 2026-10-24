@@ -15,6 +15,7 @@ export interface PublicBook {
   author: string;
   description: string;
   sampleText: string;
+  highlights: string[];
   cover: { url: string; width: number | null; height: number | null } | null;
   prices: BookPrice[];
 }
@@ -26,6 +27,7 @@ interface BookRow {
   author: string;
   description: string;
   sample_text: string;
+  highlights: string[] | null;
   cover_path: string | null;
   cover_width: number | null;
   cover_height: number | null;
@@ -35,7 +37,7 @@ interface BookRow {
 }
 
 const COLUMNS =
-  "id, slug, title, author, description, sample_text, cover_path, cover_width, cover_height, price_read_ghs, price_download_ghs, price_print_ghs";
+  "id, slug, title, author, description, sample_text, highlights, cover_path, cover_width, cover_height, price_read_ghs, price_download_ghs, price_print_ghs";
 
 function toBook(row: BookRow): PublicBook {
   const prices: BookPrice[] = [];
@@ -50,6 +52,7 @@ function toBook(row: BookRow): PublicBook {
     author: row.author,
     description: row.description,
     sampleText: row.sample_text,
+    highlights: row.highlights ?? [],
     cover: row.cover_path ? { url: mediaPublicUrl(row.cover_path), width: row.cover_width, height: row.cover_height } : null,
     prices,
   };

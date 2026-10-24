@@ -6,6 +6,7 @@ import { createClient } from "@/lib/supabase/server";
 import { AdminShell } from "@/features/admin/AdminShell";
 import { BookForm } from "@/features/admin/cms/BookForm";
 import { deleteBook } from "@/features/admin/cms/bookActions";
+import { BookReaderPanel } from "@/features/admin/cms/BookReaderPanel";
 
 export const metadata: Metadata = { title: "Edit book" };
 
@@ -21,11 +22,12 @@ export default async function EditBookPage({ params, searchParams }: PageProps<"
   const { data: b } = await supabase
     .from("books")
     .select(
-      "id, slug, title, author, description, sample_text, cover_path, cover_width, cover_height, book_file_path, book_file_name, book_file_size, price_read_ghs, price_download_ghs, price_print_ghs, status, sort_order",
+      "id, slug, title, author, description, sample_text, cover_path, cover_width, cover_height, book_file_path, book_file_name, book_file_size, highlights, price_read_ghs, price_download_ghs, price_print_ghs, status, sort_order",
     )
     .eq("id", id)
     .maybeSingle();
   if (!b) notFound();
+  const { count: pageCount } = await supabase.from("book_pages").select("page_no", { count: "exact", head: true }).eq("book_id", b.id);
 
   return (
     <AdminShell email={admin.email}>
@@ -64,6 +66,7 @@ export default async function EditBookPage({ params, searchParams }: PageProps<"
           }}
         />
       </div>
+      <BookReaderPanel bookId={b.id} slug={b.slug} filePath={b.book_file_path} pageCount={pageCount ?? 0} highlights={b.highlights ?? []} />
       <section className="mt-12 max-w-3xl border-t border-black/10 pt-8 dark:border-white/10">
         <details className="text-sm">
           <summary className="cursor-pointer text-red-700 dark:text-red-400">Delete this book…</summary>
