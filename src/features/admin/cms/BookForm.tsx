@@ -78,9 +78,12 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
     const file = pdfInput.current?.files?.[0];
     if (!file) return;
     setPdfError("");
-    if (file.type && file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
+    // Check the file itself (every PDF starts with "%PDF-"): phones often
+    // report the wrong type for files named .PDF in capitals.
+    const header = new TextDecoder().decode(await file.slice(0, 5).arrayBuffer());
+    if (header !== "%PDF-") {
       if (pdfInput.current) pdfInput.current.value = "";
-      return setPdfError("Choose a PDF file.");
+      return setPdfError("That file isn't a PDF. Choose the book's PDF file.");
     }
     if (file.size > 50 * 1024 * 1024) {
       if (pdfInput.current) pdfInput.current.value = "";
@@ -192,7 +195,8 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
         ) : (
           <p className="mt-3 text-sm text-foreground/60">No PDF yet.</p>
         )}
-        <input ref={pdfInput} type="file" accept="application/pdf,.pdf" onChange={uploadPdf} className="hidden" />
+        {/* No "accept" filter: on Android it can grey out PDFs named .PDF in capitals. The file is checked above instead. */}
+        <input ref={pdfInput} type="file" onChange={uploadPdf} className="hidden" />
         <div className="mt-3 flex flex-wrap gap-3">
           <button type="button" onClick={() => pdfInput.current?.click()} disabled={pdfBusy} className={secondaryButtonClasses}>
             {pdfBusy ? "Uploading…" : pdf.path ? "Replace PDF" : "Choose PDF"}
