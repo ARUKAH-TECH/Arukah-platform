@@ -136,3 +136,34 @@ summary:focus-visible {
   .ad-roll-x { animation: ad-roll-x 8s ease-in-out infinite alternate; }
 }
 
+
+/* ZIVARUKAH Admin (and the installed ZIV Admin app) — ARUKAH logo colours:
+   royal blue + gold. Applies only inside the admin's [data-admin] wrapper,
+   so the public website keeps its look. Blues/golds sampled from
+   public/branding/arukah/arukah-logo-transparent.png. */
+[data-admin] {
+  --background: #f3f6fc;
+  --admin-blue: #002f80;
+  --admin-navy: #001a4d;
+  --admin-gold: #e3a82a;
+  --brand-primary: #e3a82a;
+  --brand-primary-hover: #c98c10;
+  --brand-on-primary: #14110c;
+  /* Links, active tabs and outlines: royal blue reads clearly on white. */
+  --brand-primary-text: #0b3d91;
+  background: var(--background);
+}
+
+[data-admin] h1 {
+  color: var(--admin-blue);
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-admin] {
+    --background: #050d22;
+    --brand-primary-text: #f0c050;
+  }
+  [data-admin] h1 {
+    color: #f0c050;
+  }
+}
