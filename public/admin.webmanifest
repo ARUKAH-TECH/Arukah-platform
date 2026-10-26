@@ -1,0 +1,21 @@
+{
+  "id": "/admin",
+  "name": "ZIVARUKAH Admin",
+  "short_name": "ZIV Admin",
+  "description": "Manage zivarukah.com: articles, books, outreach, adverts and more.",
+  "start_url": "/admin",
+  "scope": "/admin",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#ffffff",
+  "theme_color": "#002b70",
+  "icons": [
+    { "src": "/admin-icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/admin-icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/admin-icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "New article", "url": "/admin/articles/new", "icons": [{ "src": "/admin-icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Book orders & payments", "url": "/admin/payments", "icons": [{ "src": "/admin-icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}

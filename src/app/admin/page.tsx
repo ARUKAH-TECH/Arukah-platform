@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { requireAdmin } from "@/server/auth";
 import { AdminShell } from "@/features/admin/AdminShell";
+import { InstallAdminApp } from "@/features/admin/AdminApp";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = { title: "Dashboard" };
@@ -41,6 +42,7 @@ export default async function AdminDashboardPage() {
   return (
     <AdminShell email={admin.email}>
       <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
+      <InstallAdminApp />
 
       {waiting.length > 0 && (
         <div className="mt-6 flex flex-wrap gap-3">
