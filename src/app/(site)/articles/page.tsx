@@ -34,7 +34,7 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/article
   const link = (next: Record<string, string | number | undefined>) => {
     const sp = new URLSearchParams();
     const merged = { q: q || undefined, category: category?.slug, ...next };
-    for (const [k, v] of Object.entries(merged)) if (v !== undefined && v !== "" && !(k === "page" && v === 1)) sp.set(k, String(v));
+    for (const [k, v] of Object.entries(merged)) if (v !== undefined && v !== "" && !(k === "page" && String(v) === "1")) sp.set(k, String(v));
     const s = sp.toString();
     return s ? `/articles?${s}` : "/articles";
   };
