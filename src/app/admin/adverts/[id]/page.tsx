@@ -21,7 +21,7 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
   const { data: r } = await supabase
     .from("ad_requests")
     .select(
-      "id, contact_name, business_name, phone, email, about, location, request_image_path, status, starts_at, ends_at, amount_ghs, payment_status, payment_reference, display_kind, display_image_path, video_url, link_url, admin_note, display_seconds, banner_style, ai_video_status, ai_video_prompt, ai_video_path, ai_video_error, created_at",
+      "id, contact_name, business_name, phone, email, about, location, request_image_path, status, starts_at, ends_at, amount_ghs, payment_status, payment_reference, display_kind, display_image_path, video_url, link_url, admin_note, display_seconds, banner_style, is_text_ad, ai_video_status, ai_video_prompt, ai_video_path, ai_video_error, created_at",
     )
     .eq("id", id)
     .maybeSingle();
@@ -116,6 +116,8 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
               displaySeconds: r.display_seconds,
               bannerStyle: r.banner_style === "fit" ? "fit" : "roll",
               requesterPhotoUrl: requestPhoto,
+              isTextAd: Boolean(r.is_text_ad),
+              textDefaults: textAdDefaults(r),
             }}
           />
         </section>
@@ -147,4 +149,15 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
       </section>
     </AdminShell>
   );
+}
+
+/** Starting words for a designed text advert, taken from the request. */
+function textAdDefaults(r: { business_name: string; about: string; location: string; phone: string }) {
+  const about = r.about.replace(/\s+/g, " ").trim();
+  const firstSentence = (about.match(/^[^.!?]{3,}[.!?]?/)?.[0] ?? about).trim();
+  const short = (text: string, max: number) => (text.length > max ? `${text.slice(0, max - 1).trimEnd()}…` : text);
+  const headline = r.business_name.trim() || short(firstSentence, 40);
+  const line2 = r.business_name.trim() ? short(firstSentence, 80) : short(r.location, 80);
+  const contact = r.phone.trim() ? `📞 ${r.phone.trim()}` : r.location.trim() ? `📍 ${short(r.location.trim(), 30)}` : "";
+  return { headline, line2, contact };
 }

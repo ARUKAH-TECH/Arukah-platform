@@ -7,6 +7,7 @@ import { IMAGE_PICKER_ACCEPT, resize } from "@/lib/resizeImage";
 import { createClient } from "@/lib/supabase/browser";
 import { fieldClasses, primaryButtonClasses, secondaryButtonClasses } from "@/features/admin/ui";
 import { BannerCropper, type CropSource } from "@/features/admin/cms/BannerCropper";
+import { TextAdMaker } from "@/features/admin/cms/TextAdMaker";
 
 export interface AdRequestFormValues {
   id: string;
@@ -26,6 +27,9 @@ export interface AdRequestFormValues {
   bannerStyle: "roll" | "fit";
   /** Short-lived link to the requester's private photo, for previewing and cropping. */
   requesterPhotoUrl: string | null;
+  isTextAd: boolean;
+  /** Starting words for a designed text advert, from the request itself. */
+  textDefaults: { headline: string; line2: string; contact: string };
 }
 
 function publicImageUrl(path: string) {
@@ -70,6 +74,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
   const [uploadError, setUploadError] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
   const [bannerStyle, setBannerStyle] = useState(values.bannerStyle);
+  const [textAd, setTextAd] = useState(values.isTextAd);
   const cropSources: CropSource[] = [
     uploaded && { label: "The image you just uploaded", url: publicImageUrl(uploaded.path) },
     values.displayImagePath && { label: "The current advert image", url: publicImageUrl(values.displayImagePath) },
@@ -100,6 +105,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
       if (error) throw new Error(error.message);
       setUploaded({ path, width, height });
       setImageChoice("uploaded");
+      setTextAd(false);
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -116,6 +122,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
       <input type="hidden" name="uploadedWidth" value={uploaded?.width ?? ""} />
       <input type="hidden" name="uploadedHeight" value={uploaded?.height ?? ""} />
       <input type="hidden" name="bannerStyle" value={bannerStyle} />
+      <input type="hidden" name="textAd" value={textAd && imageChoice !== "requester" ? "1" : ""} />
 
       <fieldset>
         <legend className="text-sm font-semibold">Decision</legend>
@@ -252,6 +259,19 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
                 onCropped={(image) => {
                   setUploaded(image);
                   setImageChoice("uploaded");
+                  setTextAd(false);
+                }}
+              />
+            </div>
+            <div className="border-t border-black/10 pt-3 dark:border-white/10">
+              <TextAdMaker
+                defaults={values.textDefaults}
+                fullyPaid={paid === "full"}
+                onReady={(image) => {
+                  setUploaded(image);
+                  setImageChoice("uploaded");
+                  setTextAd(true);
+                  setBannerStyle("fit");
                 }}
               />
             </div>

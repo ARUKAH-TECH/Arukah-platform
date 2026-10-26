@@ -54,6 +54,7 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
   const note = text(formData, "adminNote", 2000);
   const seconds = Math.round(Number(formData.get("displaySeconds")) || 8);
   const bannerStyle = text(formData, "bannerStyle", 10) === "fit" ? "fit" : "roll";
+  const textAdChosen = formData.get("textAd") === "1";
 
   if (!["pending", "approved", "rejected"].includes(status)) return { status: "error", message: "Choose Pending, Approve or Reject." };
   if (!["unpaid", "part", "full"].includes(paymentStatus)) return { status: "error", message: "Choose how much has been paid." };
@@ -83,7 +84,7 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
   const supabase = await createClient();
   const { data: current } = await supabase
     .from("ad_requests")
-    .select("request_image_path, display_image_path, display_image_width, display_image_height")
+    .select("request_image_path, display_image_path, display_image_width, display_image_height, is_text_ad")
     .eq("id", id)
     .maybeSingle();
   if (!current) return { status: "error", message: "Request not found." };
@@ -115,6 +116,14 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
     }
   }
 
+  // A designed text advert is only for adverts that are fully paid.
+  const isTextAd =
+    displayKind === "image" &&
+    ((imageChoice === "uploaded" && textAdChosen) || (imageChoice === "keep" && Boolean(current.is_text_ad) && image.path === current.display_image_path));
+  if (isTextAd && paymentStatus !== "full") {
+    return { status: "error", message: "A text advert can only be used when the advert is Full paid." };
+  }
+
   if (status === "approved") {
     if (!startsAt || !endsAt) return { status: "error", message: "Set the start and end date and time before approving." };
     if (displayKind === "image" && !image.path) {
@@ -140,6 +149,7 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
       admin_note: note,
       display_seconds: seconds,
       banner_style: bannerStyle,
+      is_text_ad: isTextAd,
       updated_at: new Date().toISOString(),
     })
     .eq("id", id);
