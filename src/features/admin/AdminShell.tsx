@@ -1,4 +1,7 @@
+import Image from "next/image";
 import Link from "next/link";
+import { brands } from "@/config/brands";
+import { AdminNav } from "@/features/admin/AdminNav";
 import { signOut } from "@/features/admin/actions";
 
 const nav = [
@@ -19,31 +22,33 @@ const nav = [
 
 // Rendered only by pages that have already passed requireAdmin().
 export function AdminShell({ email, children }: { email: string; children: React.ReactNode }) {
+  const logo = brands.arukah.logo;
   return (
     <>
-      <header className="border-b border-black/10 bg-white dark:border-white/10 dark:bg-zinc-900">
-        <div className="mx-auto flex w-full max-w-5xl flex-wrap items-center justify-between gap-3 px-4 py-3 sm:px-6">
-          <div className="flex flex-wrap items-center gap-5">
-            <span className="text-sm font-bold tracking-tight">ZIVARUKAH Admin</span>
-            <nav aria-label="Admin" className="flex flex-wrap gap-4 text-sm">
-              {nav.map((item) => (
-                <Link key={item.href} href={item.href} className="hover:text-brand-primary-text">
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+      <header className="sticky top-0 z-40 border-b-[3px] border-[var(--admin-gold)] bg-gradient-to-r from-[var(--admin-navy)] to-[var(--admin-blue)] text-white shadow-sm">
+        <div className="mx-auto flex w-full max-w-5xl flex-col gap-2 px-4 py-2.5 sm:px-6">
+          <div className="flex items-center justify-between gap-3">
+            <Link href="/admin" className="flex items-center gap-2">
+              <span className="flex h-8 w-8 items-center justify-center rounded-full bg-white">
+                <Image src={logo.src} alt="" width={26} height={(26 * logo.height) / logo.width} />
+              </span>
+              <span className="text-sm font-bold tracking-tight">
+                ZIVARUKAH <span className="text-[var(--admin-gold)]">Admin</span>
+              </span>
+            </Link>
+            <div className="flex items-center gap-3">
+              <span className="hidden text-xs text-white/70 sm:inline">{email}</span>
+              <form action={signOut}>
+                <button
+                  type="submit"
+                  className="rounded-full border border-white/30 px-4 py-1.5 text-xs font-medium text-white hover:bg-white/10"
+                >
+                  Sign out
+                </button>
+              </form>
+            </div>
           </div>
-          <div className="flex items-center gap-3">
-            <span className="hidden text-xs text-foreground/60 sm:inline">{email}</span>
-            <form action={signOut}>
-              <button
-                type="submit"
-                className="rounded-full border border-black/15 px-4 py-1.5 text-xs font-medium hover:bg-black/5 dark:border-white/15 dark:hover:bg-white/10"
-              >
-                Sign out
-              </button>
-            </form>
-          </div>
+          <AdminNav items={nav} />
         </div>
       </header>
       <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">{children}</div>
