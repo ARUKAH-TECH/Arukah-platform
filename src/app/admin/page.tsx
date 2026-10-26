@@ -8,6 +8,7 @@ export const metadata: Metadata = { title: "Dashboard" };
 
 const ready = [
   { title: "Inbox", description: "Messages from the Contact page and the Ministry response form.", href: "/admin/inbox" },
+  { title: "Articles", description: "Write, preview, publish and unpublish articles and blog posts.", href: "/admin/articles" },
   { title: "Projects", description: "Create, schedule, publish and archive projects, and choose where they appear.", href: "/admin/projects" },
   { title: "Media library", description: "Upload photos and add YouTube or TikTok links, then attach them to projects.", href: "/admin/media" },
   { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
