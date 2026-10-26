@@ -136,6 +136,15 @@ summary:focus-visible {
   .ad-roll-x { animation: ad-roll-x 8s ease-in-out infinite alternate; }
 }
 
+/* "Your advert here" strip: a soft light sweep to catch the eye. */
+@keyframes ad-shine {
+  from { transform: translateX(0); }
+  to { transform: translateX(450%); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .ad-shine { animation: ad-shine 4s ease-in-out infinite; }
+}
+
 
 /* ZIVARUKAH Admin (and the installed ZIV Admin app) — ARUKAH logo colours:
    royal blue + gold. Applies only inside the admin's [data-admin] wrapper,
