@@ -8,7 +8,7 @@ import { allArticleSlugs } from "@/db/articles";
 // otherwise the sitemap ships localhost URLs. See docs/ENVIRONMENT.md.
 const baseUrl = process.env.SITE_URL || "http://localhost:3000";
 
-const routes = ["", "/tech", "/footwear", "/ziva", "/media", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles"];
+const routes = ["", "/tech", "/footwear", "/ziva", "/media", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles", "/literacy"];
 
 // Refreshed at most every hour, and immediately after an admin edit
 // (the CMS actions revalidate /sitemap.xml).

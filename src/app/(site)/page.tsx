@@ -9,6 +9,7 @@ import { SocialLinks } from "@/components/ui/SocialLinks";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { GallerySection } from "@/features/gallery/GallerySection";
+import { LiteracyPromo } from "@/features/literacy/LiteracyPromo";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
@@ -200,6 +201,7 @@ export default async function Home() {
       <AdSlot branch="home" />
 
 
+      <LiteracyPromo />
       <GallerySection branch="home" />
       <ProjectsSection branch="home" eyebrow="Latest" title="Recent projects" />
 

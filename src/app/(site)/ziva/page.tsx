@@ -5,6 +5,7 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { GallerySection } from "@/features/gallery/GallerySection";
+import { LiteracyPromo } from "@/features/literacy/LiteracyPromo";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
@@ -61,6 +62,7 @@ export default async function ZivaPage() {
       <AdSlot branch="ziva" />
 
 
+      <LiteracyPromo />
       <GallerySection branch="ziva" />
       <ProjectsSection branch="ziva" />
     </div>
