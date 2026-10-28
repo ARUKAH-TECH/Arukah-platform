@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { LITERACY_URL } from "@/config/literacy";
+import { ShareButtons } from "@/components/ui/ShareButtons";
 
 export const metadata: Metadata = {
   title: "Literacy & Handwriting Coach — ZIVA",
@@ -32,6 +33,14 @@ export default function LiteracyPage() {
               Open the Literacy App →
             </a>
           </div>
+          <ShareButtons
+            dark
+            className="mt-6"
+            label="Share with parents & teachers"
+            url={LITERACY_URL}
+            title="ZIVA Literacy & Handwriting Coach"
+            message={"✏️ *ZIVA Literacy & Handwriting Coach* — FREE\n\nReading, phonics, spelling and handwriting practice for KG, Primary and JHS. Reads stories aloud, lets children trace letters with their finger and gives stars. Install it on your phone — works offline 👇"}
+          />
           <p className="mt-4 text-sm text-white/75">
             On the app’s home page, tap <strong>Install</strong> (or Chrome menu ⋮ → Install app) to add a <strong>ZIVA Literacy</strong> icon to your phone.
           </p>

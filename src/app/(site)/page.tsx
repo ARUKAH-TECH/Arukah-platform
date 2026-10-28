@@ -11,6 +11,7 @@ import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { GallerySection } from "@/features/gallery/GallerySection";
 import { LiteracyPromo } from "@/features/literacy/LiteracyPromo";
 import { WhatsNew } from "@/features/whatsnew/WhatsNew";
+import { QuoteOfTheDay } from "@/features/quote/QuoteOfTheDay";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
@@ -84,6 +85,7 @@ export default async function Home() {
       />
 
       <WhatsNew />
+      <QuoteOfTheDay />
 
       <section id="about" className="py-16">
         <Container>

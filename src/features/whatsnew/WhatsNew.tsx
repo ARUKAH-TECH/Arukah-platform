@@ -62,7 +62,7 @@ function Card({ item, priority }: { item: NewsItem; priority: boolean }) {
     </>
   );
   const className =
-    "group flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-black/10 bg-background shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:w-auto dark:border-white/10";
+    "reveal-pop group flex w-[82%] shrink-0 snap-start flex-col overflow-hidden rounded-2xl border border-black/10 bg-background shadow-sm transition hover:-translate-y-1 hover:shadow-lg sm:w-auto dark:border-white/10";
   return item.external ? (
     <a href={item.href} className={className}>
       {body}
