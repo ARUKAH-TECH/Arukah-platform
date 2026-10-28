@@ -1,4 +1,4 @@
-// Stamps a brand logo badge (top-right) and a contact label (bottom-left:
+// Stamps a brand logo badge (top-right) and a contact label (bottom-centre:
 // phone number and website) into a photo, in the browser, before it is
 // uploaded — so they stay on the picture even if someone saves it or shares
 // it on WhatsApp.
@@ -23,8 +23,8 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.closePath();
 }
 
-/** A rounded leather-brown label with white text, bottom-left. */
-function drawContact(ctx: CanvasRenderingContext2D, lines: string[], left: number, bottom: number, maxWidth: number, badge: number) {
+/** A rounded leather-brown label with white text, centred on `centerX`. */
+function drawContact(ctx: CanvasRenderingContext2D, lines: string[], centerX: number, bottom: number, maxWidth: number, badge: number) {
   if (lines.length === 0 || maxWidth < 60) return;
   let font = Math.max(12, Math.round(badge * 0.15));
   const family = '"Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
@@ -39,6 +39,7 @@ function drawContact(ctx: CanvasRenderingContext2D, lines: string[], left: numbe
   const h = lineH * lines.length + Math.round(font * 0.7);
   const w = Math.round(textW + padX() * 2);
   const y = bottom - h;
+  const left = Math.round(centerX - w / 2);
   ctx.save();
   ctx.shadowColor = "rgba(0,0,0,0.35)";
   ctx.shadowBlur = Math.round(font * 0.6);
@@ -49,10 +50,11 @@ function drawContact(ctx: CanvasRenderingContext2D, lines: string[], left: numbe
   ctx.restore();
   ctx.fillStyle = "#ffffff";
   ctx.textBaseline = "middle";
+  ctx.textAlign = "center";
   lines.forEach((line, i) => {
     ctx.font = `${i === 0 ? 700 : 600} ${font}px ${family}`;
     ctx.fillStyle = i === 0 ? "#ffffff" : "#f6d38a";
-    ctx.fillText(line, left + padX(), y + Math.round(font * 0.35) + lineH * i + lineH / 2);
+    ctx.fillText(line, left + w / 2, y + Math.round(font * 0.35) + lineH * i + lineH / 2);
   });
 }
 
@@ -77,7 +79,7 @@ export async function stampLogo(photo: Blob, width: number, height: number, logo
   const size = Math.round(Math.max(72, Math.min(width, height) * 0.18));
   const margin = Math.round(size * 0.12);
   ctx.drawImage(logo, width - size - margin, margin, size, size); // top-right
-  drawContact(ctx, lines, margin, height - margin, width - margin * 2, size); // bottom-left
+  drawContact(ctx, lines, width / 2, height - margin, width - margin * 2, size); // bottom-centre
   picture.close?.();
   return new Promise((resolve, reject) =>
     canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("Couldn't add the logo."))), "image/webp", quality),
