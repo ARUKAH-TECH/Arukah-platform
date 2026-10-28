@@ -1,4 +1,4 @@
-// Stamps a brand logo badge (bottom-right) and a contact label (bottom-left:
+// Stamps a brand logo badge (top-right) and a contact label (bottom-left:
 // phone number and website) into a photo, in the browser, before it is
 // uploaded — so they stay on the picture even if someone saves it or shares
 // it on WhatsApp.
@@ -23,7 +23,7 @@ function roundRect(ctx: CanvasRenderingContext2D, x: number, y: number, w: numbe
   ctx.closePath();
 }
 
-/** A rounded leather-brown label with white text, bottom-left, ending before the logo badge. */
+/** A rounded leather-brown label with white text, bottom-left. */
 function drawContact(ctx: CanvasRenderingContext2D, lines: string[], left: number, bottom: number, maxWidth: number, badge: number) {
   if (lines.length === 0 || maxWidth < 60) return;
   let font = Math.max(12, Math.round(badge * 0.15));
@@ -76,8 +76,8 @@ export async function stampLogo(photo: Blob, width: number, height: number, logo
   ctx.drawImage(picture, 0, 0, width, height);
   const size = Math.round(Math.max(72, Math.min(width, height) * 0.18));
   const margin = Math.round(size * 0.12);
-  ctx.drawImage(logo, width - size - margin, height - size - margin, size, size);
-  drawContact(ctx, lines, margin, height - margin - Math.round(size * 0.06), width - size - margin * 3, size);
+  ctx.drawImage(logo, width - size - margin, margin, size, size); // top-right
+  drawContact(ctx, lines, margin, height - margin, width - margin * 2, size); // bottom-left
   picture.close?.();
   return new Promise((resolve, reject) =>
     canvas.toBlob((blob) => (blob ? resolve(blob) : reject(new Error("Couldn't add the logo."))), "image/webp", quality),
