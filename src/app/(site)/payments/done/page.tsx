@@ -108,6 +108,12 @@ export default async function PaymentDonePage({ searchParams }: PageProps<"/paym
                   {view.file.download ? "Download your book (PDF)" : "Open your book (PDF)"}
                 </a>
               )}
+              {view.file && (
+                <p className="mt-3 max-w-md text-xs leading-5 opacity-70">
+                  Save it on your phone or computer and read it any time, even offline. This copy is licensed to you: printing,
+                  copying and editing are switched off, and each page carries your payment reference.
+                </p>
+              )}
               {view.whatsapp && (
                 <a
                   href={view.whatsapp}
