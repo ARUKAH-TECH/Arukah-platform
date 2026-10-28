@@ -25,12 +25,16 @@ export function PageViewTracker() {
       visit,
       source: visit ? sourceFromReferrer(document.referrer, window.location.hostname, utm) : "direct",
     });
+    // Plain text: phones refuse to "beacon" JSON-typed data, so the body is
+    // sent as text (the server reads it as JSON). Falls back to fetch.
+    let sent = false;
     try {
-      if (!navigator.sendBeacon?.("/api/track", new Blob([body], { type: "application/json" }))) {
-        fetch("/api/track", { method: "POST", body, headers: { "Content-Type": "application/json" }, keepalive: true }).catch(() => {});
-      }
+      sent = navigator.sendBeacon?.("/api/track", new Blob([body], { type: "text/plain;charset=UTF-8" })) ?? false;
     } catch {
-      // counting must never break the page
+      sent = false;
+    }
+    if (!sent) {
+      fetch("/api/track", { method: "POST", body, headers: { "Content-Type": "text/plain;charset=UTF-8" }, keepalive: true }).catch(() => {});
     }
   }, [pathname]);
   return null;
