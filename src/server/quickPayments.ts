@@ -183,11 +183,11 @@ export async function confirmQuickPayment(reference: string): Promise<QuickConfi
 }
 
 /**
- * For a paid "Read online" / "Digital download" purchase: a link to the book
- * PDF that works for one hour. Available for 30 days after payment, so the
- * buyer can come back to the same page (bookmark) to open it again.
+ * For a paid "Read online" / "Digital download" purchase: which book file the
+ * buyer may have. Available for 30 days after payment, so the buyer can come
+ * back to the same page (bookmark) to open it again.
  */
-export async function bookFileLink(reference: string): Promise<{ url: string; download: boolean } | null> {
+export async function paidBookFile(reference: string): Promise<{ path: string; name: string; download: boolean } | null> {
   if (!/^ZS-[A-Z0-9]{10}$/.test(reference) || !quickPaymentsEnabled()) return null;
   const supabase = createServiceClient();
   const { data: row } = await supabase
@@ -200,16 +200,19 @@ export async function bookFileLink(reference: string): Promise<{ url: string; do
   if (row.paid_at && Date.now() - new Date(row.paid_at).getTime() > 30 * 24 * 3600 * 1000) return null;
   const { data: book } = await supabase.from("books").select("book_file_path, book_file_name").eq("id", row.book_id).maybeSingle();
   if (!book?.book_file_path) return null;
-  const download = row.book_format === "download";
   const name = (book.book_file_name || "book.pdf").replace(/[^\w .()-]/g, "_");
-  const { data, error } = await supabase.storage
-    .from("book-files")
-    .createSignedUrl(book.book_file_path, 3600, download ? { download: name } : undefined);
-  if (error || !data?.signedUrl) {
-    console.error("[quick-pay] signed link failed", error?.message);
-    return null;
-  }
-  return { url: data.signedUrl, download };
+  return { path: book.book_file_path, name: /\.pdf$/i.test(name) ? name : `${name}.pdf`, download: row.book_format === "download" };
+}
+
+/**
+ * The buyer's link: our own address, which checks the payment again and
+ * hands over a read-only copy (no printing, copying or editing) — never the
+ * original file.
+ */
+export async function bookFileLink(reference: string): Promise<{ url: string; download: boolean } | null> {
+  const file = await paidBookFile(reference);
+  if (!file) return null;
+  return { url: `/api/books/file/${reference}`, download: file.download };
 }
 
 export async function bookSlug(bookId: string | null) {
