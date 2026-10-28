@@ -8,7 +8,7 @@ export default function SiteLayout({ children }: LayoutProps<"/">) {
   return (
     <>
       <Header />
-      <main className="flex flex-1 flex-col">{children}</main>
+      <main className="reveal-sections flex flex-1 flex-col">{children}</main>
       <Footer />
       <SupportWidget />
     </>

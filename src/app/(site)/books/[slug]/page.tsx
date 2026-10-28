@@ -9,6 +9,7 @@ import { AddToBasket } from "@/features/books/AddToBasket";
 import { quickPaymentsEnabled } from "@/server/quickPayments";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { ContinueReading } from "@/features/books/ReaderBits";
+import { ShareButtons } from "@/components/ui/ShareButtons";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
@@ -23,7 +24,14 @@ export async function generateMetadata({ params }: PageProps<"/books/[slug]">): 
     title: `${book.title} · ZIVARUKAH BOOKS`,
     description: book.description.slice(0, 160) || undefined,
     alternates: { canonical: `/books/${book.slug}` },
-    openGraph: book.cover ? { images: [book.cover.url] } : undefined,
+    openGraph: {
+      title: book.title,
+      description: (book.highlights[0] ? `“${book.highlights[0]}” — ` : "") + book.description.slice(0, 140),
+      url: `/books/${book.slug}`,
+      siteName: "ZIVARUKAH",
+      type: "book",
+      ...(book.cover ? { images: [{ url: book.cover.url, alt: `Cover of ${book.title}` }] } : {}),
+    },
   };
 }
 
@@ -121,6 +129,14 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
                 </>
               )}
             </div>
+
+            <ShareButtons
+              className="mt-6"
+              label="Tell a friend"
+              url={`${SITE}/books/${book.slug}`}
+              title={book.title}
+              message={`📘 *${book.title}*${book.author ? ` by ${book.author}` : ""}${book.highlights[0] ? `\n\n“${book.highlights[0]}”` : ""}\n\nRead a sample on ZIVARUKAH BOOKS 👇`}
+            />
 
             {paragraphs.length > 0 && (
               <div className="mt-10 flex flex-col gap-4 text-sm leading-7 text-foreground/80">

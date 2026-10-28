@@ -6,6 +6,7 @@ import { ArticleBody } from "@/features/articles/ArticleBody";
 import { ArticleCard, formatArticleDate } from "@/features/articles/ArticleCard";
 import type { ArticleSummary } from "@/db/articles";
 import { readingMinutes } from "@/lib/articleMarkup";
+import { ShareButtons } from "@/components/ui/ShareButtons";
 
 export interface ArticleViewData {
   title: string;
@@ -90,33 +91,13 @@ export function ArticleView({ article, related = [], banner, shareUrl }: { artic
           </div>
 
           {shareUrl && (
-            <div className="mt-10 flex flex-wrap items-center gap-2 border-t border-black/10 pt-6 text-sm dark:border-white/10">
-              <span className="font-semibold">Share:</span>
-              <a
-                href={`https://wa.me/?text=${encodeURIComponent(`${article.title} ${shareUrl}`)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full bg-[#25D366] px-4 py-1.5 font-medium text-black"
-              >
-                WhatsApp
-              </a>
-              <a
-                href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-black/15 px-4 py-1.5 font-medium dark:border-white/15"
-              >
-                Facebook
-              </a>
-              <a
-                href={`https://x.com/intent/post?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(article.title)}`}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="rounded-full border border-black/15 px-4 py-1.5 font-medium dark:border-white/15"
-              >
-                X
-              </a>
-            </div>
+            <ShareButtons
+              className="mt-10 border-t border-black/10 pt-6 dark:border-white/10"
+              label="Share this article"
+              url={shareUrl}
+              title={article.title}
+              message={`📰 *${article.title}*${article.excerpt ? `\n\n${article.excerpt}` : ""}\n\nRead it on ZIVARUKAH 👇`}
+            />
           )}
         </div>
 
