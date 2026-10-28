@@ -36,7 +36,7 @@ const LAUNCHES: NewsItem[] = [
     href: LITERACY_URL,
     external: true,
     date: "2026-10-27T12:00:00Z",
-    image: null,
+    image: { url: "/branding/ziva-literacy/logo.webp", alt: "ZIVA Literacy logo", width: 480, height: 480 },
   },
 ];
 

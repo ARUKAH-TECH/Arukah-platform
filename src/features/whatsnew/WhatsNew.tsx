@@ -34,7 +34,7 @@ function Card({ item, priority }: { item: NewsItem; priority: boolean }) {
             fill
             priority={priority}
             sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 85vw"
-            className={`transition-transform duration-500 group-hover:scale-105 ${item.kind === "book" ? "object-contain p-3 drop-shadow-xl" : "object-cover"}`}
+            className={`transition-transform duration-500 group-hover:scale-105 ${item.kind === "book" || item.kind === "app" ? "object-contain p-3 drop-shadow-xl" : "object-cover"}`}
           />
         ) : (
           <div aria-hidden="true" className="flex h-full items-center justify-center text-7xl drop-shadow-lg transition-transform duration-500 group-hover:scale-110">

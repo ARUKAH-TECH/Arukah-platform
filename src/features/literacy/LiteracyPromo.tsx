@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { LITERACY_URL } from "@/config/literacy";
@@ -8,7 +9,13 @@ export function LiteracyPromo() {
     <section className="py-12">
       <Container>
         <div className="flex flex-col gap-6 overflow-hidden rounded-3xl bg-gradient-to-br from-[#0b69a8] to-[#0b3d91] p-6 text-white shadow-lg sm:flex-row sm:items-center sm:p-10">
-          <div aria-hidden="true" className="flex h-24 w-24 shrink-0 items-center justify-center rounded-3xl bg-white text-5xl shadow">✏️</div>
+          <Image
+            src="/branding/ziva-literacy/logo.webp"
+            alt="ZIVA Literacy logo"
+            width={128}
+            height={128}
+            className="h-28 w-28 shrink-0 rounded-full bg-white shadow-xl ring-4 ring-white/30 sm:h-32 sm:w-32"
+          />
           <div className="flex-1">
             <p className="text-xs font-semibold uppercase tracking-widest text-[#f0c050]">New · Free</p>
             <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">ZIVA Literacy &amp; Handwriting Coach</h2>
