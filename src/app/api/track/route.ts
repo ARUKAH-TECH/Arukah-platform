@@ -12,7 +12,7 @@ export async function POST(request: Request) {
 
   let body: { path?: unknown; source?: unknown; visit?: unknown };
   try {
-    body = await request.json();
+    body = JSON.parse(await request.text());
   } catch {
     return new Response(null, { status: 400 });
   }
