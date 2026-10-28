@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ArticleCard } from "@/features/articles/ArticleCard";
 import { ARTICLES_PER_PAGE, cleanSearch, getArticleCategories, listArticles } from "@/db/articles";
+import { SharePage } from "@/components/ui/SharePage";
 
 export const revalidate = 60;
 
@@ -131,6 +132,12 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/article
           </nav>
         )}
       </Container>
+      <SharePage
+        path="/articles"
+        title="Articles — ZIVARUKAH"
+        message={"📰 *Articles on ZIVARUKAH*\n\nEducation, technology, faith and more 👇"}
+        heading="📣 Share our articles"
+      />
     </div>
   );
 }

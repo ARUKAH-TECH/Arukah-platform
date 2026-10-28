@@ -8,6 +8,7 @@ import { WhatsAppContact } from "@/components/ui/WhatsAppContact";
 import { ONLINE_FORMS_ENABLED } from "@/config/forms";
 import { QuickGiveForm } from "@/features/payments/QuickGiveForm";
 import { quickPaymentsEnabled } from "@/server/quickPayments";
+import { SharePage } from "@/components/ui/SharePage";
 
 export const metadata: Metadata = {
   title: "Support the outreach · Repent Online Ministries",
@@ -54,6 +55,14 @@ export default async function SupportPage({ searchParams }: PageProps<"/ministry
           </div>
         </div>
       </Container>
+      <SharePage
+        path="/ministry/support"
+        title="Support the outreach"
+        message={"🙏 *Support the outreach — Repent Online Ministries*\n\nHelp us visit hospitals and prisons, feed people on the streets and reach communities with the Gospel. Give by Mobile Money or card 👇"}
+        heading="💛 Share this giving page"
+        note="Every share helps more people join the outreach."
+        dark
+      />
     </div>
   );
 }

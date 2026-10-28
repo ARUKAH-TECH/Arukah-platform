@@ -19,6 +19,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { socialLinks } from "@/config/social";
 import { homePage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
+import { SharePage } from "@/components/ui/SharePage";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
@@ -336,6 +337,14 @@ export default async function Home() {
           </div>
         </Container>
       </section>
+
+      <SharePage
+        path="/"
+        title="ZIVARUKAH"
+        message={"✨ *ZIVARUKAH* — Creating Solutions. Building Skills. Serving Communities.\n\nBooks, the FREE ZIVA Literacy app, tech, media, footwear and Repent Online Ministries — all in one place 👇"}
+        heading="📣 Share ZIVARUKAH"
+        note="Tell friends and family about everything here."
+      />
 
       <section id="contact" className="py-20">
         <Container>

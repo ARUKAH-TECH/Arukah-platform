@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/Button";
 import { getPublicProject } from "@/db/projects";
 import { parseVideoLink } from "@/lib/video";
 import { branchLabel } from "@/config/branches";
+import { SharePage } from "@/components/ui/SharePage";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -121,6 +122,12 @@ export default async function ProjectPage({ params }: PageProps<"/projects/[slug
           </Button>
         </div>
       </Container>
+      <SharePage
+        path={`/projects/${project.slug}`}
+        title={project.title}
+        message={`🛠️ *${project.title}*${project.summary ? `\n\n${project.summary}` : ""}\n\nSee it on ZIVARUKAH 👇`}
+        heading="📣 Share this project"
+      />
     </article>
   );
 }

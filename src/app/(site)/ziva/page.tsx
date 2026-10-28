@@ -11,6 +11,7 @@ import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
 import { zivaPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
+import { SharePage } from "@/components/ui/SharePage";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -65,6 +66,13 @@ export default async function ZivaPage() {
       <LiteracyPromo />
       <GallerySection branch="ziva" />
       <ProjectsSection branch="ziva" />
+      <SharePage
+        path="/ziva"
+        title="ZIVA Special Classes"
+        message={"🎓 *ZIVA Special Classes*\n\nOnline and special classes, plus the FREE ZIVA Literacy app for KG to JHS 👇"}
+        heading="📣 Share ZIVA Special Classes"
+        note="Know a parent or teacher who would like this?"
+      />
     </div>
   );
 }

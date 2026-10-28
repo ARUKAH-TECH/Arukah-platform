@@ -12,6 +12,7 @@ import { booksPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 import { getPublishedBooks } from "@/db/books";
 import { BookCard } from "@/features/books/BookCard";
+import { SharePage } from "@/components/ui/SharePage";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -79,6 +80,12 @@ export default async function BooksPage() {
 
       <GallerySection branch="books" />
       <ProjectsSection branch="books" />
+      <SharePage
+        path="/books"
+        title="ZIVARUKAH BOOKS"
+        message={"📚 *ZIVARUKAH BOOKS*\n\nRead online with read-aloud, download, or order a printed copy 👇"}
+        heading="📚 Share ZIVARUKAH BOOKS"
+      />
     </div>
   );
 }
