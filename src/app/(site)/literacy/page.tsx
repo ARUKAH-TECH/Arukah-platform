@@ -1,3 +1,4 @@
+import Image from "next/image";
 import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { LITERACY_URL } from "@/config/literacy";
@@ -22,6 +23,14 @@ export default function LiteracyPage() {
     <div data-brand="ziva" className="py-12 sm:py-16">
       <Container>
         <div className="rounded-3xl bg-gradient-to-br from-[#0b69a8] to-[#0b3d91] p-8 text-white shadow-lg sm:p-12">
+          <Image
+            src="/branding/ziva-literacy/logo.webp"
+            alt="ZIVA Literacy — a sub of ZIVA Online and Special Classes"
+            width={160}
+            height={160}
+            priority
+            className="float-right mb-3 ml-4 h-28 w-28 rounded-full bg-white shadow-xl ring-4 ring-white/30 sm:h-40 sm:w-40"
+          />
           <p className="text-xs font-semibold uppercase tracking-widest text-[#f0c050]">ZIVA Special Classes</p>
           <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-5xl">Literacy &amp; Handwriting Coach</h1>
           <p className="mt-4 max-w-2xl text-lg text-white/90">
