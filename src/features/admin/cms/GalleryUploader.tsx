@@ -28,7 +28,7 @@ export function GalleryUploader({ branch }: { branch: string }) {
         setMessage({ ok: true, text: `Preparing and uploading photo ${done + 1} of ${files.length}…` });
         const resized = await resize(file, 1600, 0.82);
         const { width, height } = resized;
-        const blob = stamp && addLogo ? await stampLogo(resized.blob, width, height, stamp.src) : resized.blob;
+        const blob = stamp && addLogo ? await stampLogo(resized.blob, width, height, stamp.src, stamp.lines) : resized.blob;
         const storagePath = `gallery/${crypto.randomUUID()}.webp`;
         const { error } = await supabase.storage
           .from("media")
@@ -59,7 +59,7 @@ export function GalleryUploader({ branch }: { branch: string }) {
       {stamp && (
         <label className="flex items-center gap-2 text-sm font-medium">
           <input type="checkbox" checked={addLogo} onChange={(event) => setAddLogo(event.target.checked)} className="h-4 w-4" />
-          Add the {stamp.label} to each photo (bottom-right corner)
+          Add the {stamp.label} to each photo
         </label>
       )}
       <input ref={input} type="file" accept={IMAGE_PICKER_ACCEPT} multiple onChange={upload} className="hidden" />
