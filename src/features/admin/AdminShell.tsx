@@ -6,6 +6,7 @@ import { signOut } from "@/features/admin/actions";
 
 const nav = [
   { label: "Dashboard", href: "/admin" },
+  { label: "Visitors", href: "/admin/visitors" },
   { label: "Inbox", href: "/admin/inbox" },
   { label: "Projects", href: "/admin/projects" },
   { label: "Articles", href: "/admin/articles" },

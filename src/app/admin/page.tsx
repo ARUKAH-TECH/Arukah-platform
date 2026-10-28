@@ -8,6 +8,7 @@ import { createClient } from "@/lib/supabase/server";
 export const metadata: Metadata = { title: "Dashboard" };
 
 const ready = [
+  { title: "Visitors", description: "Graphs of how many people view each page, and where they come from.", href: "/admin/visitors" },
   { title: "Inbox", description: "Messages from the Contact page and the Ministry response form.", href: "/admin/inbox" },
   { title: "Articles", description: "Write, preview, publish and unpublish articles and blog posts.", href: "/admin/articles" },
   { title: "Projects", description: "Create, schedule, publish and archive projects, and choose where they appear.", href: "/admin/projects" },
