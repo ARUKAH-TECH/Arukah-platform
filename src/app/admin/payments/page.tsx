@@ -4,8 +4,7 @@ import { requireAdmin } from "@/server/auth";
 import { createClient } from "@/lib/supabase/server";
 import { AdminShell } from "@/features/admin/AdminShell";
 import { formatGhs } from "@/config/books";
-import { paymentsEnabled } from "@/server/payments";
-import { quickPaymentsEnabled } from "@/server/quickPayments";
+import { paymentSetup, quickPaymentsEnabled } from "@/server/quickPayments";
 import { setDelivered } from "@/features/admin/cms/quickPaymentActions";
 import { BOOK_FORMATS } from "@/config/books";
 
@@ -38,17 +37,35 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
   if (paidOnly) quickQuery = quickQuery.eq("status", "success");
   const { data: quick } = await quickQuery;
   const quickTotal = (quick ?? []).filter((p) => p.status === "success").reduce((sum, p) => sum + Number(p.amount_ghs), 0);
+  const setup = paymentSetup();
   const total = (payments ?? []).filter((p) => p.status === "success").reduce((sum, p) => sum + Number(p.amount_ghs), 0);
 
   return (
     <AdminShell email={admin.email}>
       <h1 className="text-2xl font-semibold tracking-tight">Online payments</h1>
-      {!quickPaymentsEnabled() && !paymentsEnabled() && (
-        <p className="mt-3 max-w-2xl rounded-xl bg-amber-50 p-4 text-sm text-amber-950 dark:bg-amber-950 dark:text-amber-100">
-          Online payment is switched off. It turns on when PAYSTACK_SECRET_KEY, SUPABASE_SERVICE_ROLE_KEY and PAYSTACK_RECEIPT_EMAIL are
-          added in Vercel (see docs/PAYMENTS.md). Until then visitors order and give on WhatsApp.
+      <div
+        className={`mt-3 max-w-2xl rounded-xl p-4 text-sm ${
+          quickPaymentsEnabled() ? "bg-green-50 text-green-950 dark:bg-green-950 dark:text-green-100" : "bg-amber-50 text-amber-950 dark:bg-amber-950 dark:text-amber-100"
+        }`}
+      >
+        <p className="font-semibold">
+          {quickPaymentsEnabled() ? "✅ Online payment is ON" : "Online payment is OFF — visitors see WhatsApp buttons instead."}
         </p>
-      )}
+        <ul className="mt-2 flex flex-col gap-1">
+          {[
+            [setup.paystackKey, "PAYSTACK_SECRET_KEY is set"],
+            [setup.paystackLive, "…and it is a LIVE key (starts with sk_live_)"],
+            [setup.receiptEmail, "PAYSTACK_RECEIPT_EMAIL is a valid email address"],
+            [setup.siteUrl, "SITE_URL starts with https:// (e.g. https://zivarukah.com)"],
+            [setup.serviceKey, "SUPABASE_SERVICE_ROLE_KEY is set"],
+          ].map(([ok, label]) => (
+            <li key={String(label)}>
+              {ok ? "✅" : "❌"} {label}
+            </li>
+          ))}
+        </ul>
+        {!quickPaymentsEnabled() && <p className="mt-2">Fix any ❌ in Vercel → Settings → Environment Variables, then redeploy.</p>}
+      </div>
       <nav className="mt-4 flex gap-2 text-sm">
         <Link href="/admin/payments" className={`rounded-full border px-3 py-1 ${paidOnly ? "border-brand-primary-text font-medium" : "border-black/10 dark:border-white/10"}`}>
           Paid

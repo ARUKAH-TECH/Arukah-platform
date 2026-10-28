@@ -10,7 +10,7 @@ import { initializeTransaction, paystackConfigured, toPesewas, verifyTransaction
  * Until then the site keeps working exactly as before (pay by MoMo/contact).
  */
 export function paymentsEnabled() {
-  return paystackConfigured() && serviceKeyConfigured() && Boolean(process.env.SITE_URL);
+  return paystackConfigured() && serviceKeyConfigured() && Boolean(process.env.SITE_URL?.trim());
 }
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -20,7 +20,7 @@ function newReference() {
 }
 
 function callbackUrl() {
-  return `${process.env.SITE_URL!.replace(/\/$/, "")}/payments/done`;
+  return `${process.env.SITE_URL!.trim().replace(/\/$/, "")}/payments/done`;
 }
 
 export type StartResult = { ok: true; url: string } | { ok: false; message: string };
