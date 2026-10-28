@@ -32,7 +32,14 @@ export default async function ReadBookPage({ params, searchParams }: PageProps<"
                 Admin preview — buyers see this after paying for &quot;Read online&quot;.
               </p>
             )}
-            {access.mode === "paid" && <RememberReading slug={access.book.slug} reference={reference} />}
+            {(access.mode === "paid" || access.mode === "free") && <RememberReading slug={access.book.slug} reference={reference} />}
+            {access.mode === "free" && (
+              <p className="mt-4 rounded-xl bg-emerald-50 p-3 text-center text-sm text-emerald-950 dark:bg-emerald-950 dark:text-emerald-100">
+                🎁 Free reading key from ZIVA Literacy — open until{" "}
+                <strong>{new Date(access.expiresAt).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Accra" })}</strong>
+                .
+              </p>
+            )}
             <p className="mt-4 text-center text-xs text-foreground/60">
               Tap <strong>▶ Read aloud</strong> at the bottom to listen from page 1 to the end. Underlined words show their meaning when tapped.
             </p>
@@ -61,7 +68,9 @@ export default async function ReadBookPage({ params, searchParams }: PageProps<"
         <div className="mx-auto max-w-xl text-center">
           <h1 className="text-3xl font-bold tracking-tight">{book.title}</h1>
           {access.reason === "expired" ? (
-            <p className="mt-4 text-sm text-foreground/70">Your online reading time for this book has ended.</p>
+            <p className="mt-4 text-sm text-foreground/70">
+              {reference.startsWith("ZF-") ? "Your free 7-day reading time has ended. Earn another key in ZIVA Literacy, or buy below." : "Your online reading time for this book has ended."}
+            </p>
           ) : access.reason === "no-text" ? (
             <p className="mt-4 text-sm text-foreground/70">The online edition is being prepared. Please check back soon.</p>
           ) : (
