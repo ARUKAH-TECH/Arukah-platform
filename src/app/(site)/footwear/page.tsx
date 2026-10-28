@@ -10,6 +10,7 @@ import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
 import { wearPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
+import { SharePage } from "@/components/ui/SharePage";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -70,6 +71,12 @@ export default async function FootwearPage() {
 
       <GallerySection branch="wear" />
       <ProjectsSection branch="wear" />
+      <SharePage
+        path="/footwear"
+        title="ARUKAH WEAR"
+        message={"👞 *ARUKAH WEAR*\n\nQuality footwear made with care 👇"}
+        heading="📣 Share ARUKAH WEAR"
+      />
     </div>
   );
 }

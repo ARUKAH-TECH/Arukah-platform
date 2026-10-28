@@ -10,6 +10,7 @@ import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
 import { mediaPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
+import { SharePage } from "@/components/ui/SharePage";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -58,6 +59,12 @@ export default async function MediaPage() {
 
       <GallerySection branch="media" />
       <ProjectsSection branch="media" />
+      <SharePage
+        path="/media"
+        title="ARUKAH MEDIA"
+        message={"🎬 *ARUKAH MEDIA*\n\nMedia, design and content services 👇"}
+        heading="📣 Share ARUKAH MEDIA"
+      />
     </div>
   );
 }

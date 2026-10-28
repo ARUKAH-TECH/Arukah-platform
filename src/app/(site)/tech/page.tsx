@@ -11,6 +11,7 @@ import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
 import { techPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
+import { SharePage } from "@/components/ui/SharePage";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -89,6 +90,12 @@ export default async function TechPage() {
 
       <GallerySection branch="tech" />
       <ProjectsSection branch="tech" />
+      <SharePage
+        path="/tech"
+        title="ARUKAH TECH"
+        message={"💻 *ARUKAH TECH*\n\nWebsites, apps and management systems for schools, churches and businesses 👇"}
+        heading="📣 Share ARUKAH TECH"
+      />
     </div>
   );
 }

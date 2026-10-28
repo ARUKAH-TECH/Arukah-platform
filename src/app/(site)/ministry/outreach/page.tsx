@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { getPublicOutreaches } from "@/db/outreaches";
 import { OutreachCard } from "@/features/outreach/OutreachCard";
+import { SharePage } from "@/components/ui/SharePage";
 
 export const metadata: Metadata = {
   title: "Outreach · Repent Online Ministries",
@@ -45,6 +46,13 @@ export default async function OutreachListPage() {
           )}
         </div>
       </Container>
+      <SharePage
+        path="/ministry/outreach"
+        title="Outreach — Repent Online Ministries"
+        message={"✝️ *Outreach — Repent Online Ministries*\n\nSee where we are going next and how you can help 👇"}
+        heading="📣 Share our outreach"
+        dark
+      />
     </div>
   );
 }

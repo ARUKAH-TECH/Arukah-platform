@@ -12,6 +12,7 @@ import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { OutreachSection } from "@/features/outreach/OutreachSection";
 import { ministryPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
+import { SharePage } from "@/components/ui/SharePage";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -100,6 +101,14 @@ export default async function MinistryPage() {
       <OutreachSection />
 
       <ProjectsSection branch="ministry" eyebrow="Outreach" title="Recent outreach" dark />
+      <SharePage
+        path="/ministry"
+        title="Repent Online Ministries"
+        message={"✝️ *Repent Online Ministries*\n\nHospital, prison, street and community outreach — and the Word online. Follow, pray with us and support the work 👇"}
+        heading="🙏 Share the ministry"
+        note="Invite someone to follow, pray and support the outreach."
+        dark
+      />
     </div>
   );
 }
