@@ -5,7 +5,7 @@ import { BOOK_FORMATS, type BookFormat } from "@/config/books";
 import { getPublishedBook } from "@/db/books";
 import { getPublicOutreaches } from "@/db/outreaches";
 import { createServiceClient, serviceKeyConfigured } from "@/lib/supabase/service";
-import { initializeTransaction, paystackConfigured, toPesewas, verifyTransaction } from "@/server/paystack";
+import { initializeTransaction, paystackSecret, toPesewas, verifyTransaction } from "@/server/paystack";
 
 // "Quantity → pay" payments. The visitor gives us nothing: they choose a book
 // and quantity (or a gift amount) and type their MoMo number or card on
@@ -15,13 +15,25 @@ import { initializeTransaction, paystackConfigured, toPesewas, verifyTransaction
 // Switched on only when PAYSTACK_SECRET_KEY, SUPABASE_SERVICE_ROLE_KEY,
 // PAYSTACK_RECEIPT_EMAIL and SITE_URL are all set in Vercel.
 
+function receiptEmail() {
+  return (process.env.PAYSTACK_RECEIPT_EMAIL ?? "").trim();
+}
+
+/** Which settings are in place (yes/no only — never the values), for the admin checklist. */
+export function paymentSetup() {
+  const key = paystackSecret();
+  return {
+    paystackKey: Boolean(key),
+    paystackLive: key.startsWith("sk_live_"),
+    serviceKey: serviceKeyConfigured(),
+    siteUrl: /^https:\/\/\S+$/.test((process.env.SITE_URL ?? "").trim()),
+    receiptEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(receiptEmail()),
+  };
+}
+
 export function quickPaymentsEnabled() {
-  return (
-    paystackConfigured() &&
-    serviceKeyConfigured() &&
-    Boolean(process.env.SITE_URL) &&
-    /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(process.env.PAYSTACK_RECEIPT_EMAIL ?? "")
-  );
+  const s = paymentSetup();
+  return s.paystackKey && s.serviceKey && s.siteUrl && s.receiptEmail;
 }
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
@@ -30,7 +42,7 @@ function newReference() {
 }
 
 function callbackUrl() {
-  return `${process.env.SITE_URL!.replace(/\/$/, "")}/payments/done`;
+  return `${process.env.SITE_URL!.trim().replace(/\/$/, "")}/payments/done`;
 }
 
 export type QuickStart = { ok: true; url: string } | { ok: false; message: string };
@@ -45,7 +57,7 @@ async function start(row: Record<string, unknown>, amountGhs: number, label: str
   }
   try {
     const url = await initializeTransaction({
-      email: process.env.PAYSTACK_RECEIPT_EMAIL!,
+      email: receiptEmail(),
       amountGhs,
       reference,
       callbackUrl: callbackUrl(),

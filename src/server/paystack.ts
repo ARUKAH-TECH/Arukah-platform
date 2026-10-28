@@ -7,12 +7,17 @@ import { createHmac, timingSafeEqual } from "node:crypto";
 
 const API = "https://api.paystack.co";
 
+/** The secret key with any spaces or line breaks from pasting removed. */
+export function paystackSecret() {
+  return (process.env.PAYSTACK_SECRET_KEY ?? "").trim();
+}
+
 export function paystackConfigured() {
-  return Boolean(process.env.PAYSTACK_SECRET_KEY);
+  return Boolean(paystackSecret());
 }
 
 function authHeaders() {
-  return { Authorization: `Bearer ${process.env.PAYSTACK_SECRET_KEY}`, "Content-Type": "application/json" };
+  return { Authorization: `Bearer ${paystackSecret()}`, "Content-Type": "application/json" };
 }
 
 export function toPesewas(ghs: number) {
@@ -81,7 +86,7 @@ export async function verifyTransaction(reference: string): Promise<VerifiedTran
 
 /** Webhook check: HMAC-SHA512 of the raw body with the secret key. */
 export function signatureIsValid(rawBody: string, signature: string | null) {
-  const secret = process.env.PAYSTACK_SECRET_KEY;
+  const secret = paystackSecret();
   if (!secret || !signature) return false;
   const expected = createHmac("sha512", secret).update(rawBody).digest("hex");
   const a = Buffer.from(expected, "utf8");
