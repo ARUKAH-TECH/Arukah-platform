@@ -12,9 +12,13 @@ import {
   PDFRef,
   PDFStream,
   PDFString,
+  StandardFonts,
+  degrees,
+  rgb,
 } from "pdf-lib";
+import { PHONE_DISPLAY } from "@/config/forms";
 
-// Makes a "read-only" copy of a book PDF for a buyer: it opens normally with
+// Makes a stamped, "read-only" copy of a book PDF for a buyer: it opens normally with
 // no password, but PDF readers are told not to allow printing, copying text,
 // editing or adding comments. (Standard PDF security, 128-bit, revision 3.)
 //
@@ -115,11 +119,55 @@ function encryptStrings(obj: PDFObject, key: Uint8Array): PDFObject {
   return obj;
 }
 
+const BRAND = "ZIVA SERIES";
+
+/** Stamps every page: a faint diagonal "ZIVA SERIES" and a footer with the buyer's reference and our contact. */
+async function addWatermark(doc: PDFDocument, reference: string) {
+  const bold = await doc.embedFont(StandardFonts.HelveticaBold);
+  const regular = await doc.embedFont(StandardFonts.Helvetica);
+  const footer = `${BRAND}  ·  Licensed copy  ·  Ref ${reference}  ·  WhatsApp/Call ${PHONE_DISPLAY}  ·  zivarukah.com`;
+  for (const page of doc.getPages()) {
+    const { width, height } = page.getSize();
+    const { x: left, y: bottom } = page.getMediaBox();
+
+    // Diagonal brand mark, sized to the page.
+    const diagonal = Math.hypot(width, height);
+    const size = Math.min(diagonal * 0.09, (diagonal * 0.7) / (bold.widthOfTextAtSize(BRAND, 1) || 1));
+    const textWidth = bold.widthOfTextAtSize(BRAND, size);
+    const angle = Math.atan2(height, width);
+    const cx = left + width / 2;
+    const cy = bottom + height / 2;
+    page.drawText(BRAND, {
+      x: cx - (Math.cos(angle) * textWidth) / 2 + (Math.sin(angle) * size * 0.35),
+      y: cy - (Math.sin(angle) * textWidth) / 2 - (Math.cos(angle) * size * 0.35),
+      size,
+      font: bold,
+      color: rgb(0.043, 0.412, 0.659), // ZIVA blue
+      opacity: 0.08,
+      rotate: degrees((angle * 180) / Math.PI),
+    });
+
+    // Footer line, shrunk to fit narrow pages.
+    let footSize = Math.max(5, Math.min(8, height * 0.011));
+    while (footSize > 4 && regular.widthOfTextAtSize(footer, footSize) > width * 0.92) footSize -= 0.25;
+    const footWidth = regular.widthOfTextAtSize(footer, footSize);
+    page.drawText(footer, {
+      x: left + (width - footWidth) / 2,
+      y: bottom + Math.max(8, height * 0.015),
+      size: footSize,
+      font: regular,
+      color: rgb(0.35, 0.35, 0.35),
+      opacity: 0.85,
+    });
+  }
+  await doc.flush(); // write fonts/stamps into the file before it is encrypted
+}
+
 /**
  * Returns protected PDF bytes, or null if the file can't be processed (for
  * example it is already password-protected) — the caller decides what to do.
  */
-export async function protectPdf(source: Uint8Array): Promise<Uint8Array | null> {
+export async function protectPdf(source: Uint8Array, reference: string): Promise<Uint8Array | null> {
   let doc: PDFDocument;
   try {
     doc = await PDFDocument.load(source, { updateMetadata: false });
@@ -127,42 +175,48 @@ export async function protectPdf(source: Uint8Array): Promise<Uint8Array | null>
     console.error("[pdf-protect] could not open PDF", error instanceof Error ? error.message : error);
     return null;
   }
-  const context = doc.context;
+  try {
+    await addWatermark(doc, reference);
+    const context = doc.context;
 
-  const id0 = randomBytes(16);
-  const userPassword = new Uint8Array(0); // opens without a password
-  const ownerPassword = randomBytes(32); // never stored: nobody can lift the limits with a password
-  const o = ownerEntry(ownerPassword, userPassword);
-  const key = fileKey(userPassword, o, id0);
-  const u = userEntry(key, id0);
+    const id0 = randomBytes(16);
+    const userPassword = new Uint8Array(0); // opens without a password
+    const ownerPassword = randomBytes(32); // never stored: nobody can lift the limits with a password
+    const o = ownerEntry(ownerPassword, userPassword);
+    const key = fileKey(userPassword, o, id0);
+    const u = userEntry(key, id0);
 
-  for (const [ref, obj] of context.enumerateIndirectObjects()) {
-    if (obj instanceof PDFStream) {
-      const type = obj.dict.get(PDFName.of("Type"));
-      if (type === PDFName.of("XRef") || type === PDFName.of("ObjStm")) {
-        context.delete(ref); // rebuilt on save
-        continue;
+    for (const [ref, obj] of context.enumerateIndirectObjects()) {
+      if (obj instanceof PDFStream) {
+        const type = obj.dict.get(PDFName.of("Type"));
+        if (type === PDFName.of("XRef") || type === PDFName.of("ObjStm")) {
+          context.delete(ref); // rebuilt on save
+          continue;
+        }
+        const k = objectKey(key, ref);
+        encryptStrings(obj.dict, k);
+        context.assign(ref, PDFRawStream.of(obj.dict, rc4(k, obj.getContents())));
+      } else {
+        context.assign(ref, encryptStrings(obj, objectKey(key, ref)));
       }
-      const k = objectKey(key, ref);
-      encryptStrings(obj.dict, k);
-      context.assign(ref, PDFRawStream.of(obj.dict, rc4(k, obj.getContents())));
-    } else {
-      context.assign(ref, encryptStrings(obj, objectKey(key, ref)));
     }
+
+    // Added after the loop: the security dictionary itself is never encrypted.
+    const encrypt = context.obj({
+      Filter: "Standard",
+      V: 2,
+      R: 3,
+      Length: 128,
+      P: PDFNumber.of(PERMISSIONS),
+      O: PDFHexString.of(toHex(o)),
+      U: PDFHexString.of(toHex(u)),
+    });
+    context.trailerInfo.Encrypt = context.register(encrypt);
+    context.trailerInfo.ID = context.obj([PDFHexString.of(toHex(id0)), PDFHexString.of(toHex(id0))]);
+
+    return await doc.save({ useObjectStreams: false, addDefaultPage: false, updateFieldAppearances: false });
+  } catch (error) {
+    console.error("[pdf-protect] could not protect PDF", error instanceof Error ? error.message : error);
+    return null;
   }
-
-  // Added after the loop: the security dictionary itself is never encrypted.
-  const encrypt = context.obj({
-    Filter: "Standard",
-    V: 2,
-    R: 3,
-    Length: 128,
-    P: PDFNumber.of(PERMISSIONS),
-    O: PDFHexString.of(toHex(o)),
-    U: PDFHexString.of(toHex(u)),
-  });
-  context.trailerInfo.Encrypt = context.register(encrypt);
-  context.trailerInfo.ID = context.obj([PDFHexString.of(toHex(id0)), PDFHexString.of(toHex(id0))]);
-
-  return doc.save({ useObjectStreams: false, addDefaultPage: false, updateFieldAppearances: false });
 }
