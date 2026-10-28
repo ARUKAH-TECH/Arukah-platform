@@ -30,7 +30,7 @@ export function ContinueReading({ slug }: { slug: string }) {
       setReference("");
     }
   }, [slug]);
-  if (!/^ZS-[A-Z0-9]{10}$/.test(reference)) return null;
+  if (!/^Z[SF]-[A-Z0-9]{10}$/.test(reference)) return null;
   return (
     <Link
       href={`/books/${slug}/read?ref=${reference}`}
