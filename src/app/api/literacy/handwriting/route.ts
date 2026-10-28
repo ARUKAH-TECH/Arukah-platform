@@ -79,7 +79,8 @@ export async function POST(request: Request) {
     "Never mention or suggest any learning difficulty, disability, condition or diagnosis (e.g. dyslexia, dysgraphia). Only talk about the writing itself.",
     "Do not describe the child or anything else in the photo except the writing.",
     'Reply with JSON only, no markdown, exactly this shape: {"read_text": string, "matches_target": boolean, "stars": integer 1-5, "summary": string, "letters": [{"letter": string, "issue": string, "tip": string}], "strengths": [string], "next_steps": [string]}.',
-    "read_text = what you can read. letters = up to 5 specific letters/words that are wrong, reversed (b/d, p/q), badly formed, the wrong size, or missing compared with the exercise. Use simple English.",
+    "read_text = an EXACT copy of what the child actually wrote, character by character, so the app can rewrite it and mark corrections: keep their spelling mistakes, reversed letters (write b if they wrote b), capital and small letters exactly as written, missing or extra punctuation, and joined words (no space if they left no space). Do NOT correct anything in read_text and do NOT copy the exercise text unless that is exactly what was written. If a letter is unclear, write your best guess of what it looks like. If the same word or letter is written several times, include every copy separated by spaces.",
+    "letters = up to 5 specific letters/words that are wrong, reversed (b/d, p/q), badly formed, the wrong size, or missing compared with the exercise. Use simple English.",
     "If there is no readable handwriting in the photo, set read_text to \"\" and explain kindly in summary how to take a better photo.",
   ].join(" ");
   const prompt = `Exercise text the child was asked to write: ${target ? `"${target}"` : "(not given — just assess the writing)"}. Class level: ${level}.`;
@@ -89,7 +90,7 @@ export async function POST(request: Request) {
     const res = await fetch(ENDPOINT, {
       method: "POST",
       headers: { Authorization: `Key ${process.env.FAL_KEY.trim()}`, "Content-Type": "application/json" },
-      body: JSON.stringify({ model: MODEL, system_prompt: system, prompt, image_urls: [image], temperature: 0.2, max_tokens: 700 }),
+      body: JSON.stringify({ model: MODEL, system_prompt: system, prompt, image_urls: [image], temperature: 0.2, max_tokens: 900 }),
       signal: AbortSignal.timeout(50_000),
     });
     if (!res.ok) {
