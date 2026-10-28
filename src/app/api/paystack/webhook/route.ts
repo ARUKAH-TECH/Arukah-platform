@@ -1,6 +1,7 @@
 import { signatureIsValid } from "@/server/paystack";
 import { confirmPayment } from "@/server/payments";
 import { confirmQuickPayment } from "@/server/quickPayments";
+import { confirmSubscription } from "@/server/literacySubs";
 
 // Paystack calls this after a payment (set the URL in the Paystack dashboard:
 // Settings → API Keys & Webhooks → https://zivarukah.com/api/paystack/webhook).
@@ -21,7 +22,11 @@ export async function POST(request: Request) {
 
   const reference = event?.data?.reference;
   if (event?.event === "charge.success" && typeof reference === "string") {
-    const result = reference.startsWith("ZS-") ? await confirmQuickPayment(reference) : await confirmPayment(reference);
+    const result = reference.startsWith("ZL-")
+      ? await confirmSubscription(reference)
+      : reference.startsWith("ZS-")
+        ? await confirmQuickPayment(reference)
+        : await confirmPayment(reference);
     // Paystack retries when we don't answer 200 — useful if their verify
     // endpoint was briefly unreachable.
     if (result.state === "pending") return new Response("retry", { status: 503 });
