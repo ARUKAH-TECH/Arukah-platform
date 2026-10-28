@@ -25,12 +25,15 @@ export function ShareButtons({ url, title, message, label = "Share", dark = fals
     setCanShare(typeof navigator !== "undefined" && typeof navigator.share === "function");
   }, []);
 
-  const full = `${message}\n\n${url}`;
+  // Tagged so the admin Visitors page can tell visits came from WhatsApp
+  // (WhatsApp usually hides where a link was opened from).
+  const tagged = (source: string) => `${url}${url.includes("?") ? "&" : "?"}utm_source=${source}`;
+  const full = `${message}\n\n${tagged("whatsapp")}`;
   const outline = dark ? "border-white/30 text-white" : "border-black/15 dark:border-white/15";
 
   async function nativeShare() {
     try {
-      await navigator.share({ title, text: message, url });
+      await navigator.share({ title, text: message, url: tagged("share") });
     } catch {
       // cancelled — nothing to do
     }
