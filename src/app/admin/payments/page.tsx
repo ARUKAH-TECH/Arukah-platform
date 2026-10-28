@@ -58,6 +58,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
             [setup.receiptEmail, "PAYSTACK_RECEIPT_EMAIL is a valid email address"],
             [setup.siteUrl, "SITE_URL starts with https:// (e.g. https://zivarukah.com)"],
             [setup.serviceKey, "SUPABASE_SERVICE_ROLE_KEY is set"],
+            [setup.serviceKeyRole, "…and it is the service_role (secret) key, not the anon/public key"],
           ].map(([ok, label]) => (
             <li key={String(label)}>
               {ok ? "✅" : "❌"} {label}

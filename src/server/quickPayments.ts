@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { BOOK_FORMATS, type BookFormat } from "@/config/books";
 import { getPublishedBook } from "@/db/books";
 import { getPublicOutreaches } from "@/db/outreaches";
-import { createServiceClient, serviceKeyConfigured } from "@/lib/supabase/service";
+import { createServiceClient, serviceKeyConfigured, serviceKeyIsServiceRole } from "@/lib/supabase/service";
 import { initializeTransaction, paystackSecret, toPesewas, verifyTransaction } from "@/server/paystack";
 
 // "Quantity → pay" payments. The visitor gives us nothing: they choose a book
@@ -26,6 +26,7 @@ export function paymentSetup() {
     paystackKey: Boolean(key),
     paystackLive: key.startsWith("sk_live_"),
     serviceKey: serviceKeyConfigured(),
+    serviceKeyRole: serviceKeyIsServiceRole(),
     siteUrl: /^https:\/\/\S+$/.test((process.env.SITE_URL ?? "").trim()),
     receiptEmail: /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(receiptEmail()),
   };
@@ -33,7 +34,7 @@ export function paymentSetup() {
 
 export function quickPaymentsEnabled() {
   const s = paymentSetup();
-  return s.paystackKey && s.serviceKey && s.siteUrl && s.receiptEmail;
+  return s.paystackKey && s.serviceKey && s.serviceKeyRole && s.siteUrl && s.receiptEmail;
 }
 
 const ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
