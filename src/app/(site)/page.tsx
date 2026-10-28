@@ -10,6 +10,7 @@ import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { GallerySection } from "@/features/gallery/GallerySection";
 import { LiteracyPromo } from "@/features/literacy/LiteracyPromo";
+import { WhatsNew } from "@/features/whatsnew/WhatsNew";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
@@ -81,6 +82,8 @@ export default async function Home() {
         primaryCta={{ label: "Explore ZIVARUKAH", href: "#businesses" }}
         secondaryCta={{ label: "Contact Us", href: "/contact" }}
       />
+
+      <WhatsNew />
 
       <section id="about" className="py-16">
         <Container>

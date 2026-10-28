@@ -18,6 +18,7 @@ export interface PublicBook {
   highlights: string[];
   cover: { url: string; width: number | null; height: number | null } | null;
   prices: BookPrice[];
+  createdAt: string;
 }
 
 interface BookRow {
@@ -34,10 +35,11 @@ interface BookRow {
   price_read_ghs: number | string | null;
   price_download_ghs: number | string | null;
   price_print_ghs: number | string | null;
+  created_at: string;
 }
 
 const COLUMNS =
-  "id, slug, title, author, description, sample_text, highlights, cover_path, cover_width, cover_height, price_read_ghs, price_download_ghs, price_print_ghs";
+  "id, slug, title, author, description, sample_text, highlights, cover_path, cover_width, cover_height, price_read_ghs, price_download_ghs, price_print_ghs, created_at";
 
 function toBook(row: BookRow): PublicBook {
   const prices: BookPrice[] = [];
@@ -55,6 +57,7 @@ function toBook(row: BookRow): PublicBook {
     highlights: row.highlights ?? [],
     cover: row.cover_path ? { url: mediaPublicUrl(row.cover_path), width: row.cover_width, height: row.cover_height } : null,
     prices,
+    createdAt: row.created_at,
   };
 }
 
