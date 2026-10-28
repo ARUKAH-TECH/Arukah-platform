@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/browser";
 import { registerGalleryPhoto } from "@/features/admin/cms/galleryActions";
 import { IMAGE_PICKER_ACCEPT, resize } from "@/lib/resizeImage";
+import { LOGO_STAMPS, stampLogo } from "@/lib/stampLogo";
 import { fieldClasses, primaryButtonClasses } from "@/features/admin/ui";
 
 export function GalleryUploader({ branch }: { branch: string }) {
@@ -13,6 +14,8 @@ export function GalleryUploader({ branch }: { branch: string }) {
   const [caption, setCaption] = useState("");
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<{ ok: boolean; text: string } | null>(null);
+  const stamp = LOGO_STAMPS[branch];
+  const [addLogo, setAddLogo] = useState(true);
 
   async function upload() {
     const files = Array.from(input.current?.files ?? []);
@@ -23,7 +26,9 @@ export function GalleryUploader({ branch }: { branch: string }) {
     try {
       for (const file of files) {
         setMessage({ ok: true, text: `Preparing and uploading photo ${done + 1} of ${files.length}…` });
-        const { blob, width, height } = await resize(file, 1600, 0.82);
+        const resized = await resize(file, 1600, 0.82);
+        const { width, height } = resized;
+        const blob = stamp && addLogo ? await stampLogo(resized.blob, width, height, stamp.src) : resized.blob;
         const storagePath = `gallery/${crypto.randomUUID()}.webp`;
         const { error } = await supabase.storage
           .from("media")
@@ -51,6 +56,12 @@ export function GalleryUploader({ branch }: { branch: string }) {
         Caption <span className="font-normal text-foreground/50">(optional — type it first, e.g. &quot;Leather sandals, size 42&quot;)</span>
         <input value={caption} maxLength={300} onChange={(event) => setCaption(event.target.value)} className={fieldClasses} />
       </label>
+      {stamp && (
+        <label className="flex items-center gap-2 text-sm font-medium">
+          <input type="checkbox" checked={addLogo} onChange={(event) => setAddLogo(event.target.checked)} className="h-4 w-4" />
+          Add the {stamp.label} to each photo (bottom-right corner)
+        </label>
+      )}
       <input ref={input} type="file" accept={IMAGE_PICKER_ACCEPT} multiple onChange={upload} className="hidden" />
       <div>
         <button type="button" onClick={() => input.current?.click()} disabled={busy} className={primaryButtonClasses}>
