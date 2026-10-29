@@ -35,7 +35,7 @@ function contentProblem(content: string): string | null {
     if (!safeImage(match[1], base)) return "An image in the text isn't one you uploaded here. Use the 📷 Image button to add pictures.";
   }
   for (const match of content.matchAll(/(?<!!)\[[^\]]+\]\(([^)\s]*)\)/g)) {
-    if (!safeHref(match[1])) return `This link can't be used: ${match[1].slice(0, 60)} — links must start with https:// (or be a page like /books).`;
+    if (!safeHref(match[1])) return `This link can't be used: ${match[1].slice(0, 60)}. Links must start with https:// (or be a page like /books).`;
   }
   return null;
 }
@@ -67,7 +67,7 @@ export async function saveArticle(_prev: CmsFormState, formData: FormData): Prom
     if (!content.trim()) return { status: "error", message: "Write the article before publishing." };
     if (!categoryId) return { status: "error", message: "Choose a category before publishing." };
     if (imagePath && !text(formData, "imageAlt", 300)) {
-      return { status: "error", message: "Describe the featured image (alt text) before publishing — it helps blind readers and Google." };
+      return { status: "error", message: "Describe the featured image (alt text) before publishing. It helps blind readers and Google." };
     }
   }
 

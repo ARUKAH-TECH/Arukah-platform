@@ -352,7 +352,7 @@ export default async function Home() {
       <SharePage
         path="/"
         title="ZIVARUKAH"
-        message={"✨ *ZIVARUKAH* — Creating Solutions. Building Skills. Serving Communities.\n\nBooks, the FREE ZIVA Literacy app, tech, media, footwear and Repent Online Ministries — all in one place 👇"}
+        message={"✨ *ZIVARUKAH*: Creating Solutions. Building Skills. Serving Communities.\n\nBooks, the FREE ZIVA Literacy app, tech, media, footwear and Repent Online Ministries. All in one place 👇"}
         heading="📣 Share ZIVARUKAH"
         note="Tell friends and family about everything here."
       />

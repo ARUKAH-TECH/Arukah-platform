@@ -16,7 +16,7 @@ import { SharePage } from "@/components/ui/SharePage";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "ARUKAH MEDIA — Video Production & Event Coverage in Ghana",
+  title: "ARUKAH MEDIA: Video Production & Event Coverage in Ghana",
   description:
     "ARUKAH MEDIA offers video production, event coverage, video editing and promotional videos for businesses, churches and events in Ghana.",
   alternates: { canonical: "/media" },

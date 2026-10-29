@@ -14,7 +14,7 @@ export async function submitAdRequest(formData: FormData): Promise<AdvertiseForm
   if (!ONLINE_FORMS_ENABLED) return { status: "error", message: FORMS_OFF_MESSAGE };
   // Honeypot: real visitors never see or fill this field.
   if (formData.get("company_website")) {
-    return { status: "success", message: "Thank you — we'll get back to you." };
+    return { status: "success", message: "Thank you: we'll get back to you." };
   }
 
   const contactName = field(formData, "contactName");

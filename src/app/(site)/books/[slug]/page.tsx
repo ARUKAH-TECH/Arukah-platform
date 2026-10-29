@@ -26,7 +26,7 @@ export async function generateMetadata({ params }: PageProps<"/books/[slug]">): 
     alternates: { canonical: `/books/${book.slug}` },
     openGraph: {
       title: book.title,
-      description: (book.highlights[0] ? `“${book.highlights[0]}” — ` : "") + book.description.slice(0, 140),
+      description: (book.highlights[0] ? `“${book.highlights[0]}” ` : "") + book.description.slice(0, 140),
       url: `/books/${book.slug}`,
       siteName: "ZIVARUKAH",
       type: "book",
@@ -107,7 +107,7 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
                   href={`/books/${book.slug}/read`}
                   className="inline-flex items-center justify-center rounded-full border border-brand-primary-text px-5 py-2 text-sm font-semibold text-brand-primary-text"
                 >
-                  📖 Read online now — with read-aloud 🔊
+                  📖 Read online now, with read-aloud 🔊
                 </Link>
               </div>
             )}

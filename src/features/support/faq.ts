@@ -30,7 +30,7 @@ const declineTechStack: FaqRule = {
     "how was this site built",
   ],
   answer:
-    "That's something we keep to ourselves — happy to help with anything else about our services though!",
+    "That's something we keep to ourselves. Happy to help with anything else about our services though!",
 };
 
 const rules: FaqRule[] = [
@@ -38,41 +38,41 @@ const rules: FaqRule[] = [
   {
     keywords: ["website", "web development", "software", "app develop", "custom system", "management system"],
     answer:
-      "Yes — ARUKAH TECH builds websites, custom software, and management systems. Check out /tech or use the contact form to discuss your project.",
+      "Yes: ARUKAH TECH builds websites, custom software, and management systems. Check out /tech or use the contact form to discuss your project.",
   },
   {
     keywords: ["shoe", "shoes", "footwear", "slipper", "sandal", "wear", "retail", "wholesale"],
     answer:
-      "Yes — ARUKAH WEAR sells Ghana-made footwear at retail, and we take wholesale orders too. See /footwear for details.",
+      "Yes: ARUKAH WEAR sells Ghana-made footwear at retail, and we take wholesale orders too. See /footwear for details.",
   },
   {
     keywords: ["ziva", "special classes", "tuition", "school", "learn", "study", "class for my child"],
     answer:
-      "Yes — ZIVA Special Classes covers Primary 1 to SHS 3. Visit /ziva to learn more, or use the contact form to enquire.",
+      "Yes: ZIVA Special Classes covers Primary 1 to SHS 3. Visit /ziva to learn more, or use the contact form to enquire.",
   },
   {
     keywords: ["book", "bookstore", "ebook", "e-book", "read online", "audiobook"],
     answer:
-      "ZIVARUKAH BOOKS is coming soon — online reading, digital downloads, and printed copies. Use the contact form if you'd like to hear when it opens.",
+      "ZIVARUKAH BOOKS is coming soon: online reading, digital downloads, and printed copies. Use the contact form if you'd like to hear when it opens.",
   },
   {
     keywords: ["video", "media", "photography", "event coverage", "editing"],
     answer:
-      "Yes — ARUKAH MEDIA offers video production, event coverage, and video editing. See /media for details.",
+      "Yes: ARUKAH MEDIA offers video production, event coverage, and video editing. See /media for details.",
   },
   {
     keywords: ["ministry", "church", "sermon", "prayer", "convert", "faith", "bible"],
     answer:
-      "You're welcome to visit /ministry — Repent Online Ministries has a dedicated form there for prayer requests and follow-up.",
+      "You're welcome to visit /ministry: Repent Online Ministries has a dedicated form there for prayer requests and follow-up.",
   },
   {
     keywords: ["contact", "whatsapp", "phone number", "reach you", "reach out", "get in touch", "call you"],
-    answer: `You can reach us on WhatsApp: ${WHATSAPP_LINK} — or use our contact form at /contact.`,
+    answer: `You can reach us on WhatsApp: ${WHATSAPP_LINK}, or use our contact form at /contact.`,
   },
 ];
 
 const FALLBACK_ANSWER =
-  "I don't have an answer for that one — please use our contact form and a real person will get back to you.";
+  "I don't have an answer for that one. Please use our contact form and a real person will get back to you.";
 
 export function matchFaq(question: string): string {
   const q = question.toLowerCase();

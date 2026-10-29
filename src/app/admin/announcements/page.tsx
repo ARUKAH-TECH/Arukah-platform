@@ -18,7 +18,7 @@ const statusStyles: Record<string, string> = {
 function formatDate(iso: string | null) {
   return iso
     ? new Date(iso).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Africa/Accra" })
-    : "—";
+    : "None";
 }
 
 export default async function AdminAnnouncementsPage() {
@@ -69,7 +69,7 @@ export default async function AdminAnnouncementsPage() {
                     </span>
                   </td>
                   <td className="px-4 py-3 text-xs text-foreground/70">
-                    {(item.branches as string[]).map(branchLabel).join(", ") || "—"}
+                    {(item.branches as string[]).map(branchLabel).join(", ") || "None"}
                   </td>
                   <td className="px-4 py-3 text-xs text-foreground/70">{formatDate(item.publish_at)}</td>
                   <td className="px-4 py-3 text-xs text-foreground/70">{formatDate(item.unpublish_at)}</td>

@@ -17,7 +17,7 @@ const NAMES: Record<string, string> = {
   "/books": "Books",
   "/literacy": "Literacy & Handwriting Coach",
   "/ministry": "Ministry",
-  "/ministry/support": "Giving — Support the outreach",
+  "/ministry/support": "Giving: Support the outreach",
   "/ministry/outreach": "Outreach",
   "/ziva": "ZIVA Special Classes",
   "/tech": "ARUKAH TECH",
@@ -170,7 +170,7 @@ export default async function VisitorsPage({ searchParams }: PageProps<"/admin/v
       <div className="flex flex-wrap items-end justify-between gap-3">
         <div>
           <h1 className="text-2xl font-semibold tracking-tight">Visitors</h1>
-          <p className="mt-1 text-sm text-foreground/60">How many people open each page. Counts only — no personal details are collected.</p>
+          <p className="mt-1 text-sm text-foreground/60">How many people open each page. Counts only, no personal details are collected.</p>
         </div>
         <nav aria-label="Period" className="flex gap-1.5 text-sm">
           {RANGES.map((r) => (
@@ -197,7 +197,7 @@ export default async function VisitorsPage({ searchParams }: PageProps<"/admin/v
           { label: "Today so far", value: todayViews.toLocaleString(), tone: "bg-black/5 dark:bg-white/10" },
           {
             label: "Pages per visit",
-            value: totalVisits ? (totalViews / totalVisits).toFixed(1) : "—",
+            value: totalVisits ? (totalViews / totalVisits).toFixed(1) : "None",
             tone: "bg-black/5 dark:bg-white/10",
           },
         ].map((t) => (
@@ -228,7 +228,7 @@ export default async function VisitorsPage({ searchParams }: PageProps<"/admin/v
         </div>
         {totalViews > 0 && (
           <p className="mt-2 text-xs text-foreground/60">
-            Busiest day: {new Date(`${best.day}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" })} —{" "}
+            Busiest day: {new Date(`${best.day}T00:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", timeZone: "UTC" })},{" "}
             {best.views} views.
           </p>
         )}

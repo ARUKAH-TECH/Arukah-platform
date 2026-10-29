@@ -30,7 +30,7 @@ export default async function PreviewArticlePage({ params }: PageProps<"/admin/a
       banner={
         <div className="mb-6 flex flex-wrap items-center justify-between gap-2 rounded-xl bg-amber-50 p-3 text-sm text-amber-950 dark:bg-amber-950 dark:text-amber-100">
           <span>
-            <strong>Preview</strong> — {live ? "this article is published." : "this is a draft; visitors can't see it."}
+            <strong>Preview</strong>: {live ? "this article is published." : "this is a draft; visitors can't see it."}
           </span>
           <Link href={`/admin/articles/${a.id}`} className="font-semibold underline">
             ← Back to editing

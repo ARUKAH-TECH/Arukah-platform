@@ -27,7 +27,7 @@ export function Footer() {
               Creating Solutions. Building Skills. Serving Communities.
             </p>
             <p className="mt-3 max-w-xs text-sm leading-6 text-foreground/70">
-              <strong>ZIVARUKAH</strong> — Hebrew for <em>the light of God</em> (ZIVA) and <em>total restoration</em> (ARUKAH). Founded by Shepherd
+              <strong>ZIVARUKAH</strong>: Hebrew for <em>the light of God</em> (ZIVA) and <em>total restoration</em> (ARUKAH). Founded by Shepherd
               Justice Sarpong Oduro.{" "}
               <Link href="/about" className="font-semibold underline hover:text-brand-primary-text">
                 Our story
@@ -47,6 +47,11 @@ export function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <Link href="/ministry/support" className="font-semibold hover:text-brand-primary-text">
+                  🙏 Support the outreach
+                </Link>
+              </li>
               <li>
                 <Link href="/advertise" className="hover:text-brand-primary-text">
                   Advertise with us

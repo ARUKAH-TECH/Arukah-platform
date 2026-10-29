@@ -48,7 +48,7 @@ export function BookReaderPanel({ bookId, slug, filePath, pageCount, highlights 
         if (!result.ok) throw new Error(result.message);
       }
       await finishBookPages(bookId, slug, pages.length);
-      setStep(`Ready ✓ — ${pages.length} pages are in the online reader.`);
+      setStep(`Ready ✓: ${pages.length} pages are in the online reader.`);
       router.refresh();
     } catch (err) {
       setStep("");
@@ -100,7 +100,7 @@ export function BookReaderPanel({ bookId, slug, filePath, pageCount, highlights 
               startTransition(async () => {
                 const picks = await suggestHighlights(bookId);
                 setLines(picks.join("\n"));
-                setLineMessage(picks.length ? "Suggestions added — edit them, then press Save lines." : "No suggestions found.");
+                setLineMessage(picks.length ? "Suggestions added: edit them, then press Save lines." : "No suggestions found.");
               })
             }
             className={secondaryButtonClasses}

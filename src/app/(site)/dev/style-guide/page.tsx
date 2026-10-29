@@ -23,7 +23,7 @@ export default function StyleGuidePage() {
     <div className="py-16">
       <Container>
         <SectionHeading
-          eyebrow="Internal — not linked from the site"
+          eyebrow="Internal: not linked from the site"
           title="ZIVARUKAH design system"
           description="Per-division brand tokens and shared components. Wrap any section in data-brand to scope Button/SectionHeading colors to that division."
         />
@@ -71,7 +71,7 @@ export default function StyleGuidePage() {
               <div className="mt-4">
                 <Card>
                   <p className="text-sm text-foreground/70">
-                    Card content is brand-agnostic by design — only accents
+                    Card content is brand-agnostic by design, only accents
                     (buttons, headings, links) switch per division.
                   </p>
                 </Card>

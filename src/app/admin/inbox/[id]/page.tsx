@@ -76,7 +76,7 @@ export default async function InboxMessagePage({ params }: PageProps<"/admin/inb
           )}
           <div>
             <p className="text-xs uppercase tracking-wider text-foreground/60">{m.kind === "ministry" ? "Prayer request / message" : "Message"}</p>
-            <p className="mt-1 whitespace-pre-line leading-6">{m.message || "—"}</p>
+            <p className="mt-1 whitespace-pre-line leading-6">{m.message || "None"}</p>
           </div>
         </div>
 

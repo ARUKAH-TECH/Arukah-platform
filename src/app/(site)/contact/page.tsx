@@ -36,7 +36,7 @@ export default async function ContactPage() {
           ) : (
             <WhatsAppContact
               message="Hello ZIVARUKAH, I would like to ask about "
-              note="Tell us what you need — software, websites, footwear, ZIVA classes, video production or books — and we'll reply on WhatsApp."
+              note="Tell us what you need (software, websites, footwear, ZIVA classes, video production or books) and we'll reply on WhatsApp."
             />
           )}
         </div>

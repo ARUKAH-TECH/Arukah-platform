@@ -117,7 +117,7 @@ export function AdvertiseForm() {
 
       <div>
         <label htmlFor="photo" className="block text-sm font-medium">
-          Photo or flyer <span className="font-normal text-foreground/60">(optional — a wide photo works best)</span>
+          Photo or flyer <span className="font-normal text-foreground/60">(optional: a wide photo works best)</span>
         </label>
         <input id="photo" ref={photoInput} type="file" accept={ACCEPTED_IMAGE_TYPES.join(",")} className="mt-1 text-sm" />
       </div>

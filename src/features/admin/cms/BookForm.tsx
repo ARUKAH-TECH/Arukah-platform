@@ -64,7 +64,7 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
         .upload(path, blob, { contentType: "image/webp", cacheControl: "31536000" });
       if (error) throw new Error(error.message);
       setCover({ path, width, height });
-      setCoverStep("Cover uploaded ✓ — now press Save book.");
+      setCoverStep("Cover uploaded ✓: now press Save book.");
     } catch (error) {
       setCoverStep("");
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
@@ -87,7 +87,7 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
     }
     if (file.size > 50 * 1024 * 1024) {
       if (pdfInput.current) pdfInput.current.value = "";
-      return setPdfError(`This PDF is ${(file.size / 1048576).toFixed(0)} MB. The limit is 50 MB — try a compressed PDF.`);
+      return setPdfError(`This PDF is ${(file.size / 1048576).toFixed(0)} MB. The limit is 50 MB. Try a compressed PDF.`);
     }
     setPdfBusy(true);
     setPdfStep(`Uploading ${(file.size / 1048576).toFixed(1)} MB… keep this page open.`);
@@ -98,7 +98,7 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
         .upload(path, file, { contentType: "application/pdf" });
       if (error) throw new Error(error.message);
       setPdf({ path, name: file.name.slice(0, 200), size: file.size });
-      setPdfStep("PDF uploaded ✓ — now press Save book.");
+      setPdfStep("PDF uploaded ✓: now press Save book.");
     } catch (error) {
       setPdfStep("");
       setPdfError(error instanceof Error ? error.message : "Upload failed.");
@@ -236,7 +236,7 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
       </label>
 
       <label className="text-sm font-medium">
-        Free sample <span className="font-normal text-foreground/60">(optional — a short excerpt visitors can read)</span>
+        Free sample <span className="font-normal text-foreground/60">(optional: a short excerpt visitors can read)</span>
         <textarea name="sampleText" rows={6} maxLength={20000} defaultValue={book.sampleText} className={fieldClasses} />
       </label>
 

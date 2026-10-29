@@ -4,9 +4,9 @@ export interface MinistryFormState {
 }
 
 export const FAITH_STATUS_OPTIONS = [
-  "New convert — I just gave my life to Christ",
+  "New convert: I just gave my life to Christ",
   "Rededicating my life",
-  "Already a believer — I want to grow deeper",
+  "Already a believer: I want to grow deeper",
 ] as const;
 
 export const initialMinistryFormState: MinistryFormState = { status: "idle", message: "" };

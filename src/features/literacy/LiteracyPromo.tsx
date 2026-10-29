@@ -20,7 +20,7 @@ export function LiteracyPromo() {
             <p className="text-xs font-semibold uppercase tracking-widest text-[#f0c050]">New · Free</p>
             <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">ZIVA Literacy &amp; Handwriting Coach</h2>
             <p className="mt-2 max-w-xl text-white/85">
-              Reading, phonics, spelling and handwriting practice for Kindergarten, Primary 1–6 and JHS 1–3 — with read-aloud, tracing and
+              Reading, phonics, spelling and handwriting practice for Kindergarten, Primary 1 to 6 and JHS 1 to 3, with read-aloud, tracing and
               stars. Install it on your phone; it works offline.
             </p>
           </div>

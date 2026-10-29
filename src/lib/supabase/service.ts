@@ -31,6 +31,6 @@ export function serviceKeyIsServiceRole() {
 
 export function createServiceClient() {
   const key = process.env.SUPABASE_SERVICE_ROLE_KEY?.trim();
-  if (!key) throw new Error("SUPABASE_SERVICE_ROLE_KEY is not set — see docs/ENVIRONMENT.md");
+  if (!key) throw new Error("SUPABASE_SERVICE_ROLE_KEY is not set: see docs/ENVIRONMENT.md");
   return createClient(supabaseUrl(), key, { auth: { persistSession: false, autoRefreshToken: false } });
 }

@@ -15,7 +15,7 @@ export async function submitEnquiry(
   if (!ONLINE_FORMS_ENABLED) return { status: "error", message: FORMS_OFF_MESSAGE };
   // Honeypot: real visitors never see or fill this field.
   if (formData.get("company_website")) {
-    return { status: "success", message: "Thanks — we'll be in touch soon." };
+    return { status: "success", message: "Thanks: we'll be in touch soon." };
   }
 
   const fullName = String(formData.get("fullName") ?? "").trim();

@@ -58,7 +58,7 @@ export function OutreachImageUploader({ outreachId }: { outreachId: string }) {
       <input id="outreachImages" ref={fileInput} type="file" accept={IMAGE_PICKER_ACCEPT} multiple onChange={upload} className="hidden" />
       <div>
         <label htmlFor="outreachAlt" className="block text-sm font-medium">
-          Describe the photo <span className="font-normal text-foreground/60">(optional — type this first; for blind visitors and Google)</span>
+          Describe the photo <span className="font-normal text-foreground/60">(optional: type this first; for blind visitors and Google)</span>
         </label>
         <input
           id="outreachAlt"

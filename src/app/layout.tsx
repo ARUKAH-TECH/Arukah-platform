@@ -22,7 +22,7 @@ const siteUrl = process.env.SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "ZIVARUKAH — Technology, Education, Footwear, Media & Books in Ghana",
+    default: "ZIVARUKAH: Technology, Education, Footwear, Media & Books in Ghana",
     template: "%s · ZIVARUKAH",
   },
   description:

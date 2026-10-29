@@ -25,7 +25,7 @@ export default async function GalleryAdminPage({ searchParams }: PageProps<"/adm
 
   return (
     <AdminShell email={admin.email}>
-      <h1 className="text-2xl font-semibold tracking-tight">Gallery — photos of your work</h1>
+      <h1 className="text-2xl font-semibold tracking-tight">Gallery: photos of your work</h1>
       <p className="mt-2 max-w-2xl text-sm text-foreground/60">
         Photos added here appear in an &quot;Our work&quot; section on that page. Choose the page first.
       </p>

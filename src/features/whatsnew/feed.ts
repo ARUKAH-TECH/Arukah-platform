@@ -31,7 +31,7 @@ const LAUNCHES: NewsItem[] = [
     kind: "app",
     label: "New app · Free",
     title: "ZIVA Literacy & Handwriting Coach",
-    teaser: "Reading, phonics, spelling and handwriting for KG to JHS — with read-aloud, finger tracing and stars. Works offline.",
+    teaser: "Reading, phonics, spelling and handwriting for KG to JHS, with read-aloud, finger tracing and stars. Works offline.",
     cta: "Open the app →",
     href: LITERACY_URL,
     external: true,

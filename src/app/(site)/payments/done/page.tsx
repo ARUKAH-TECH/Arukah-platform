@@ -31,7 +31,7 @@ async function load(reference: string): Promise<View> {
         return {
           state: "paid",
           amountGhs: r.amountGhs,
-          heading: "Thank you — your book is ready",
+          heading: "Thank you: your book is ready",
           lines: [
             `You paid for ${item}.`,
             "Tap the button to open your book. Bookmark this page: you can come back to it for 30 days to open the book again.",
@@ -43,7 +43,7 @@ async function load(reference: string): Promise<View> {
       return {
         state: "paid",
         amountGhs: r.amountGhs,
-        heading: "Thank you — payment received",
+        heading: "Thank you: payment received",
         lines: [
           `You paid for ${item}.`,
           isPrint
@@ -68,7 +68,7 @@ async function load(reference: string): Promise<View> {
   return {
     state: "paid",
     amountGhs: r.amountGhs,
-    heading: "Thank you — payment received",
+    heading: "Thank you: payment received",
     lines: r.orderReference ? [`It has been added to your book order ${r.orderReference}.`] : ["Your gift supports our outreach work. God bless you."],
     whatsapp: null,
   };
@@ -96,7 +96,7 @@ export default async function PaymentDonePage({ searchParams }: PageProps<"/paym
                 </p>
               ))}
               <p className="mt-4 text-sm">
-                Payment reference: <span className="font-mono font-bold">{reference}</span> — please keep it.
+                Payment reference: <span className="font-mono font-bold">{reference}</span>. Please keep it.
               </p>
               {view.file && (
                 <a

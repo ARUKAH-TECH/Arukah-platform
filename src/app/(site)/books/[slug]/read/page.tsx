@@ -29,13 +29,13 @@ export default async function ReadBookPage({ params, searchParams }: PageProps<"
             {access.book.author && <p className="mt-1 text-center text-sm text-foreground/60">{access.book.author}</p>}
             {access.mode === "admin" && (
               <p className="mt-4 rounded-xl bg-amber-50 p-3 text-center text-xs text-amber-950 dark:bg-amber-950 dark:text-amber-100">
-                Admin preview — buyers see this after paying for &quot;Read online&quot;.
+                Admin preview: buyers see this after paying for &quot;Read online&quot;.
               </p>
             )}
             {(access.mode === "paid" || access.mode === "free") && <RememberReading slug={access.book.slug} reference={reference} />}
             {access.mode === "free" && (
               <p className="mt-4 rounded-xl bg-emerald-50 p-3 text-center text-sm text-emerald-950 dark:bg-emerald-950 dark:text-emerald-100">
-                🎁 Free reading key from ZIVA Literacy — open until{" "}
+                🎁 Free reading key from ZIVA Literacy, open until{" "}
                 <strong>{new Date(access.expiresAt).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Accra" })}</strong>
                 .
               </p>
@@ -74,7 +74,7 @@ export default async function ReadBookPage({ params, searchParams }: PageProps<"
           ) : access.reason === "no-text" ? (
             <p className="mt-4 text-sm text-foreground/70">The online edition is being prepared. Please check back soon.</p>
           ) : (
-            <p className="mt-4 text-sm text-foreground/70">Read the whole book here on your phone — with read-aloud — straight after paying.</p>
+            <p className="mt-4 text-sm text-foreground/70">Read the whole book here on your phone, with read-aloud, straight after paying.</p>
           )}
           {readPrice && access.reason !== "no-text" && (
             <div className="mt-6 flex justify-center">
