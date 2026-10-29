@@ -1,31 +1,35 @@
 {
  "https://learn.zivarukah.com/": {
   "scores": {
-   "performance": 100,
-   "accessibility": 96,
+   "performance": 94,
+   "accessibility": 100,
    "best-practices": 100,
    "seo": 100
   },
-  "lcp": "1.7 s",
+  "lcp": "1.8 s",
   "cls": "0.001",
-  "tbt": "40 ms",
+  "tbt": "270 ms",
   "lcpEl": "\"<h1 class=\\\"mt-1 text-3xl font-extrabold leading-tight sm:text-4xl\\\">\"",
   "boot": [
    [
-    "s://learn.zivarukah.com/_next/static/chunks/1mh6a-0e61pyc.js",
-    181
+    "Unattributable",
+    389
    ],
    [
-    "Unattributable",
-    141
+    "zivarukah.com/_next/static/chunks/turbopack-0td869ukh0v94.js",
+    219
    ],
    [
     "https://learn.zivarukah.com/",
-    117
+    130
+   ],
+   [
+    "s://learn.zivarukah.com/_next/static/chunks/1mh6a-0e61pyc.js",
+    109
    ],
    [
     "s://learn.zivarukah.com/_next/static/chunks/344n2zhqbh4pn.js",
-    75
+    78
    ]
   ],
   "bytes": [
@@ -42,7 +46,7 @@
     32
    ],
    [
-    "https://learn.zivarukah.com/_next/static/chunks/1me1bbjmx5g2r.js",
+    "https://learn.zivarukah.com/_next/static/chunks/2224gk8dawofc.js",
     20
    ],
    [
@@ -50,15 +54,15 @@
     15
    ],
    [
-    "https://learn.zivarukah.com/_next/static/chunks/41fna8pp88c7b.js",
+    "https://learn.zivarukah.com/_next/static/chunks/0gq_8n4-uxp0z.js",
     13
    ],
    [
-    "https://learn.zivarukah.com/_next/static/chunks/2q6tf7tujiyiy.js",
+    "https://learn.zivarukah.com/_next/static/chunks/1te3sa0k9-wcu.js",
     11
    ],
    [
-    "https://learn.zivarukah.com/_next/static/chunks/3a_t20l5w8a4q.js",
+    "https://learn.zivarukah.com/_next/static/chunks/1s_letk03eu7h.js",
     10
    ]
   ],
@@ -69,39 +73,41 @@
    ]
   ],
   "fails": [
-   "color-contrast",
-   "label-content-name-mismatch",
    "unused-javascript",
+   "uses-responsive-images",
+   "legacy-javascript",
+   "image-delivery-insight",
+   "legacy-javascript-insight",
    "network-dependency-tree-insight"
   ]
  },
  "https://learn.zivarukah.com/stages/": {
   "scores": {
-   "performance": 100,
-   "accessibility": 95,
+   "performance": 99,
+   "accessibility": 100,
    "best-practices": 100,
    "seo": 100
   },
   "lcp": "1.8 s",
   "cls": "0.001",
-  "tbt": "30 ms",
+  "tbt": "70 ms",
   "lcpEl": "\"<p class=\\\"text-lg\\\">\"",
   "boot": [
    [
     "s://learn.zivarukah.com/_next/static/chunks/344n2zhqbh4pn.js",
-    129
+    170
    ],
    [
     "Unattributable",
-    102
+    116
    ],
    [
     "s://learn.zivarukah.com/_next/static/chunks/1mh6a-0e61pyc.js",
-    82
+    114
    ],
    [
     "https://learn.zivarukah.com/stages/",
-    53
+    84
    ]
   ],
   "bytes": [
@@ -114,7 +120,7 @@
     45
    ],
    [
-    "https://learn.zivarukah.com/_next/static/chunks/2c70i7wh5k85p.js",
+    "https://learn.zivarukah.com/_next/static/chunks/1jwbyl56b-_bz.js",
     31
    ],
    [
@@ -122,15 +128,15 @@
     15
    ],
    [
-    "https://learn.zivarukah.com/_next/static/chunks/3a_t20l5w8a4q.js",
+    "https://learn.zivarukah.com/_next/static/chunks/1s_letk03eu7h.js",
     10
    ],
    [
-    "https://learn.zivarukah.com/_next/static/chunks/1-wwfafv5wj1g.css",
+    "https://learn.zivarukah.com/_next/static/chunks/41v12ifb8e4l6.css",
     9
    ],
    [
-    "https://learn.zivarukah.com/_next/static/chunks/0tvoz-p62ipyb.js",
+    "https://learn.zivarukah.com/_next/static/chunks/2lfc26-7es9lx.js",
     8
    ],
    [
@@ -140,62 +146,57 @@
   ],
   "images": [],
   "fails": [
-   "color-contrast",
-   "label-content-name-mismatch",
    "unused-javascript",
+   "legacy-javascript",
    "legacy-javascript-insight",
    "network-dependency-tree-insight"
   ]
  },
  "https://zivarukah.com/": {
   "scores": {
-   "performance": 89,
-   "accessibility": 95,
+   "performance": 81,
+   "accessibility": 96,
    "best-practices": 100,
    "seo": 92
   },
-  "lcp": "3.7 s",
+  "lcp": "2.9 s",
   "cls": "0",
-  "tbt": "40 ms",
+  "tbt": "510 ms",
   "lcpEl": "\"<p class=\\\"max-w-xl text-lg leading-8 text-foreground/70\\\">\"",
   "boot": [
    [
     "https://zivarukah.com/",
-    277
-   ],
-   [
-    "zivarukah.com/_next/static/immutable/chunks/313a9o6wc2y17.js",
-    246
+    957
    ],
    [
     "Unattributable",
-    230
+    725
+   ],
+   [
+    "com/_next/static/immutable/chunks/turbopack-0x_a4gc4a59v9.js",
+    282
    ],
    [
     "zivarukah.com/_next/static/immutable/chunks/0qqyimsx0jsl6.js",
-    91
+    262
+   ],
+   [
+    "zivarukah.com/_next/static/immutable/chunks/0l9488ltbvo5l.js",
+    219
    ]
   ],
   "bytes": [
-   [
-    "v1/object/public/media/books/1c516c65-7b0e-4baa-84c5-609cca2ad437.webp",
-    167
-   ],
    [
     "2Fmedia%2Fbooks%2F1c516c65-7b0e-4baa-84c5-609cca2ad437.webp&w=640&q=75",
     89
    ],
    [
-    "https://zivarukah.com/_next/static/immutable/chunks/313a9o6wc2y17.js",
+    "https://zivarukah.com/_next/static/immutable/chunks/0l9488ltbvo5l.js",
     72
    ],
    [
     "https://zivarukah.com/_next/static/immutable/chunks/2xm1z1b-4q4s3.js",
-    67
-   ],
-   [
-    "https://zivarukah.com/branding/ziva-literacy/logo.webp",
-    54
+    68
    ],
    [
     "com/_next/image?url=%2Fbranding%2Fziva-literacy%2Flogo.webp&w=640&q=75",
@@ -208,87 +209,81 @@
    [
     "mage?url=%2Fbranding%2Farukah%2Farukah-logo-transparent.png&w=384&q=75",
     35
+   ],
+   [
+    "/_next/static/immutable/media/caa3a2e1cccd8315-s.p.0zr6hhvz-h9nw.woff2",
+    29
+   ],
+   [
+    "/_next/static/immutable/media/797e433ab948586e-s.p.1v5bejj26fx9h.woff2",
+    23
    ]
   ],
   "images": [
-   [
-    "v1/object/public/media/books/1c516c65-7b0e-4baa-84c5-609cca2ad437.webp",
-    165
-   ],
    [
     "2Fmedia%2Fbooks%2F1c516c65-7b0e-4baa-84c5-609cca2ad437.webp&w=640&q=75",
     61
    ],
    [
-    "https://zivarukah.com/branding/ziva-literacy/logo.webp",
-    53
-   ],
-   [
     "mage?url=%2Fbranding%2Farukah%2Farukah-logo-transparent.png&w=384&q=75",
     20
+   ],
+   [
+    "2Fmedia%2Fbooks%2F1c516c65-7b0e-4baa-84c5-609cca2ad437.webp&w=128&q=75",
+    6
+   ],
+   [
+    "com/_next/image?url=%2Fbranding%2Fziva-literacy%2Flogo.webp&w=128&q=75",
+    4
    ]
   ],
   "fails": [
+   "max-potential-fid",
+   "mainthread-work-breakdown",
    "largest-contentful-paint-element",
    "color-contrast",
-   "image-redundant-alt",
    "unused-javascript",
-   "legacy-javascript",
    "link-text",
-   "image-delivery-insight",
-   "legacy-javascript-insight",
    "network-dependency-tree-insight"
   ]
  },
  "https://zivarukah.com/books": {
   "scores": {
-   "performance": 100,
-   "accessibility": 95,
+   "performance": 91,
+   "accessibility": 100,
    "best-practices": 100,
    "seo": 100
   },
-  "lcp": "1.3 s",
+  "lcp": "2.4 s",
   "cls": "0",
-  "tbt": "70 ms",
+  "tbt": "320 ms",
   "lcpEl": "\"<p class=\\\"max-w-xl text-lg leading-8 text-foreground/70\\\">\"",
   "boot": [
    [
-    "zivarukah.com/_next/static/immutable/chunks/313a9o6wc2y17.js",
-    264
+    "zivarukah.com/_next/static/immutable/chunks/0l9488ltbvo5l.js",
+    695
    ],
    [
     "Unattributable",
-    159
+    152
    ],
    [
     "https://zivarukah.com/books",
-    124
-   ],
-   [
-    "zivarukah.com/_next/static/immutable/chunks/32_9u2lef27ri.js",
-    84
+    128
    ],
    [
     "zivarukah.com/_next/static/immutable/chunks/0qqyimsx0jsl6.js",
-    74
+    100
    ]
   ],
   "bytes": [
    [
-    "v1/object/public/media/books/1c516c65-7b0e-4baa-84c5-609cca2ad437.webp",
-    167
-   ],
-   [
-    "https://zivarukah.com/_next/static/immutable/chunks/313a9o6wc2y17.js",
+    "https://zivarukah.com/_next/static/immutable/chunks/0l9488ltbvo5l.js",
     72
    ],
    [
     "https://zivarukah.com/_next/static/immutable/chunks/2xm1z1b-4q4s3.js",
     67
-   ],
-   [
-    "https://zivarukah.com/branding/ziva-literacy/logo.webp",
-    54
    ],
    [
     "2Fmedia%2Fbooks%2F1c516c65-7b0e-4baa-84c5-609cca2ad437.webp&w=384&q=75",
@@ -305,17 +300,17 @@
    [
     "/_next/static/immutable/media/caa3a2e1cccd8315-s.p.0zr6hhvz-h9nw.woff2",
     29
+   ],
+   [
+    "/_next/static/immutable/media/797e433ab948586e-s.p.1v5bejj26fx9h.woff2",
+    23
+   ],
+   [
+    "https://zivarukah.com/_next/static/immutable/chunks/0qsj306wbfck0.css",
+    14
    ]
   ],
   "images": [
-   [
-    "v1/object/public/media/books/1c516c65-7b0e-4baa-84c5-609cca2ad437.webp",
-    165
-   ],
-   [
-    "https://zivarukah.com/branding/ziva-literacy/logo.webp",
-    53
-   ],
    [
     "mage?url=%2Fbranding%2Farukah%2Farukah-logo-transparent.png&w=384&q=75",
     20
@@ -323,11 +318,19 @@
    [
     "2Fmedia%2Fbooks%2F1c516c65-7b0e-4baa-84c5-609cca2ad437.webp&w=384&q=75",
     14
+   ],
+   [
+    "2Fmedia%2Fbooks%2F1c516c65-7b0e-4baa-84c5-609cca2ad437.webp&w=128&q=75",
+    6
+   ],
+   [
+    "com/_next/image?url=%2Fbranding%2Fziva-literacy%2Flogo.webp&w=128&q=75",
+    4
    ]
   ],
   "fails": [
-   "color-contrast",
-   "image-redundant-alt",
+   "max-potential-fid",
+   "unused-javascript",
    "network-dependency-tree-insight",
    "render-blocking-insight"
   ]

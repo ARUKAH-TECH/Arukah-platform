@@ -20,8 +20,8 @@
     },
     {
      "target": ".reveal-pop.w-\\[82\\%\\].snap-start:nth-child(1) > .p-5.flex-1.flex-col > .tracking-wider.uppercase.text-brand-primary-text > .font-normal.normal-case.tracking-normal",
-     "html": "<span class=\"font-normal normal-case tracking-normal text-foreground/50\">2 days ago</span>",
-     "why": "Element has insufficient color contrast of 1.51 (foreground color: #d2d2d2, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected c"
+     "html": "<span class=\"font-normal normal-case tracking-normal text-foreground/60\">2 days ago</span>",
+     "why": "Element has insufficient color contrast of 1.65 (foreground color: #c9c9c9, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected c"
     },
     {
      "target": ".reveal-pop.w-\\[82\\%\\].snap-start:nth-child(1) > .p-5.flex-1.flex-col > .line-clamp-2.leading-snug",
@@ -45,8 +45,8 @@
     },
     {
      "target": ".reveal-pop.w-\\[82\\%\\].snap-start:nth-child(2) > .p-5.flex-1.flex-col > .tracking-wider.uppercase.text-brand-primary-text > .font-normal.normal-case.tracking-normal",
-     "html": "<span class=\"font-normal normal-case tracking-normal text-foreground/50\">5 days ago</span>",
-     "why": "Element has insufficient color contrast of 1.51 (foreground color: #d2d2d2, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected c"
+     "html": "<span class=\"font-normal normal-case tracking-normal text-foreground/60\">5 days ago</span>",
+     "why": "Element has insufficient color contrast of 1.65 (foreground color: #c9c9c9, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected c"
     },
     {
      "target": ".reveal-pop.w-\\[82\\%\\].snap-start:nth-child(2) > .p-5.flex-1.flex-col > .line-clamp-2.leading-snug",
@@ -65,387 +65,38 @@
     },
     {
      "target": ".sm\\:hidden",
-     "html": "<p class=\"mt-1 text-center text-xs text-foreground/50 sm:hidden\">Swipe for more →</p>",
-     "why": "Element has insufficient color contrast of 1.51 (foreground color: #d2d2d2, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected c"
-    },
-    {
-     "target": "div:nth-child(2) > .text-foreground\\/50.tracking-wider.uppercase",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Navigate</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "div:nth-child(3) > .text-foreground\\/50.tracking-wider.uppercase",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Businesses</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".pt-6",
-     "html": "<p class=\"mt-10 border-t border-black/10 pt-6 text-xs text-foreground/50 dark:border-white/10\">© <!-- -->2026<!-- --> ZIVARUKAH VENTURES.</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    }
-   ]
-  },
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
+     "html": "<p class=\"mt-1 text-center text-xs text-foreground/60 sm:hidden\">Swipe for more →</p>",
+     "why": "Element has insufficient color contrast of 1.65 (foreground color: #c9c9c9, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected c"
     }
    ]
   }
  ],
- "light https://zivarukah.com/books": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": ".whitespace-nowrap",
-     "html": "<span class=\"whitespace-nowrap font-normal text-foreground/50 \" title=\"Approximate. You are charged in Ghana cedis (GHS).\"> ≈ $1.72</span>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "div:nth-child(2) > .text-foreground\\/50.uppercase.tracking-wider",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Navigate</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "div:nth-child(3) > .text-foreground\\/50.uppercase.tracking-wider",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Businesses</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".pt-6",
-     "html": "<p class=\"mt-10 border-t border-black/10 pt-6 text-xs text-foreground/50 dark:border-white/10\">© <!-- -->2026<!-- --> ZIVARUKAH VENTURES.</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    }
-   ]
-  },
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "light https://zivarukah.com/books/the-wicked-and-unforgiving-student": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": ".border-brand-primary-text.justify-between > .text-right.font-semibold > .whitespace-nowrap.font-normal.text-foreground\\/50",
-     "html": "<span class=\"whitespace-nowrap font-normal text-foreground/50 block text-xs\" title=\"Approximate. You are charged in Ghana cedis (GHS).\"> ≈ $1.72</span>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".justify-between:nth-child(2) > .text-right.font-semibold > .whitespace-nowrap.font-normal.text-foreground\\/50",
-     "html": "<span class=\"whitespace-nowrap font-normal text-foreground/50 block text-xs\" title=\"Approximate. You are charged in Ghana cedis (GHS).\"> ≈ $4.30</span>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".justify-between:nth-child(3) > .text-right.font-semibold > .whitespace-nowrap.font-normal.text-foreground\\/50",
-     "html": "<span class=\"whitespace-nowrap font-normal text-foreground/50 block text-xs\" title=\"Approximate. You are charged in Ghana cedis (GHS).\"> ≈ $3.44</span>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".flex-wrap.mt-3.gap-2 > span",
-     "html": "<span>Prices are in Ghana cedis (GHS). ≈ amounts in USD are a guide only.</span>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".flex-wrap.mt-3.gap-2 > .gap-1",
-     "html": "<label class=\"flex items-center gap-1\">",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "select",
-     "html": "<select class=\"rounded border border-black/15 bg-transparent px-1 py-0.5 dark:border-white/15\">",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".gap-4.flex-col > .text-foreground\\/50:nth-child(3)",
-     "html": "<p class=\"text-xs text-foreground/50\">Pay securely with Mobile Money (approve with your PIN) or card on Paystack's page. We don't ask for your details here.</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".text-foreground\\/50:nth-child(4)",
-     "html": "<p class=\"text-xs text-foreground/50\">Buy more than 3 copies and get 10% off.<!-- --> We confirm your order and how to pay on WhatsApp.</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "div:nth-child(2) > .uppercase.tracking-wider.text-foreground\\/50",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Navigate</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "div:nth-child(3) > .uppercase.tracking-wider.text-foreground\\/50",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Businesses</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".mt-10",
-     "html": "<p class=\"mt-10 border-t border-black/10 pt-6 text-xs text-foreground/50 dark:border-white/10\">© <!-- -->2026<!-- --> ZIVARUKAH VENTURES.</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    }
-   ]
-  },
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
+ "light https://zivarukah.com/books": [],
+ "light https://zivarukah.com/books/the-wicked-and-unforgiving-student": [],
  "light https://zivarukah.com/projects": [
   {
    "id": "color-contrast",
    "nodes": [
     {
      "target": ".gap-3.rounded-2xl.border-dashed:nth-child(1) > .aspect-video.bg-black\\/5.dark\\:bg-white\\/5",
-     "html": "<div class=\"flex aspect-video items-center justify-center rounded-xl bg-black/5 text-xs text-foreground/50 dark:bg-white/5\">Preview coming soon</div>",
-     "why": "Element has insufficient color contrast of 3.33 (foreground color: #858484, background color: #f2f2f2, font size: 9.0pt (12px), font weight: normal). Expected c"
+     "html": "<div class=\"flex aspect-video items-center justify-center rounded-xl bg-black/5 text-xs text-foreground/60 dark:bg-white/5\">Preview coming soon</div>",
+     "why": "Element has insufficient color contrast of 4.48 (foreground color: #6f6f6f, background color: #f2f2f2, font size: 9.0pt (12px), font weight: normal). Expected c"
     },
     {
      "target": ".gap-3.rounded-2xl.border-dashed:nth-child(2) > .aspect-video.bg-black\\/5.dark\\:bg-white\\/5",
-     "html": "<div class=\"flex aspect-video items-center justify-center rounded-xl bg-black/5 text-xs text-foreground/50 dark:bg-white/5\">Preview coming soon</div>",
-     "why": "Element has insufficient color contrast of 3.33 (foreground color: #858484, background color: #f2f2f2, font size: 9.0pt (12px), font weight: normal). Expected c"
-    },
-    {
-     "target": "div:nth-child(2) > .uppercase.tracking-wider.text-foreground\\/50",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Navigate</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "div:nth-child(3) > .uppercase.tracking-wider.text-foreground\\/50",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Businesses</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".pt-6",
-     "html": "<p class=\"mt-10 border-t border-black/10 pt-6 text-xs text-foreground/50 dark:border-white/10\">© <!-- -->2026<!-- --> ZIVARUKAH VENTURES.</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    }
-   ]
-  },
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
+     "html": "<div class=\"flex aspect-video items-center justify-center rounded-xl bg-black/5 text-xs text-foreground/60 dark:bg-white/5\">Preview coming soon</div>",
+     "why": "Element has insufficient color contrast of 4.48 (foreground color: #6f6f6f, background color: #f2f2f2, font size: 9.0pt (12px), font weight: normal). Expected c"
     }
    ]
   }
  ],
- "light https://zivarukah.com/contact": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": ".mt-20 > .w-full.max-w-6xl.sm\\:px-6 > .text-center > .text-brand-primary-text.uppercase.tracking-wider",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-brand-primary-text\">Online Ministry</p>",
-     "why": "Element has insufficient color contrast of 3.31 (foreground color: #c08000, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected c"
-    },
-    {
-     "target": "div:nth-child(2) > .text-foreground\\/50.uppercase.tracking-wider",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Navigate</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "div:nth-child(3) > .text-foreground\\/50.uppercase.tracking-wider",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Businesses</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".pt-6",
-     "html": "<p class=\"mt-10 border-t border-black/10 pt-6 text-xs text-foreground/50 dark:border-white/10\">© <!-- -->2026<!-- --> ZIVARUKAH VENTURES.</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    }
-   ]
-  },
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "light https://zivarukah.com/ministry": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": "div:nth-child(2) > .text-foreground\\/50.tracking-wider.uppercase",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Navigate</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "div:nth-child(3) > .text-foreground\\/50.tracking-wider.uppercase",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Businesses</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".mt-10",
-     "html": "<p class=\"mt-10 border-t border-black/10 pt-6 text-xs text-foreground/50 dark:border-white/10\">© <!-- -->2026<!-- --> ZIVARUKAH VENTURES.</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    }
-   ]
-  },
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "light https://zivarukah.com/tech": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": "div:nth-child(2) > .text-foreground\\/50.tracking-wider",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Navigate</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": "div:nth-child(3) > .text-foreground\\/50.tracking-wider",
-     "html": "<p class=\"text-xs font-semibold uppercase tracking-wider text-foreground/50\">Businesses</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    },
-    {
-     "target": ".pt-6",
-     "html": "<p class=\"mt-10 border-t border-black/10 pt-6 text-xs text-foreground/50 dark:border-white/10\">© <!-- -->2026<!-- --> ZIVARUKAH VENTURES.</p>",
-     "why": "Element has insufficient color contrast of 3.4 (foreground color: #8b8b8b, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected co"
-    }
-   ]
-  },
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "light https://learn.zivarukah.com/": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\] > .truncate",
-     "html": "<span class=\"truncate\">Guest</span>",
-     "why": "Element has insufficient color contrast of 4.3 (foreground color: #ffffff, background color: #3080b5, font size: 10.5pt (14px), font weight: bold). Expected con"
-    }
-   ]
-  },
-  {
-   "id": "label-content-name-mismatch",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\]",
-     "html": "<a aria-label=\"Who is learning?\" class=\"flex h-9 max-w-[6.5rem] shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 text-sm font-bold\" href=\"/join/\"><span",
-     "why": "Text inside the element is not included in the accessible name"
-    }
-   ]
-  }
- ],
- "light https://learn.zivarukah.com/handwriting/": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\] > .truncate",
-     "html": "<span class=\"truncate\">Guest</span>",
-     "why": "Element has insufficient color contrast of 4.3 (foreground color: #ffffff, background color: #3080b5, font size: 10.5pt (14px), font weight: bold). Expected con"
-    },
-    {
-     "target": ".text-black\\/50",
-     "html": "<p class=\"mt-2 text-sm text-black/50\">Tip: good light, paper flat, writing fills most of the photo.</p>",
-     "why": "Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected "
-    }
-   ]
-  },
-  {
-   "id": "label-content-name-mismatch",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\]",
-     "html": "<a aria-label=\"Who is learning?\" class=\"flex h-9 max-w-[6.5rem] shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 text-sm font-bold\" href=\"/join/\"><span",
-     "why": "Text inside the element is not included in the accessible name"
-    }
-   ]
-  }
- ],
- "light https://learn.zivarukah.com/account/": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": "span:nth-child(2)",
-     "html": "<span class=\"truncate\">Guest</span>",
-     "why": "Element has insufficient color contrast of 4.3 (foreground color: #ffffff, background color: #3080b5, font size: 10.5pt (14px), font weight: bold). Expected con"
-    },
-    {
-     "target": ".text-black\\/50",
-     "html": "<p class=\"text-xs text-black/50\">No password needed — you sign in with your phone number and this phone stays signed in. Only first names and practice stars of ",
-     "why": "Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected c"
-    }
-   ]
-  },
-  {
-   "id": "label-content-name-mismatch",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\]",
-     "html": "<a aria-label=\"Who is learning?\" class=\"flex h-9 max-w-[6.5rem] shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 text-sm font-bold\" href=\"/join/\"><span",
-     "why": "Text inside the element is not included in the accessible name"
-    }
-   ]
-  }
- ],
- "light https://learn.zivarukah.com/join/": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\] > .truncate",
-     "html": "<span class=\"truncate\">Guest</span>",
-     "why": "Element has insufficient color contrast of 4.3 (foreground color: #ffffff, background color: #3080b5, font size: 10.5pt (14px), font weight: bold). Expected con"
-    }
-   ]
-  },
-  {
-   "id": "label-content-name-mismatch",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\]",
-     "html": "<a aria-label=\"Who is learning?\" class=\"flex h-9 max-w-[6.5rem] shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 text-sm font-bold\" href=\"/join/\"><span",
-     "why": "Text inside the element is not included in the accessible name"
-    }
-   ]
-  }
- ],
+ "light https://zivarukah.com/contact": [],
+ "light https://zivarukah.com/ministry": [],
+ "light https://zivarukah.com/tech": [],
+ "light https://learn.zivarukah.com/": [],
+ "light https://learn.zivarukah.com/handwriting/": [],
+ "light https://learn.zivarukah.com/account/": [],
+ "light https://learn.zivarukah.com/join/": [],
  "dark https://zivarukah.com/": [
   {
    "id": "color-contrast",
@@ -462,8 +113,8 @@
     },
     {
      "target": ".reveal-pop.w-\\[82\\%\\].snap-start:nth-child(1) > .p-5.flex-1.flex-col > .tracking-wider.uppercase.text-brand-primary-text > .font-normal.normal-case.tracking-normal",
-     "html": "<span class=\"font-normal normal-case tracking-normal text-foreground/50\">2 days ago</span>",
-     "why": "Element has insufficient color contrast of 1.63 (foreground color: #363636, background color: #0a0a0a, font size: 9.0pt (12px), font weight: normal). Expected c"
+     "html": "<span class=\"font-normal normal-case tracking-normal text-foreground/60\">2 days ago</span>",
+     "why": "Element has insufficient color contrast of 1.85 (foreground color: #3e3e3e, background color: #0a0a0a, font size: 9.0pt (12px), font weight: normal). Expected c"
     },
     {
      "target": ".reveal-pop.w-\\[82\\%\\].snap-start:nth-child(1) > .p-5.flex-1.flex-col > .line-clamp-2.leading-snug",
@@ -487,8 +138,8 @@
     },
     {
      "target": ".reveal-pop.w-\\[82\\%\\].snap-start:nth-child(2) > .p-5.flex-1.flex-col > .tracking-wider.uppercase.text-brand-primary-text > .font-normal.normal-case.tracking-normal",
-     "html": "<span class=\"font-normal normal-case tracking-normal text-foreground/50\">5 days ago</span>",
-     "why": "Element has insufficient color contrast of 1.63 (foreground color: #363636, background color: #0a0a0a, font size: 9.0pt (12px), font weight: normal). Expected c"
+     "html": "<span class=\"font-normal normal-case tracking-normal text-foreground/60\">5 days ago</span>",
+     "why": "Element has insufficient color contrast of 1.85 (foreground color: #3e3e3e, background color: #0a0a0a, font size: 9.0pt (12px), font weight: normal). Expected c"
     },
     {
      "target": ".reveal-pop.w-\\[82\\%\\].snap-start:nth-child(2) > .p-5.flex-1.flex-col > .line-clamp-2.leading-snug",
@@ -507,190 +158,20 @@
     },
     {
      "target": ".sm\\:hidden",
-     "html": "<p class=\"mt-1 text-center text-xs text-foreground/50 sm:hidden\">Swipe for more →</p>",
-     "why": "Element has insufficient color contrast of 1.63 (foreground color: #363636, background color: #0a0a0a, font size: 9.0pt (12px), font weight: normal). Expected c"
-    }
-   ]
-  },
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
+     "html": "<p class=\"mt-1 text-center text-xs text-foreground/60 sm:hidden\">Swipe for more →</p>",
+     "why": "Element has insufficient color contrast of 1.85 (foreground color: #3e3e3e, background color: #0a0a0a, font size: 9.0pt (12px), font weight: normal). Expected c"
     }
    ]
   }
  ],
- "dark https://zivarukah.com/books": [
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "dark https://zivarukah.com/books/the-wicked-and-unforgiving-student": [
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "dark https://zivarukah.com/projects": [
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "dark https://zivarukah.com/contact": [
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "dark https://zivarukah.com/ministry": [
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "dark https://zivarukah.com/tech": [
-  {
-   "id": "image-redundant-alt",
-   "nodes": [
-    {
-     "target": ".h-9",
-     "html": "<img alt=\"ZIVARUKAH\" loading=\"lazy\" width=\"36\" height=\"36\" decoding=\"async\" data-nimg=\"1\" class=\"h-9 w-9 object-contain\" style=\"color:transparent\" srcset=\"/_nex",
-     "why": ""
-    }
-   ]
-  }
- ],
- "dark https://learn.zivarukah.com/": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\] > .truncate",
-     "html": "<span class=\"truncate\">Guest</span>",
-     "why": "Element has insufficient color contrast of 4.3 (foreground color: #ffffff, background color: #3080b5, font size: 10.5pt (14px), font weight: bold). Expected con"
-    }
-   ]
-  },
-  {
-   "id": "label-content-name-mismatch",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\]",
-     "html": "<a aria-label=\"Who is learning?\" class=\"flex h-9 max-w-[6.5rem] shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 text-sm font-bold\" href=\"/join/\"><span",
-     "why": "Text inside the element is not included in the accessible name"
-    }
-   ]
-  }
- ],
- "dark https://learn.zivarukah.com/handwriting/": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\] > .truncate",
-     "html": "<span class=\"truncate\">Guest</span>",
-     "why": "Element has insufficient color contrast of 4.3 (foreground color: #ffffff, background color: #3080b5, font size: 10.5pt (14px), font weight: bold). Expected con"
-    },
-    {
-     "target": ".text-black\\/50",
-     "html": "<p class=\"mt-2 text-sm text-black/50\">Tip: good light, paper flat, writing fills most of the photo.</p>",
-     "why": "Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 10.5pt (14px), font weight: normal). Expected "
-    }
-   ]
-  },
-  {
-   "id": "label-content-name-mismatch",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\]",
-     "html": "<a aria-label=\"Who is learning?\" class=\"flex h-9 max-w-[6.5rem] shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 text-sm font-bold\" href=\"/join/\"><span",
-     "why": "Text inside the element is not included in the accessible name"
-    }
-   ]
-  }
- ],
- "dark https://learn.zivarukah.com/account/": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": "span:nth-child(2)",
-     "html": "<span class=\"truncate\">Guest</span>",
-     "why": "Element has insufficient color contrast of 4.3 (foreground color: #ffffff, background color: #3080b5, font size: 10.5pt (14px), font weight: bold). Expected con"
-    },
-    {
-     "target": ".text-black\\/50",
-     "html": "<p class=\"text-xs text-black/50\">No password needed — you sign in with your phone number and this phone stays signed in. Only first names and practice stars of ",
-     "why": "Element has insufficient color contrast of 3.94 (foreground color: #808080, background color: #ffffff, font size: 9.0pt (12px), font weight: normal). Expected c"
-    }
-   ]
-  },
-  {
-   "id": "label-content-name-mismatch",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\]",
-     "html": "<a aria-label=\"Who is learning?\" class=\"flex h-9 max-w-[6.5rem] shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 text-sm font-bold\" href=\"/join/\"><span",
-     "why": "Text inside the element is not included in the accessible name"
-    }
-   ]
-  }
- ],
- "dark https://learn.zivarukah.com/join/": [
-  {
-   "id": "color-contrast",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\] > .truncate",
-     "html": "<span class=\"truncate\">Guest</span>",
-     "why": "Element has insufficient color contrast of 4.3 (foreground color: #ffffff, background color: #3080b5, font size: 10.5pt (14px), font weight: bold). Expected con"
-    }
-   ]
-  },
-  {
-   "id": "label-content-name-mismatch",
-   "nodes": [
-    {
-     "target": ".max-w-\\[6\\.5rem\\]",
-     "html": "<a aria-label=\"Who is learning?\" class=\"flex h-9 max-w-[6.5rem] shrink-0 items-center gap-1 rounded-full bg-white/15 px-3 text-sm font-bold\" href=\"/join/\"><span",
-     "why": "Text inside the element is not included in the accessible name"
-    }
-   ]
-  }
- ]
+ "dark https://zivarukah.com/books": [],
+ "dark https://zivarukah.com/books/the-wicked-and-unforgiving-student": [],
+ "dark https://zivarukah.com/projects": [],
+ "dark https://zivarukah.com/contact": [],
+ "dark https://zivarukah.com/ministry": [],
+ "dark https://zivarukah.com/tech": [],
+ "dark https://learn.zivarukah.com/": [],
+ "dark https://learn.zivarukah.com/handwriting/": [],
+ "dark https://learn.zivarukah.com/account/": [],
+ "dark https://learn.zivarukah.com/join/": []
 }
