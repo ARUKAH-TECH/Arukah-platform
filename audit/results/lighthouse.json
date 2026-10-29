@@ -1,0 +1,89 @@
+{
+ "https://learn.zivarukah.com/": {
+  "scores": {
+   "performance": 98,
+   "accessibility": 96,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": "1.7 s",
+  "cls": "0.001",
+  "tbt": "170 ms",
+  "fails": [
+   "max-potential-fid",
+   "color-contrast",
+   "label-content-name-mismatch",
+   "unused-javascript",
+   "legacy-javascript",
+   "legacy-javascript-insight",
+   "network-dependency-tree-insight"
+  ]
+ },
+ "https://learn.zivarukah.com/stages/": {
+  "scores": {
+   "performance": 100,
+   "accessibility": 95,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": "1.8 s",
+  "cls": "0.001",
+  "tbt": "50 ms",
+  "fails": [
+   "color-contrast",
+   "label-content-name-mismatch",
+   "unused-javascript",
+   "legacy-javascript",
+   "legacy-javascript-insight",
+   "network-dependency-tree-insight"
+  ]
+ },
+ "https://zivarukah.com/": {
+  "scores": {
+   "performance": 72,
+   "accessibility": 95,
+   "best-practices": 100,
+   "seo": 92
+  },
+  "lcp": "4.1 s",
+  "cls": "0",
+  "tbt": "530 ms",
+  "fails": [
+   "largest-contentful-paint",
+   "max-potential-fid",
+   "mainthread-work-breakdown",
+   "largest-contentful-paint-element",
+   "color-contrast",
+   "image-redundant-alt",
+   "unused-javascript",
+   "uses-responsive-images",
+   "link-text",
+   "image-delivery-insight",
+   "network-dependency-tree-insight"
+  ]
+ },
+ "https://zivarukah.com/books": {
+  "scores": {
+   "performance": 93,
+   "accessibility": 95,
+   "best-practices": 100,
+   "seo": 100
+  },
+  "lcp": "2.9 s",
+  "cls": "0",
+  "tbt": "170 ms",
+  "fails": [
+   "max-potential-fid",
+   "largest-contentful-paint-element",
+   "color-contrast",
+   "image-redundant-alt",
+   "unused-javascript",
+   "uses-responsive-images",
+   "legacy-javascript",
+   "image-delivery-insight",
+   "legacy-javascript-insight",
+   "network-dependency-tree-insight",
+   "render-blocking-insight"
+  ]
+ }
+}
