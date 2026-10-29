@@ -41,7 +41,7 @@ export default function StyleGuidePage() {
                 />
                 <h3 className="text-lg font-semibold">
                   {brand.name}{" "}
-                  <code className="text-xs font-normal text-foreground/50">
+                  <code className="text-xs font-normal text-foreground/60">
                     data-brand=&quot;{brand.id}&quot;
                   </code>
                 </h3>
@@ -56,7 +56,7 @@ export default function StyleGuidePage() {
                     />
                     <div className="p-2 text-xs">
                       <p className="font-medium">{swatch.label}</p>
-                      <p className="text-foreground/50">{swatch.varName}</p>
+                      <p className="text-foreground/60">{swatch.varName}</p>
                     </div>
                   </div>
                 ))}

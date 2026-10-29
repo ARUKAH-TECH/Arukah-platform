@@ -140,7 +140,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
       </fieldset>
 
       <fieldset>
-        <legend className="text-sm font-semibold">When it shows <span className="font-normal text-foreground/50">(Ghana time)</span></legend>
+        <legend className="text-sm font-semibold">When it shows <span className="font-normal text-foreground/60">(Ghana time)</span></legend>
         <div className="mt-2 grid grid-cols-1 gap-4 sm:grid-cols-2">
           <label className="text-sm">
             Start
@@ -184,7 +184,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
             <input name="amountGhs" inputMode="decimal" defaultValue={values.amountGhs} className={fieldClasses} />
           </label>
           <label className="text-sm">
-            Reference <span className="text-foreground/50">(MoMo / bank)</span>
+            Reference <span className="text-foreground/60">(MoMo / bank)</span>
             <input name="paymentReference" maxLength={200} defaultValue={values.paymentReference} className={fieldClasses} />
           </label>
         </div>
@@ -227,7 +227,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
                   onChange={() => setImageChoice("uploaded")}
                   disabled={!uploaded}
                 />
-                Upload a different image <span className="text-foreground/50">(wide, ideally 1200 × 150)</span>
+                Upload a different image <span className="text-foreground/60">(wide, ideally 1200 × 150)</span>
               </span>
               <div className="flex flex-wrap items-center gap-3">
                 <input ref={fileInput} type="file" accept={IMAGE_PICKER_ACCEPT} onChange={upload} className="hidden" />
@@ -251,7 +251,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
                   Fit — show the whole image, still
                 </Choice>
               </div>
-              <p className="text-xs text-foreground/50">
+              <p className="text-xs text-foreground/60">
                 Or crop the picture to the exact banner shape (it then fills the banner perfectly either way):
               </p>
               <BannerCropper
@@ -286,7 +286,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
 
       <label className="text-sm">
         Seconds on screen{" "}
-        <span className="text-foreground/50">(when two or more adverts are showing, each stays this long before the next)</span>
+        <span className="text-foreground/60">(when two or more adverts are showing, each stays this long before the next)</span>
         <input
           name="displaySeconds"
           type="number"
@@ -298,7 +298,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
       </label>
 
       <label className="text-sm">
-        Link when clicked <span className="text-foreground/50">(optional — their website, Facebook or WhatsApp link)</span>
+        Link when clicked <span className="text-foreground/60">(optional — their website, Facebook or WhatsApp link)</span>
         <input name="linkUrl" defaultValue={values.linkUrl} placeholder="https://…" className={fieldClasses} />
       </label>
 

@@ -122,8 +122,8 @@ export function Basket({ afterOrderText, payOnline }: { afterOrderText: string; 
           </div>
         </dl>
         <CurrencyNote />
-        {hasPrint && <p className="mt-2 text-xs text-foreground/50">Any delivery charge for printed copies is confirmed with you.</p>}
-        {totals.count <= 3 && <p className="mt-2 text-xs text-foreground/50">Add {4 - totals.count} more to get 10% off.</p>}
+        {hasPrint && <p className="mt-2 text-xs text-foreground/60">Any delivery charge for printed copies is confirmed with you.</p>}
+        {totals.count <= 3 && <p className="mt-2 text-xs text-foreground/60">Add {4 - totals.count} more to get 10% off.</p>}
       </div>
 
       <form action={submit} className="flex flex-col gap-4 lg:col-span-2">
@@ -138,7 +138,7 @@ export function Basket({ afterOrderText, payOnline }: { afterOrderText: string; 
           <input name="phone" type="tel" maxLength={40} className={inputClasses} />
         </label>
         <label className="text-sm font-medium">
-          Email <span className="font-normal text-foreground/50">(optional)</span>
+          Email <span className="font-normal text-foreground/60">(optional)</span>
           <input name="email" type="email" maxLength={200} className={inputClasses} />
         </label>
 
@@ -165,7 +165,7 @@ export function Basket({ afterOrderText, payOnline }: { afterOrderText: string; 
         )}
 
         <label className="text-sm font-medium">
-          Note <span className="font-normal text-foreground/50">(optional)</span>
+          Note <span className="font-normal text-foreground/60">(optional)</span>
           <textarea name="note" rows={2} maxLength={1000} className={inputClasses} />
         </label>
 
@@ -182,7 +182,7 @@ export function Basket({ afterOrderText, payOnline }: { afterOrderText: string; 
         >
           {pending ? "Placing order…" : `Place order · ${formatGhs(totals.total)}`}
         </button>
-        <p className="text-xs text-foreground/50">
+        <p className="text-xs text-foreground/60">
           {payOnline
             ? "After placing the order you can pay securely online (Mobile Money or card), or pay later when we contact you."
             : "No payment is taken online. We'll contact you to confirm and arrange payment."}

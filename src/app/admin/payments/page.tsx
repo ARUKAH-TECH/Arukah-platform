@@ -13,8 +13,8 @@ export const metadata: Metadata = { title: "Payments" };
 const STATUS: Record<string, { label: string; cls: string }> = {
   success: { label: "Paid", cls: "bg-green-100 text-green-900 dark:bg-green-950 dark:text-green-200" },
   pending: { label: "Not finished", cls: "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200" },
-  failed: { label: "Failed", cls: "bg-black/5 text-foreground/50 dark:bg-white/10" },
-  abandoned: { label: "Abandoned", cls: "bg-black/5 text-foreground/50 dark:bg-white/10" },
+  failed: { label: "Failed", cls: "bg-black/5 text-foreground/60 dark:bg-white/10" },
+  abandoned: { label: "Abandoned", cls: "bg-black/5 text-foreground/60 dark:bg-white/10" },
 };
 
 export default async function PaymentsPage({ searchParams }: PageProps<"/admin/payments">) {
@@ -136,7 +136,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
                   <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${s.cls}`}>{s.label}</span>
                   <span className="font-semibold">{formatGhs(Number(p.amount_ghs))}</span>
                   <span>{p.payer_name || p.email}</span>
-                  {p.channel && <span className="text-xs text-foreground/50">({p.channel.replace("_", " ")})</span>}
+                  {p.channel && <span className="text-xs text-foreground/60">({p.channel.replace("_", " ")})</span>}
                 </span>
                 <span className="text-xs text-foreground/60">
                   {p.purpose === "book_order" ? (

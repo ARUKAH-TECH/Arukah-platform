@@ -48,7 +48,7 @@ export function MfaForm({ existingFactorId }: MfaFormProps) {
           <p className="text-sm text-foreground/70">Scan this with your authenticator app:</p>
           {/* eslint-disable-next-line @next/next/no-img-element -- inline SVG data URI from Supabase */}
           <img src={enroll.qrCode} alt="Authenticator setup QR code" width={180} height={180} className="rounded-lg bg-white p-2" />
-          <p className="text-xs text-foreground/50">
+          <p className="text-xs text-foreground/60">
             Can&apos;t scan? Enter this key instead:{" "}
             <code className="break-all font-mono">{enroll.secret}</code>
           </p>

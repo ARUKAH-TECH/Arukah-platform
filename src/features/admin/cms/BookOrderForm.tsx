@@ -62,7 +62,7 @@ export function BookOrderForm({ values }: { values: BookOrderFormValues }) {
             <input name="amountPaid" inputMode="decimal" defaultValue={values.amountPaid} className={fieldClasses} />
           </label>
           <label>
-            Reference <span className="text-foreground/50">(MoMo / bank)</span>
+            Reference <span className="text-foreground/60">(MoMo / bank)</span>
             <input name="paymentReference" maxLength={200} defaultValue={values.paymentReference} className={fieldClasses} />
           </label>
         </div>
@@ -70,7 +70,7 @@ export function BookOrderForm({ values }: { values: BookOrderFormValues }) {
 
       {values.hasPrint && (
         <label>
-          Delivery charge (GHS) <span className="text-foreground/50">(added to the total)</span>
+          Delivery charge (GHS) <span className="text-foreground/60">(added to the total)</span>
           <input name="deliveryFee" inputMode="decimal" defaultValue={values.deliveryFee} className={`${fieldClasses} max-w-[10rem]`} />
         </label>
       )}

@@ -327,7 +327,7 @@ export function Reader({ title, author, pages, highlights, storageKey }: Props) 
                 );
               })}
             </div>
-            <div className="mt-6 flex items-center justify-between font-sans text-xs text-foreground/50">
+            <div className="mt-6 flex items-center justify-between font-sans text-xs text-foreground/60">
               <span>
                 Page {pageIndex + 1} of {pages.length}
               </span>

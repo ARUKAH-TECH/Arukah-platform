@@ -8,7 +8,7 @@ const CHOICES = ["GHS", "USD", "GBP", "EUR", "CAD", "NGN", "ZAR", "KES", "XOF", 
 export function CurrencyNote() {
   const local = useLocalCurrency();
   return (
-    <p className="mt-3 flex flex-wrap items-center gap-2 text-xs text-foreground/50">
+    <p className="mt-3 flex flex-wrap items-center gap-2 text-xs text-foreground/60">
       <span>Prices are in Ghana cedis (GHS).{local.currency ? ` ≈ amounts in ${local.currency} are a guide only.` : ""}</span>
       <label className="flex items-center gap-1">
         Show approx. in

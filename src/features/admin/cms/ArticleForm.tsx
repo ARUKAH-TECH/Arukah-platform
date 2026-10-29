@@ -40,7 +40,7 @@ async function uploadImage(file: File, maxEdge: number) {
 function Counter({ value, ideal, max }: { value: string; ideal: number; max: number }) {
   const n = value.length;
   return (
-    <span className={`text-xs ${n > ideal ? "text-amber-700 dark:text-amber-400" : "text-foreground/50"}`}>
+    <span className={`text-xs ${n > ideal ? "text-amber-700 dark:text-amber-400" : "text-foreground/60"}`}>
       {n}/{ideal} recommended{n > ideal ? " — may be cut short in Google" : ""} (max {max})
     </span>
   );
@@ -236,7 +236,7 @@ export function ArticleForm({
       <label className="text-sm font-medium">
         Web address
         <span className="mt-1 flex items-center gap-1 text-sm font-normal">
-          <span className="shrink-0 text-foreground/50">/articles/</span>
+          <span className="shrink-0 text-foreground/60">/articles/</span>
           <input
             name="slug"
             maxLength={100}
@@ -271,7 +271,7 @@ export function ArticleForm({
       </div>
 
       <label className="text-sm font-medium">
-        Short summary (excerpt) <span className="font-normal text-foreground/50">— shown on the Articles list</span>
+        Short summary (excerpt) <span className="font-normal text-foreground/60">— shown on the Articles list</span>
         <textarea
           name="excerpt"
           rows={3}
@@ -302,7 +302,7 @@ export function ArticleForm({
           )}
         </div>
         <label className="mt-3 block text-sm font-medium">
-          Describe the image (alt text) <span className="font-normal text-foreground/50">— for blind readers and Google</span>
+          Describe the image (alt text) <span className="font-normal text-foreground/60">— for blind readers and Google</span>
           <input
             name="imageAlt"
             maxLength={300}
@@ -403,7 +403,7 @@ export function ArticleForm({
               // eslint-disable-next-line @next/next/no-img-element -- admin preview
               <img src={mediaUrl(image.path)} alt={imageAlt} className="mt-4 w-full rounded-xl" />
             )}
-            <div className="mt-5">{content.trim() ? <ArticleBody content={content} /> : <p className="text-foreground/50">Nothing written yet.</p>}</div>
+            <div className="mt-5">{content.trim() ? <ArticleBody content={content} /> : <p className="text-foreground/60">Nothing written yet.</p>}</div>
           </div>
         )}
         {busy && <p className="mt-2 text-sm text-green-700 dark:text-green-400">{busy}</p>}
@@ -418,17 +418,17 @@ export function ArticleForm({
       <details className="rounded-2xl border border-black/10 p-4 dark:border-white/10" open={Boolean(article.seoTitle || article.metaDescription)}>
         <summary className="cursor-pointer text-sm font-semibold">Google &amp; sharing (SEO) — optional</summary>
         <label className="mt-4 block text-sm font-medium">
-          SEO title <span className="font-normal text-foreground/50">— leave empty to use the title</span>
+          SEO title <span className="font-normal text-foreground/60">— leave empty to use the title</span>
           <input name="seoTitle" maxLength={120} value={seoTitle} onChange={(e) => (setSeoTitle(e.target.value), setDirty(true))} className={fieldClasses} />
           <Counter value={seoTitle} ideal={60} max={120} />
         </label>
         <label className="mt-4 block text-sm font-medium">
-          Meta description <span className="font-normal text-foreground/50">— leave empty to use the summary</span>
+          Meta description <span className="font-normal text-foreground/60">— leave empty to use the summary</span>
           <textarea name="metaDescription" rows={3} maxLength={300} value={meta} onChange={(e) => (setMeta(e.target.value), setDirty(true))} className={fieldClasses} />
           <Counter value={meta} ideal={160} max={300} />
         </label>
         <div className="mt-4 rounded-xl bg-black/5 p-3 text-sm dark:bg-white/5">
-          <p className="text-xs text-foreground/50">How it may look on Google:</p>
+          <p className="text-xs text-foreground/60">How it may look on Google:</p>
           <p className="mt-1 truncate text-[#1a0dab] dark:text-blue-300">{(seoTitle || title || "Article title") + " · ZIVARUKAH"}</p>
           <p className="truncate text-xs text-green-800 dark:text-green-400">zivarukah.com/articles/{slug || "…"}</p>
           <p className="line-clamp-2 text-xs text-foreground/70">{meta || excerpt || "Your summary will appear here."}</p>

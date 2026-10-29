@@ -12,7 +12,7 @@ export function Header() {
         <Link href="/#top" className="flex items-center gap-2">
           <Image
             src={logo.src}
-            alt="ZIVARUKAH"
+            alt=""
             width={36}
             height={36}
             className="h-9 w-9 object-contain"
@@ -83,7 +83,7 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
-            <p className="mt-2 px-2 text-xs font-semibold uppercase tracking-wider text-foreground/50">
+            <p className="mt-2 px-2 text-xs font-semibold uppercase tracking-wider text-foreground/60">
               Businesses
             </p>
             {businessNav.map((biz) => (

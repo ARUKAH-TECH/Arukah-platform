@@ -80,7 +80,7 @@ export function AdvertiseForm() {
         </div>
         <div>
           <label htmlFor="businessName" className="block text-sm font-medium">
-            Business name <span className="font-normal text-foreground/50">(optional)</span>
+            Business name <span className="font-normal text-foreground/60">(optional)</span>
           </label>
           <input id="businessName" name="businessName" maxLength={150} className={inputClasses} />
         </div>
@@ -95,7 +95,7 @@ export function AdvertiseForm() {
         </div>
         <div>
           <label htmlFor="adEmail" className="block text-sm font-medium">
-            Email <span className="font-normal text-foreground/50">(optional)</span>
+            Email <span className="font-normal text-foreground/60">(optional)</span>
           </label>
           <input id="adEmail" name="email" type="email" maxLength={200} className={inputClasses} />
         </div>
@@ -110,14 +110,14 @@ export function AdvertiseForm() {
 
       <div>
         <label htmlFor="location" className="block text-sm font-medium">
-          Location <span className="font-normal text-foreground/50">(town / area)</span>
+          Location <span className="font-normal text-foreground/60">(town / area)</span>
         </label>
         <input id="location" name="location" maxLength={200} className={inputClasses} />
       </div>
 
       <div>
         <label htmlFor="photo" className="block text-sm font-medium">
-          Photo or flyer <span className="font-normal text-foreground/50">(optional — a wide photo works best)</span>
+          Photo or flyer <span className="font-normal text-foreground/60">(optional — a wide photo works best)</span>
         </label>
         <input id="photo" ref={photoInput} type="file" accept={ACCEPTED_IMAGE_TYPES.join(",")} className="mt-1 text-sm" />
       </div>

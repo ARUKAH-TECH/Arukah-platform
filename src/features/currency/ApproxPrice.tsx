@@ -74,7 +74,7 @@ export function ApproxPrice({ ghs, className = "" }: { ghs: number; className?: 
   const text = formatApprox(ghs, local);
   if (!text) return null;
   return (
-    <span className={`whitespace-nowrap font-normal text-foreground/50 ${className}`} title="Approximate. You are charged in Ghana cedis (GHS).">
+    <span className={`whitespace-nowrap font-normal text-foreground/60 ${className}`} title="Approximate. You are charged in Ghana cedis (GHS).">
       {" "}
       ≈ {text}
     </span>

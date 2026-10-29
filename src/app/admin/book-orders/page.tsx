@@ -14,7 +14,7 @@ const STATUS: Record<string, { label: string; cls: string }> = {
   ready: { label: "Ready to collect", cls: "bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-200" },
   shipped: { label: "Sent out", cls: "bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-200" },
   delivered: { label: "Done", cls: "bg-green-100 text-green-900 dark:bg-green-950 dark:text-green-200" },
-  cancelled: { label: "Cancelled", cls: "bg-black/5 text-foreground/50 dark:bg-white/10" },
+  cancelled: { label: "Cancelled", cls: "bg-black/5 text-foreground/60 dark:bg-white/10" },
 };
 const PAYMENT: Record<string, string> = { unpaid: "Not paid", part: "Part paid", full: "Full paid" };
 

@@ -64,7 +64,7 @@ export async function OutreachMediaSection({ outreachId }: { outreachId: string 
                     // eslint-disable-next-line @next/next/no-img-element -- short-lived signed link to a private file
                     <img src={src} alt={item.alt_text} className="aspect-[4/3] w-full rounded-lg bg-black/5 object-cover" />
                   ) : (
-                    <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-black/5 text-xs text-foreground/50">
+                    <div className="flex aspect-[4/3] items-center justify-center rounded-lg bg-black/5 text-xs text-foreground/60">
                       Preview unavailable
                     </div>
                   )

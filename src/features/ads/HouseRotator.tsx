@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { HouseAd } from "./houseAds";
+import { resized } from "@/lib/resizedImage";
 
 // The top advert strip while no paid advert is running: our own works take
 // turns every 15 seconds. One slide always invites businesses to advertise.
@@ -23,7 +24,7 @@ function Slide({ ad }: { ad: HouseAd | null }) {
       <span className="relative flex aspect-square h-[82%] shrink-0 items-center justify-center overflow-hidden rounded-md bg-white/15">
         {ad.image ? (
           // eslint-disable-next-line @next/next/no-img-element -- small thumbnail from our own storage
-          <img src={ad.image.url} alt="" className={`h-full w-full ${ad.image.fit === "cover" ? "object-cover" : "object-contain"}`} />
+          <img src={resized(ad.image.url, 128)} alt="" className={`h-full w-full ${ad.image.fit === "cover" ? "object-cover" : "object-contain"}`} />
         ) : (
           <span aria-hidden="true" className="text-base sm:text-2xl">{ad.emoji}</span>
         )}

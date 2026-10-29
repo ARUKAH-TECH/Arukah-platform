@@ -191,7 +191,7 @@ export default async function Home() {
                   className="flex aspect-video flex-col items-center justify-center rounded-2xl border border-dashed border-black/15 p-6 text-center dark:border-white/15"
                 >
                   <p className="text-sm font-medium">{project}</p>
-                  <p className="mt-1 text-xs text-foreground/50">Preview coming soon</p>
+                  <p className="mt-1 text-xs text-foreground/60">Preview coming soon</p>
                 </div>
               ),
             )}
@@ -235,7 +235,7 @@ export default async function Home() {
                   </li>
                 ))}
               </ul>
-              <p className="mt-4 text-xs text-foreground/50">{t.text("wearNote")}</p>
+              <p className="mt-4 text-xs text-foreground/60">{t.text("wearNote")}</p>
               <div className="mt-6">
                 <Button href="/footwear">Learn more</Button>
               </div>

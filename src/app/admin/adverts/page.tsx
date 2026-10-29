@@ -14,7 +14,7 @@ function formatDate(iso: string | null) {
 function badge(row: { status: string; starts_at: string | null; ends_at: string | null }) {
   const now = Date.now();
   if (row.status === "pending") return { label: "Pending", cls: "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200" };
-  if (row.status === "rejected") return { label: "Rejected", cls: "bg-black/5 text-foreground/50 dark:bg-white/10" };
+  if (row.status === "rejected") return { label: "Rejected", cls: "bg-black/5 text-foreground/60 dark:bg-white/10" };
   if (row.starts_at && now < Date.parse(row.starts_at)) return { label: "Approved · starts later", cls: "bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-200" };
   if (row.ends_at && now >= Date.parse(row.ends_at)) return { label: "Ended", cls: "bg-black/5 text-foreground/60 dark:bg-white/10" };
   return { label: "Showing now", cls: "bg-green-100 text-green-900 dark:bg-green-950 dark:text-green-200" };
@@ -65,7 +65,7 @@ export default async function AdvertsPage() {
                   <span className="flex flex-wrap items-center gap-2">
                     <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${b.cls}`}>{b.label}</span>
                     <span className="text-sm font-medium">{row.business_name || row.contact_name}</span>
-                    {row.location && <span className="text-xs text-foreground/50">· {row.location}</span>}
+                    {row.location && <span className="text-xs text-foreground/60">· {row.location}</span>}
                   </span>
                   <span className="text-xs text-foreground/60">
                     {row.status === "approved" ? `${formatDate(row.starts_at)} → ${formatDate(row.ends_at)} · ` : `Received ${formatDate(row.created_at)} · `}

@@ -64,18 +64,18 @@ export default async function InboxMessagePage({ params }: PageProps<"/admin/inb
           </div>
           {m.organization && (
             <div>
-              <p className="text-xs uppercase tracking-wider text-foreground/50">Organisation</p>
+              <p className="text-xs uppercase tracking-wider text-foreground/60">Organisation</p>
               <p className="mt-1">{m.organization}</p>
             </div>
           )}
           {m.topic && (
             <div>
-              <p className="text-xs uppercase tracking-wider text-foreground/50">{m.kind === "ministry" ? "Faith journey" : "Service"}</p>
+              <p className="text-xs uppercase tracking-wider text-foreground/60">{m.kind === "ministry" ? "Faith journey" : "Service"}</p>
               <p className="mt-1">{m.topic}</p>
             </div>
           )}
           <div>
-            <p className="text-xs uppercase tracking-wider text-foreground/50">{m.kind === "ministry" ? "Prayer request / message" : "Message"}</p>
+            <p className="text-xs uppercase tracking-wider text-foreground/60">{m.kind === "ministry" ? "Prayer request / message" : "Message"}</p>
             <p className="mt-1 whitespace-pre-line leading-6">{m.message || "—"}</p>
           </div>
         </div>

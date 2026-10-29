@@ -16,7 +16,7 @@ export function Footer() {
             <div className="flex items-center gap-2">
               <Image
                 src={logo.src}
-                alt="ZIVARUKAH"
+                alt=""
                 width={32}
                 height={32}
                 className="h-8 w-8 object-contain"
@@ -29,7 +29,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-foreground/50">
+            <p className="text-xs font-semibold uppercase tracking-wider text-foreground/60">
               Navigate
             </p>
             <ul className="mt-3 flex flex-col gap-2 text-sm">
@@ -49,7 +49,7 @@ export function Footer() {
           </div>
 
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wider text-foreground/50">
+            <p className="text-xs font-semibold uppercase tracking-wider text-foreground/60">
               Businesses
             </p>
             <ul className="mt-3 flex flex-col gap-2 text-sm">
@@ -64,7 +64,7 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="mt-10 border-t border-black/10 pt-6 text-xs text-foreground/50 dark:border-white/10">
+        <p className="mt-10 border-t border-black/10 pt-6 text-xs text-foreground/60 dark:border-white/10">
           &copy; {year} ZIVARUKAH VENTURES.
         </p>
       </Container>

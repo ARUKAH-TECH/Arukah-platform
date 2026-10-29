@@ -53,7 +53,7 @@ export function GalleryUploader({ branch }: { branch: string }) {
   return (
     <div className="flex flex-col gap-4">
       <label className="text-sm font-medium">
-        Caption <span className="font-normal text-foreground/50">(optional — type it first, e.g. &quot;Leather sandals, size 42&quot;)</span>
+        Caption <span className="font-normal text-foreground/60">(optional — type it first, e.g. &quot;Leather sandals, size 42&quot;)</span>
         <input value={caption} maxLength={300} onChange={(event) => setCaption(event.target.value)} className={fieldClasses} />
       </label>
       {stamp && (
@@ -67,7 +67,7 @@ export function GalleryUploader({ branch }: { branch: string }) {
         <button type="button" onClick={() => input.current?.click()} disabled={busy} className={primaryButtonClasses}>
           {busy ? "Uploading…" : "Choose photos"}
         </button>
-        <p className="mt-2 text-xs text-foreground/50">You can pick several at once. They upload as soon as you pick them.</p>
+        <p className="mt-2 text-xs text-foreground/60">You can pick several at once. They upload as soon as you pick them.</p>
       </div>
       {message && (
         <p role={message.ok ? "status" : "alert"} className={message.ok ? "text-sm text-green-700 dark:text-green-400" : "text-sm font-medium text-red-700 dark:text-red-400"}>

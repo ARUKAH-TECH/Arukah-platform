@@ -10,7 +10,7 @@ export const metadata: Metadata = { title: "Books" };
 const statusStyles: Record<string, string> = {
   draft: "bg-black/5 text-foreground/70 dark:bg-white/10",
   published: "bg-green-100 text-green-900 dark:bg-green-950 dark:text-green-200",
-  archived: "bg-black/5 text-foreground/50 dark:bg-white/10",
+  archived: "bg-black/5 text-foreground/60 dark:bg-white/10",
 };
 
 export default async function AdminBooksPage() {
@@ -41,7 +41,7 @@ export default async function AdminBooksPage() {
               <Link href={`/admin/books/${book.id}`} className="flex flex-wrap items-center gap-3 px-4 py-3 hover:bg-black/[0.03] dark:hover:bg-white/5">
                 <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${statusStyles[book.status] ?? ""}`}>{book.status}</span>
                 <span className="text-sm font-medium">{book.title}</span>
-                {book.author && <span className="text-xs text-foreground/50">by {book.author}</span>}
+                {book.author && <span className="text-xs text-foreground/60">by {book.author}</span>}
               </Link>
             </li>
           ))}

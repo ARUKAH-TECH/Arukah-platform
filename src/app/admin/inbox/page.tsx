@@ -9,7 +9,7 @@ export const metadata: Metadata = { title: "Inbox" };
 const statusStyles: Record<string, string> = {
   new: "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200",
   in_progress: "bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-200",
-  handled: "bg-black/5 text-foreground/50 dark:bg-white/10",
+  handled: "bg-black/5 text-foreground/60 dark:bg-white/10",
 };
 const statusLabels: Record<string, string> = { new: "new", in_progress: "in progress", handled: "handled" };
 const kindLabels: Record<string, string> = { enquiry: "Enquiry", ministry: "Ministry" };
@@ -88,11 +88,11 @@ export default async function InboxPage({ searchParams }: PageProps<"/admin/inbo
                   {statusLabels[m.status] ?? m.status}
                 </span>
                 <span className={`text-sm ${m.status === "new" ? "font-semibold" : ""}`}>{m.full_name}</span>
-                <span className="text-xs text-foreground/50">
+                <span className="text-xs text-foreground/60">
                   {kindLabels[m.kind] ?? m.kind}
                   {m.topic ? ` · ${m.topic}` : ""}
                 </span>
-                <span className="ml-auto text-xs text-foreground/50">{formatDate(m.created_at)}</span>
+                <span className="ml-auto text-xs text-foreground/60">{formatDate(m.created_at)}</span>
               </Link>
             </li>
           ))}

@@ -150,11 +150,11 @@ export function TextAdMaker({
         <input value={headline} maxLength={60} onChange={(e) => setHeadline(e.target.value)} className={fieldClasses} />
       </label>
       <label className="text-xs font-medium">
-        Second line <span className="font-normal text-foreground/50">(optional)</span>
+        Second line <span className="font-normal text-foreground/60">(optional)</span>
         <input value={line2} maxLength={90} onChange={(e) => setLine2(e.target.value)} className={fieldClasses} />
       </label>
       <label className="text-xs font-medium">
-        Contact button <span className="font-normal text-foreground/50">(phone, place or offer — optional)</span>
+        Contact button <span className="font-normal text-foreground/60">(phone, place or offer — optional)</span>
         <input value={contact} maxLength={40} onChange={(e) => setContact(e.target.value)} className={fieldClasses} />
       </label>
       <div className="flex flex-wrap gap-2">

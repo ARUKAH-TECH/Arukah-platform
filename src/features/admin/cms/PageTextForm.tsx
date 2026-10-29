@@ -47,7 +47,7 @@ function Field({ field, value }: { field: FieldDef; value: string | string[] }) 
         />
       )}
       {changed && (
-        <p className="mt-1 text-xs text-foreground/50">
+        <p className="mt-1 text-xs text-foreground/60">
           Original: {Array.isArray(field.default) ? field.default.join(" · ") : field.default}
         </p>
       )}
