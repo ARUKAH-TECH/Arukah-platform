@@ -48,7 +48,7 @@ export default async function SupportPage({ searchParams }: PageProps<"/ministry
                 dark
                 message={`Hello Repent Online Ministries, I would like to support the outreach${preselectTitle ? ` "${preselectTitle}"` : ""}.`}
                 label="Give via WhatsApp"
-                note="Message or call us and we'll share how to give by Mobile Money. Thank you and God bless you."
+                note="Message us on WhatsApp and we'll share how to give by Mobile Money. Thank you and God bless you."
               />
               </div>
             )}

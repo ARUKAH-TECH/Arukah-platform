@@ -1,15 +1,15 @@
 // Stamps a brand logo badge (top-right) and a contact label (bottom-centre:
-// phone number and website) into a photo, in the browser, before it is
+// WhatsApp username and website) into a photo, in the browser, before it is
 // uploaded — so they stay on the picture even if someone saves it or shares
 // it on WhatsApp.
 
-import { PHONE_DISPLAY } from "@/config/forms";
+import { CONTACT_DISPLAY } from "@/config/forms";
 
 export const LOGO_STAMPS: Record<string, { src: string; label: string; lines: string[] }> = {
   wear: {
     src: "/branding/footwear/watermark.png",
-    label: "ARUKAH WEAR logo, phone number and website",
-    lines: [`Call / WhatsApp ${PHONE_DISPLAY}`, "zivarukah.com/footwear"],
+    label: "ARUKAH WEAR logo, WhatsApp and website",
+    lines: [CONTACT_DISPLAY, "zivarukah.com/footwear"],
   },
 };
 

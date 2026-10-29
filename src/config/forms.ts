@@ -7,10 +7,14 @@
 // 20261023200000_forms_off.sql).
 export const ONLINE_FORMS_ENABLED = false;
 
-export const WHATSAPP_NUMBER = "233597573842";
-export const PHONE_DISPLAY = "+233 59 757 3842";
-export const FORMS_OFF_MESSAGE = "Online forms are closed. Please message us on WhatsApp or call " + PHONE_DISPLAY + ".";
+// Contact is by WhatsApp username only — the founder's personal phone number
+// is deliberately not published anywhere on the site (Oct 2026).
+export const WHATSAPP_USERNAME = "ShepherdJusticeSarpongOduro";
+export const WHATSAPP_URL = `https://wa.me/${WHATSAPP_USERNAME}`;
+/** How the contact is written on pages, PDFs and photo stamps. */
+export const CONTACT_DISPLAY = `WhatsApp @${WHATSAPP_USERNAME}`;
+export const FORMS_OFF_MESSAGE = `Online forms are closed. Please message us on ${CONTACT_DISPLAY}.`;
 
 export function whatsappLink(text: string) {
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
+  return `${WHATSAPP_URL}?text=${encodeURIComponent(text)}`;
 }

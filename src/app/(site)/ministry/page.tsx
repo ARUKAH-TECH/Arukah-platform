@@ -91,7 +91,7 @@ export default async function MinistryPage() {
                 dark
                 message="Hello Repent Online Ministries, "
                 label="Talk to the ministry on WhatsApp"
-                note="For prayer, counselling or to give your life to Christ, message or call us. Your conversation stays between you and the ministry."
+                note="For prayer, counselling or to give your life to Christ, message us on WhatsApp. Your conversation stays between you and the ministry."
               />
             )}
           </div>
