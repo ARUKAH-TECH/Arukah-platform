@@ -1,21 +1,20 @@
 {
  "https://learn.zivarukah.com/": {
   "scores": {
-   "performance": 98,
+   "performance": 100,
    "accessibility": 96,
    "best-practices": 100,
    "seo": 100
   },
-  "lcp": "1.7 s",
+  "lcp": "1.5 s",
   "cls": "0.001",
-  "tbt": "170 ms",
+  "tbt": "70 ms",
   "fails": [
-   "max-potential-fid",
    "color-contrast",
    "label-content-name-mismatch",
    "unused-javascript",
-   "legacy-javascript",
-   "legacy-javascript-insight",
+   "uses-responsive-images",
+   "image-delivery-insight",
    "network-dependency-tree-insight"
   ]
  },
@@ -32,8 +31,6 @@
   "fails": [
    "color-contrast",
    "label-content-name-mismatch",
-   "unused-javascript",
-   "legacy-javascript",
    "legacy-javascript-insight",
    "network-dependency-tree-insight"
   ]
@@ -47,7 +44,7 @@
   },
   "lcp": "4.1 s",
   "cls": "0",
-  "tbt": "530 ms",
+  "tbt": "550 ms",
   "fails": [
    "largest-contentful-paint",
    "max-potential-fid",
@@ -57,30 +54,30 @@
    "image-redundant-alt",
    "unused-javascript",
    "uses-responsive-images",
+   "legacy-javascript",
    "link-text",
    "image-delivery-insight",
+   "legacy-javascript-insight",
    "network-dependency-tree-insight"
   ]
  },
  "https://zivarukah.com/books": {
   "scores": {
-   "performance": 93,
+   "performance": 80,
    "accessibility": 95,
    "best-practices": 100,
    "seo": 100
   },
-  "lcp": "2.9 s",
+  "lcp": "3.7 s",
   "cls": "0",
-  "tbt": "170 ms",
+  "tbt": "280 ms",
   "fails": [
    "max-potential-fid",
    "largest-contentful-paint-element",
    "color-contrast",
    "image-redundant-alt",
    "unused-javascript",
-   "uses-responsive-images",
    "legacy-javascript",
-   "image-delivery-insight",
    "legacy-javascript-insight",
    "network-dependency-tree-insight",
    "render-blocking-insight"
