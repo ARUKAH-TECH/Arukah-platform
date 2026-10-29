@@ -11,7 +11,7 @@ export const FOUNDER = {
   alternateNames: ["Sarpong Oduro Justice", "Justice Sarpong Oduro", "Shepherd Justice Sarpong"],
   title: "Founder and Leader of ZIVARUKAH and Repent Online Ministries",
   photo: { src: "/branding/founder/shepherd-justice-sarpong-oduro.webp", width: 655, height: 826 },
-  location: { locality: "Nketia", district: "Atwima Nwabiagya North", region: "Ashanti Region", country: "GH" },
+  location: { region: "Ashanti Region", country: "GH" },
 };
 
 /** One sentence used in search descriptions. */
@@ -42,7 +42,6 @@ export function founderLd(site: string) {
       "@type": "Place",
       address: {
         "@type": "PostalAddress",
-        addressLocality: FOUNDER.location.locality,
         addressRegion: FOUNDER.location.region,
         addressCountry: FOUNDER.location.country,
       },
