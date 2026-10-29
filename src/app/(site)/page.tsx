@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { Hero } from "@/components/ui/Hero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -17,6 +18,7 @@ import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { socialLinks } from "@/config/social";
+import { NAME_MEANING_SHORT, ORG_DESCRIPTION, founderLd } from "@/config/founder";
 import { homePage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 import { SharePage } from "@/components/ui/SharePage";
@@ -52,6 +54,8 @@ export default async function Home() {
               url: SITE,
               logo: `${SITE}${brands.arukah.logo.src}`,
               slogan: "Creating Solutions. Building Skills. Serving Communities.",
+              description: ORG_DESCRIPTION,
+              founder: { "@id": `${SITE.replace(/\/$/, "")}/#founder` },
               areaServed: "GH",
               // Only real profile pages (search-result links are left out).
               sameAs: socialLinks.map((link) => link.href).filter((href) => !href.includes("/search/") && !href.includes("wa.me")),
@@ -63,6 +67,7 @@ export default async function Home() {
                 { "@type": "Organization", name: "ZIVARUKAH BOOKS", url: `${SITE}/books` },
               ],
             },
+            founderLd(SITE),
             {
               "@type": "WebSite",
               "@id": `${SITE}/#website`,
@@ -95,6 +100,12 @@ export default async function Home() {
             title={t.text("aboutTitle")}
             description={t.text("aboutText")}
           />
+          <p className="mt-4 max-w-2xl text-sm leading-6 text-foreground/75">
+            {NAME_MEANING_SHORT} Founded and led by Shepherd Justice Sarpong Oduro.{" "}
+            <Link href="/about" className="font-semibold text-brand-primary-text underline">
+              Read our story
+            </Link>
+          </p>
         </Container>
       </section>
 

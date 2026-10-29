@@ -50,7 +50,13 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
           "@context": "https://schema.org",
           "@type": "Book",
           name: book.title,
-          ...(book.author ? { author: { "@type": "Person", name: book.author } } : {}),
+          ...(book.author
+            ? {
+                author: /sarpong|oduro/i.test(book.author)
+                  ? { "@type": "Person", "@id": `${SITE.replace(/\/$/, "")}/#founder`, name: book.author, url: `${SITE.replace(/\/$/, "")}/about` }
+                  : { "@type": "Person", name: book.author },
+              }
+            : {}),
           ...(book.description ? { description: book.description.slice(0, 500) } : {}),
           ...(book.cover ? { image: book.cover.url } : {}),
           url: `${SITE}/books/${book.slug}`,
