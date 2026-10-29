@@ -28,6 +28,13 @@ export default async function BooksPage() {
   // Admin-edited text over the original wording (Admin → Page text).
   const t = textReader(await getPageText(booksPage));
   const books = await getPublishedBooks();
+  // The original "no books yet" wording is replaced once a book is on sale
+  // (unless the admin has written their own tagline).
+  const defaultTagline = booksPage.groups[0].fields[0].default as string;
+  const heroTagline =
+    books.length > 0 && t.text("heroTagline") === defaultTagline
+      ? "Books by ZIVARUKAH — read online with read-aloud, download to your phone, or order a printed copy. 10% off when you buy more than three."
+      : t.text("heroTagline");
 
   return (
     <div>
@@ -36,7 +43,7 @@ export default async function BooksPage() {
       <Hero
         logo={brands.arukah.logo}
         title="ZIVARUKAH BOOKS"
-        tagline={t.text("heroTagline")}
+        tagline={heroTagline}
         primaryCta={books.length ? { label: "Browse books", href: "#books" } : { label: "Get notified", href: "/contact" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
