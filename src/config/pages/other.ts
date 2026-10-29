@@ -51,7 +51,7 @@ export const booksPage: PageDef = {
           kind: "textarea",
           max: 300,
           default:
-            "An online bookstore is on the way. No books are on sale yet — get in touch if you'd like to hear when it opens.",
+            "An online bookstore is on the way. No books are on sale yet, get in touch if you'd like to hear when it opens.",
         },
       ],
     },
@@ -140,7 +140,7 @@ export const ministryPage: PageDef = {
           kind: "textarea",
           max: 500,
           default:
-            "Whether you just gave your life to Christ, are rededicating, or simply want to grow deeper — tell us a little about where you are so someone from the ministry can follow up and walk with you.",
+            "Whether you just gave your life to Christ, are rededicating, or simply want to grow deeper, tell us a little about where you are so someone from the ministry can follow up and walk with you.",
         },
       ],
     },
@@ -166,12 +166,12 @@ export const projectsPage: PageDef = {
           kind: "textarea",
           max: 500,
           default:
-            "These are the kinds of management systems in active development. Screenshots and case studies are added here as projects are completed — none are presented as finished work for a named client until that's confirmed.",
+            "These are the kinds of management systems in active development. Screenshots and case studies are added here as projects are completed. None are presented as finished work for a named client until that's confirmed.",
         },
-        { key: "card1Name", label: "Card 1 — name", kind: "text", max: 80, default: "School Management System" },
-        { key: "card1Text", label: "Card 1 — text", kind: "textarea", max: 250, default: "Enrollment, attendance, grading, and communication tools for schools." },
-        { key: "card2Name", label: "Card 2 — name", kind: "text", max: 80, default: "Church Management System" },
-        { key: "card2Text", label: "Card 2 — text", kind: "textarea", max: 250, default: "Membership records, giving, and event coordination for churches." },
+        { key: "card1Name", label: "Card 1: name", kind: "text", max: 80, default: "School Management System" },
+        { key: "card1Text", label: "Card 1: text", kind: "textarea", max: 250, default: "Enrollment, attendance, grading, and communication tools for schools." },
+        { key: "card2Name", label: "Card 2: name", kind: "text", max: 80, default: "Church Management System" },
+        { key: "card2Text", label: "Card 2: text", kind: "textarea", max: 250, default: "Membership records, giving, and event coordination for churches." },
       ],
     },
   ],
@@ -199,7 +199,7 @@ export const contactPage: PageDef = {
           kind: "textarea",
           max: 400,
           default:
-            "This is a separate form for the ministry side of ZIVARUKAH — for new and returning converts, or anyone wanting prayer or spiritual follow-up.",
+            "This is a separate form for the ministry side of ZIVARUKAH, for new and returning converts, or anyone wanting prayer or spiritual follow-up.",
         },
       ],
     },
@@ -221,7 +221,7 @@ export const advertisePage: PageDef = {
           kind: "textarea",
           max: 600,
           default:
-            "Reach people who visit ZIVARUKAH's technology, education, footwear, media and books pages. Tell us what your advert is about — we review every request before anything goes live.",
+            "Reach people who visit ZIVARUKAH's technology, education, footwear, media and books pages. Tell us what your advert is about. We review every request before anything goes live.",
         },
       ],
     },

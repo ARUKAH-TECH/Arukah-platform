@@ -15,7 +15,7 @@ export async function submitMinistryResponse(
   if (!ONLINE_FORMS_ENABLED) return { status: "error", message: FORMS_OFF_MESSAGE };
   // Honeypot: real visitors never see or fill this field.
   if (formData.get("company_website")) {
-    return { status: "success", message: "Thank you — someone from the ministry will reach out." };
+    return { status: "success", message: "Thank you: someone from the ministry will reach out." };
   }
 
   const fullName = String(formData.get("fullName") ?? "").trim();
@@ -66,6 +66,6 @@ export async function submitMinistryResponse(
 
   return {
     status: "success",
-    message: "Thank you for reaching out — someone from the ministry will follow up with you soon.",
+    message: "Thank you for reaching out: someone from the ministry will follow up with you soon.",
   };
 }

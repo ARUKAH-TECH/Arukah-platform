@@ -11,7 +11,7 @@ import { SharePage } from "@/components/ui/SharePage";
 
 export const metadata: Metadata = {
   title: "Support the outreach · Repent Online Ministries",
-  description: "Give towards hospital, prison, street and community outreach by Repent Online Ministries — by Mobile Money or card.",
+  description: "Give towards hospital, prison, street and community outreach by Repent Online Ministries, by Mobile Money or card.",
   alternates: { canonical: "/ministry/support" },
 };
 
@@ -42,7 +42,7 @@ export default async function SupportPage({ searchParams }: PageProps<"/ministry
                 <QuickGiveForm outreaches={outreaches.map(({ id, title }) => ({ id, title }))} preselect={preselect} />
               ) : (
                 <p className="rounded-2xl border border-white/15 p-6 text-sm leading-6 text-white/70">
-                  Online giving is being set up. Please check back soon — thank you and God bless you.
+                  Online giving is being set up. Please check back soon. Thank you and God bless you.
                 </p>
               )
             )}
@@ -52,7 +52,7 @@ export default async function SupportPage({ searchParams }: PageProps<"/ministry
       <SharePage
         path="/ministry/support"
         title="Support the outreach"
-        message={"🙏 *Support the outreach — Repent Online Ministries*\n\nHelp us visit hospitals and prisons, feed people on the streets and reach communities with the Gospel. Give by Mobile Money or card 👇"}
+        message={"🙏 *Support the outreach: Repent Online Ministries*\n\nHelp us visit hospitals and prisons, feed people on the streets and reach communities with the Gospel. Give by Mobile Money or card 👇"}
         heading="💛 Share this giving page"
         note="Every share helps more people join the outreach."
         dark

@@ -202,7 +202,7 @@ export async function startAiVideo(_prev: CmsFormState, formData: FormData): Pro
   await requireAdmin();
   const { aiVideoConfigured, submitImageToVideo } = await import("@/server/falVideo");
   if (!aiVideoConfigured()) {
-    return { status: "error", message: "AI video isn't set up yet — add the fal.ai key in Vercel first." };
+    return { status: "error", message: "AI video isn't set up yet. Add the fal.ai key in Vercel first." };
   }
   const id = text(formData, "id", 64);
   const prompt = text(formData, "aiPrompt", 1000);
@@ -250,7 +250,7 @@ export async function startAiVideo(_prev: CmsFormState, formData: FormData): Pro
 
   await audit("ad_request.ai_video_start", { id });
   revalidatePath(`/admin/adverts/${id}`);
-  return { status: "saved", message: "Started. It usually takes 1–5 minutes — tap “Check progress” in a minute." };
+  return { status: "saved", message: "Started. It usually takes 1 to 5 minutes. Tap “Check progress” in a minute." };
 }
 
 /** Checks the AI job; when it's finished, keeps our own copy of the video. */
@@ -299,7 +299,7 @@ export async function checkAiVideo(_prev: CmsFormState, formData: FormData): Pro
 
   await audit("ad_request.ai_video_ready", { id });
   revalidatePath(`/admin/adverts/${id}`);
-  return { status: "saved", message: "Your AI video is ready — preview it below." };
+  return { status: "saved", message: "Your AI video is ready: preview it below." };
 }
 
 /** Makes the finished AI video the advert (shown as a video advert). */

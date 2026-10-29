@@ -38,7 +38,7 @@ export function GalleryUploader({ branch }: { branch: string }) {
         if (!result.ok) throw new Error(result.message);
         done += 1;
       }
-      setMessage({ ok: true, text: `Added ${done} photo${done === 1 ? "" : "s"} ✓ — they're on the page now.` });
+      setMessage({ ok: true, text: `Added ${done} photo${done === 1 ? "" : "s"} ✓. They're on the page now.` });
       setCaption("");
       router.refresh();
     } catch (error) {
@@ -53,7 +53,7 @@ export function GalleryUploader({ branch }: { branch: string }) {
   return (
     <div className="flex flex-col gap-4">
       <label className="text-sm font-medium">
-        Caption <span className="font-normal text-foreground/60">(optional — type it first, e.g. &quot;Leather sandals, size 42&quot;)</span>
+        Caption <span className="font-normal text-foreground/60">(optional: type it first, e.g. &quot;Leather sandals, size 42&quot;)</span>
         <input value={caption} maxLength={300} onChange={(event) => setCaption(event.target.value)} className={fieldClasses} />
       </label>
       {stamp && (

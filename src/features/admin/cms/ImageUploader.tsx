@@ -95,7 +95,7 @@ export function ImageUploader({ projects, defaultProjectId }: ImageUploaderProps
         <button type="button" onClick={() => fileInput.current?.click()} disabled={busy} className={primaryButtonClasses}>
           {busy ? "Uploading…" : "Choose images"}
         </button>
-        <p className="mt-2 text-xs text-foreground/60">Fill in the boxes above first — images upload as soon as you pick them.</p>
+        <p className="mt-2 text-xs text-foreground/60">Fill in the boxes above first. Images upload as soon as you pick them.</p>
       </div>
     </div>
   );

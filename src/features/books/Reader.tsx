@@ -403,7 +403,7 @@ export function Reader({ title, author, pages, highlights, storageKey }: Props) 
             <p className="text-sm">Read aloud isn&apos;t supported in this browser. Try Chrome.</p>
           )}
           <p role="status" aria-live="polite" className="w-full text-xs text-foreground/60 sm:ml-auto sm:w-auto">
-            {status || `${title}${author ? ` — ${author}` : ""}`}
+            {status || `${title}${author ? ` by ${author}` : ""}`}
           </p>
         </div>
       </div>

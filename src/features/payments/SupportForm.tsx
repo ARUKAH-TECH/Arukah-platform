@@ -90,7 +90,7 @@ export function SupportForm({ outreaches, preselect }: { outreaches: { id: strin
         {pending ? "Opening secure payment…" : "Continue to secure payment"}
       </button>
       <p className="text-xs text-white/50">
-        Paid securely through Paystack — Mobile Money or card. Charged in Ghana cedis (GHS). We never see your card details.
+        Paid securely through Paystack: Mobile Money or card. Charged in Ghana cedis (GHS). We never see your card details.
       </p>
     </form>
   );

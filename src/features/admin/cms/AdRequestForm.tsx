@@ -245,10 +245,10 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
               <p className="text-xs font-medium">In the slim top banner:</p>
               <div className="flex flex-wrap gap-2">
                 <Choice name="bannerStyleChoice" value="roll" checked={bannerStyle === "roll"} onChange={() => setBannerStyle("roll")}>
-                  Roll — fill the banner and move through the image
+                  Roll: fill the banner and move through the image
                 </Choice>
                 <Choice name="bannerStyleChoice" value="fit" checked={bannerStyle === "fit"} onChange={() => setBannerStyle("fit")}>
-                  Fit — show the whole image, still
+                  Fit: show the whole image, still
                 </Choice>
               </div>
               <p className="text-xs text-foreground/60">
@@ -298,7 +298,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
       </label>
 
       <label className="text-sm">
-        Link when clicked <span className="text-foreground/60">(optional — their website, Facebook or WhatsApp link)</span>
+        Link when clicked <span className="text-foreground/60">(optional: their website, Facebook or WhatsApp link)</span>
         <input name="linkUrl" defaultValue={values.linkUrl} placeholder="https://…" className={fieldClasses} />
       </label>
 

@@ -128,7 +128,7 @@ export function TextAdMaker({
       const { error } = await createClient().storage.from("media").upload(path, blob, { contentType: "image/webp", cacheControl: "31536000" });
       if (error) throw new Error(error.message);
       onReady({ path, width: W, height: H });
-      setMessage({ ok: true, text: "Text advert ready ✓ — now press Save." });
+      setMessage({ ok: true, text: "Text advert ready ✓: now press Save." });
     } catch (error) {
       setMessage({ ok: false, text: error instanceof Error ? error.message : "Couldn't make the advert." });
     } finally {
@@ -154,7 +154,7 @@ export function TextAdMaker({
         <input value={line2} maxLength={90} onChange={(e) => setLine2(e.target.value)} className={fieldClasses} />
       </label>
       <label className="text-xs font-medium">
-        Contact button <span className="font-normal text-foreground/60">(phone, place or offer — optional)</span>
+        Contact button <span className="font-normal text-foreground/60">(phone, place or offer: optional)</span>
         <input value={contact} maxLength={40} onChange={(e) => setContact(e.target.value)} className={fieldClasses} />
       </label>
       <div className="flex flex-wrap gap-2">

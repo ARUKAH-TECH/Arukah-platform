@@ -120,7 +120,7 @@ export function AddToBasket({ book, prices, quickPay = false }: Props) {
           )}
           <a
             href={whatsappLink(
-              `Hello ZIVARUKAH BOOKS, I would like to order:\n${quantity} × "${book.title}" (${chosen.label}) — ${formatGhs(chosen.amount * quantity)}`,
+              `Hello ZIVARUKAH BOOKS, I would like to order:\n${quantity} × "${book.title}" (${chosen.label}): ${formatGhs(chosen.amount * quantity)}`,
             )}
             target="_blank"
             rel="noopener noreferrer"

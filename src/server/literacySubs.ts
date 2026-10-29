@@ -11,9 +11,9 @@ import { quickPaymentsEnabled } from "@/server/quickPayments";
 export const LIT_REF = /^ZL-[A-Z0-9]{10}$/;
 export const LEARN_URL = "https://learn.zivarukah.com";
 const PLAN_LABEL: Record<string, string> = {
-  student: "ZIVA Literacy — student, 1 month",
-  parent: "ZIVA Literacy — family, 1 month",
-  school: "ZIVA Literacy — school, 1 month",
+  student: "ZIVA Literacy: student, 1 month",
+  parent: "ZIVA Literacy: family, 1 month",
+  school: "ZIVA Literacy: school, 1 month",
 };
 
 export async function startSubscription(reference: string): Promise<{ ok: true; url: string } | { ok: false; message: string }> {

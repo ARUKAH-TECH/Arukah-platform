@@ -13,7 +13,7 @@ export async function generateMetadata({ searchParams }: PageProps<"/articles">)
   const categories = await getArticleCategories();
   const cat = categories.find((c) => c.slug === category);
   return {
-    title: cat ? `${cat.name} — Articles` : "Articles",
+    title: cat ? `${cat.name}: Articles` : "Articles",
     description: cat
       ? `Articles on ${cat.name.toLowerCase()} from ZIVARUKAH.`
       : "Articles from ZIVARUKAH on technology and innovation, education, entrepreneurship, faith and spiritual growth, and books.",
@@ -134,7 +134,7 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/article
       </Container>
       <SharePage
         path="/articles"
-        title="Articles — ZIVARUKAH"
+        title="Articles: ZIVARUKAH"
         message={"📰 *Articles on ZIVARUKAH*\n\nEducation, technology, faith and more 👇"}
         heading="📣 Share our articles"
       />

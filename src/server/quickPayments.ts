@@ -104,7 +104,7 @@ export async function startGiftPayment(amountGhs: number, outreachId: string): P
   return start(
     { kind: "gift", outreach_id: outreach?.id ?? null, outreach_title: outreach?.title ?? "" },
     amount,
-    outreach ? `Gift — ${outreach.title}` : "Gift — outreach work",
+    outreach ? `Gift: ${outreach.title}` : "Gift: outreach work",
   );
 }
 

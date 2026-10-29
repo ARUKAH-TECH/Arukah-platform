@@ -49,7 +49,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
         }`}
       >
         <p className="font-semibold">
-          {quickPaymentsEnabled() ? "✅ Online payment is ON" : "Online payment is OFF — visitors see WhatsApp buttons instead."}
+          {quickPaymentsEnabled() ? "✅ Online payment is ON" : "Online payment is OFF: visitors see a “being set up” note instead."}
         </p>
         <ul className="mt-2 flex flex-col gap-1">
           {[
@@ -91,7 +91,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
                     <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${s.cls}`}>{s.label}</span>
                     <span className="font-semibold">{formatGhs(Number(p.amount_ghs))}</span>
                     <span>
-                      {p.kind === "book" ? `${p.quantity} × ${p.book_title} (${format})` : `Gift${p.outreach_title ? ` — ${p.outreach_title}` : " — general"}`}
+                      {p.kind === "book" ? `${p.quantity} × ${p.book_title} (${format})` : `Gift${p.outreach_title ? `: ${p.outreach_title}` : ": general"}`}
                     </span>
                   </span>
                   <span className="text-xs text-foreground/60">
@@ -148,7 +148,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
                       "Book order"
                     )
                   ) : (
-                    <>Outreach gift{outreach ? ` — ${outreach}` : " — general"}</>
+                    <>Outreach gift{outreach ? `: ${outreach}` : ": general"}</>
                   )}{" "}
                   · {p.email}
                   {p.phone ? ` · ${p.phone}` : ""} · {p.reference} ·{" "}

@@ -15,10 +15,10 @@ export const FOUNDER = {
 };
 
 /** One sentence used in search descriptions. */
-export const NAME_MEANING_SHORT = "ZIVARUKAH joins two Hebrew words: ZIVA (light — the light of God) and ARUKAH (healing, total restoration).";
+export const NAME_MEANING_SHORT = "ZIVARUKAH joins two Hebrew words: ZIVA (light, the light of God) and ARUKAH (healing, total restoration).";
 
 export const ORG_DESCRIPTION =
-  "ZIVARUKAH — from the Hebrew ZIVA (light of God) and ARUKAH (total restoration) — is a Ghanaian brand founded and led by Shepherd Justice Sarpong Oduro. " +
+  "ZIVARUKAH, from the Hebrew ZIVA (light of God) and ARUKAH (total restoration), is a Ghanaian brand founded and led by Shepherd Justice Sarpong Oduro. " +
   "It brings God's light and restoration to people spiritually and physically through ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Literacy app, ARUKAH MEDIA, ZIVARUKAH BOOKS and Repent Online Ministries.";
 
 /** schema.org Person for the founder. */

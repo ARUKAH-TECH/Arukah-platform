@@ -26,7 +26,7 @@ export default async function OutreachListPage() {
           </Link>
           <h1 className="mt-4 text-3xl font-bold tracking-tight sm:text-4xl">Outreach</h1>
           <p className="mt-3 max-w-xl text-sm leading-6 text-white/70">
-            Hospital, prison, street, community and crusade outreach — taking the message beyond the screen.
+            Hospital, prison, street, community and crusade outreach, taking the message beyond the screen.
           </p>
           <Link
             href="/ministry/support"
@@ -48,8 +48,8 @@ export default async function OutreachListPage() {
       </Container>
       <SharePage
         path="/ministry/outreach"
-        title="Outreach — Repent Online Ministries"
-        message={"✝️ *Outreach — Repent Online Ministries*\n\nSee where we are going next and how you can help 👇"}
+        title="Outreach: Repent Online Ministries"
+        message={"✝️ *Outreach: Repent Online Ministries*\n\nSee where we are going next and how you can help 👇"}
         heading="📣 Share our outreach"
         dark
       />

@@ -55,7 +55,7 @@ async function todaysQuote(): Promise<Quote> {
       .filter((line) => line.trim().length > 0)
       .map((line) => ({
         text: line.trim(),
-        source: book.author ? `${book.title} — ${book.author}` : book.title,
+        source: book.author ? `${book.title} by ${book.author}` : book.title,
         href: `/books/${book.slug}`,
         linkLabel: "Read the book →",
         kind: "book" as const,
@@ -83,7 +83,7 @@ export async function QuoteOfTheDay() {
             {isVerse ? "✝️ Verse of the day" : "📘 Quote of the day"}
           </p>
           <blockquote className="relative mt-4 max-w-3xl font-serif text-2xl italic leading-snug sm:text-3xl">{quote.text}</blockquote>
-          <figcaption className={`relative mt-4 text-sm font-medium ${isVerse ? "text-white/70" : "text-[#14110c]/70"}`}>— {quote.source}</figcaption>
+          <figcaption className={`relative mt-4 text-sm font-medium ${isVerse ? "text-white/70" : "text-[#14110c]/70"}`}>{quote.source}</figcaption>
           <div className="relative mt-6 flex flex-wrap items-center gap-3">
             <ListenButton text={`${quote.text} ${quote.source.replace("(KJV)", "")}`} dark={isVerse} />
             <Link href={quote.href} className={`text-sm font-semibold underline-offset-4 hover:underline ${isVerse ? "text-[#f0c050]" : "text-[#7a4a12]"}`}>
@@ -96,7 +96,7 @@ export async function QuoteOfTheDay() {
             label="Share today's line"
             url={`${SITE}${quote.href}`}
             title={isVerse ? "Verse of the day" : "Quote of the day"}
-            message={`${isVerse ? "✝️ *Verse of the day*" : "📘 *Quote of the day*"}\n\n“${quote.text}”\n— ${quote.source}`}
+            message={`${isVerse ? "✝️ *Verse of the day*" : "📘 *Quote of the day*"}\n\n“${quote.text}”\n(${quote.source})`}
           />
         </figure>
       </Container>

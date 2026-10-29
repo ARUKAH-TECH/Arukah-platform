@@ -7,7 +7,7 @@ import { AdminShell } from "@/features/admin/AdminShell";
 export const metadata: Metadata = { title: "Adverts" };
 
 function formatDate(iso: string | null) {
-  return iso ? new Date(iso).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Africa/Accra" }) : "—";
+  return iso ? new Date(iso).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Africa/Accra" }) : "None";
 }
 
 /** What the admin needs to know at a glance. */

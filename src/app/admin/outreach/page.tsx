@@ -33,7 +33,7 @@ export default async function AdminOutreachPage() {
         </Link>
       </div>
       <p className="mt-1 text-sm text-foreground/60">
-        Repent Online Ministries visits — shown on the Ministry page and at /ministry/outreach.
+        Repent Online Ministries visits: shown on the Ministry page and at /ministry/outreach.
       </p>
 
       {!outreaches?.length ? (
@@ -63,7 +63,7 @@ export default async function AdminOutreachPage() {
                     )}
                   </td>
                   <td className="px-4 py-3 text-xs text-foreground/70">{outreachTypeLabel(item.outreach_type)}</td>
-                  <td className="px-4 py-3 text-xs text-foreground/70">{formatOutreachDate(item.outreach_date) || "—"}</td>
+                  <td className="px-4 py-3 text-xs text-foreground/70">{formatOutreachDate(item.outreach_date) || "None"}</td>
                   <td className="px-4 py-3">
                     <span className={`rounded-full px-2 py-0.5 text-xs font-medium ${statusStyles[item.status] ?? ""}`}>
                       {item.status}

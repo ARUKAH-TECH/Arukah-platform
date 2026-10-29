@@ -11,7 +11,7 @@ export async function AdStats({ adId }: { adId: string }) {
   const rows = data ?? [];
   const views = rows.reduce((sum, row) => sum + row.views, 0);
   const clicks = rows.reduce((sum, row) => sum + row.clicks, 0);
-  const rate = views > 0 ? `${((clicks / views) * 100).toFixed(1)}%` : "—";
+  const rate = views > 0 ? `${((clicks / views) * 100).toFixed(1)}%` : "None";
 
   return (
     <section className="rounded-2xl border border-black/10 bg-white p-6 text-sm dark:border-white/10 dark:bg-zinc-900">
@@ -50,7 +50,7 @@ export async function AdStats({ adId }: { adId: string }) {
           </tbody>
         </table>
       ) : (
-        <p className="mt-4 text-xs text-foreground/60">No views yet — numbers appear once the advert is showing.</p>
+        <p className="mt-4 text-xs text-foreground/60">No views yet: numbers appear once the advert is showing.</p>
       )}
       <p className="mt-3 text-xs text-foreground/60">
         A view is counted each time the advert appears on someone&apos;s screen; a click when they tap it. Numbers are a

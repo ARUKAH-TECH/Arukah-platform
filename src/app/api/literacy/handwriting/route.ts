@@ -57,7 +57,7 @@ export async function POST(request: Request) {
   if (!process.env.FAL_KEY?.trim()) return reply(origin, { ok: false, message: "The AI check is not switched on yet." }, 503);
 
   const who = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anon";
-  if (limited(who)) return reply(origin, { ok: false, message: "Lots of checks just now — please wait a few minutes and try again." }, 429);
+  if (limited(who)) return reply(origin, { ok: false, message: "Lots of checks just now: please wait a few minutes and try again." }, 429);
 
   let body: { image?: unknown; target?: unknown; level?: unknown };
   try {
@@ -83,7 +83,7 @@ export async function POST(request: Request) {
     "letters = up to 5 specific letters/words that are wrong, reversed (b/d, p/q), badly formed, the wrong size, or missing compared with the exercise. Use simple English.",
     "If there is no readable handwriting in the photo, set read_text to \"\" and explain kindly in summary how to take a better photo.",
   ].join(" ");
-  const prompt = `Exercise text the child was asked to write: ${target ? `"${target}"` : "(not given — just assess the writing)"}. Class level: ${level}.`;
+  const prompt = `Exercise text the child was asked to write: ${target ? `"${target}"` : "(not given: just assess the writing)"}. Class level: ${level}.`;
 
   let output = "";
   try {

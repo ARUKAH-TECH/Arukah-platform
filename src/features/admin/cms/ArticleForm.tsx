@@ -41,7 +41,7 @@ function Counter({ value, ideal, max }: { value: string; ideal: number; max: num
   const n = value.length;
   return (
     <span className={`text-xs ${n > ideal ? "text-amber-700 dark:text-amber-400" : "text-foreground/60"}`}>
-      {n}/{ideal} recommended{n > ideal ? " — may be cut short in Google" : ""} (max {max})
+      {n}/{ideal} recommended{n > ideal ? ": may be cut short in Google" : ""} (max {max})
     </span>
   );
 }
@@ -213,7 +213,7 @@ export function ArticleForm({
             isPublished ? "bg-green-100 text-green-900 dark:bg-green-950 dark:text-green-200" : "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200"
           }`}
         >
-          {isPublished ? "Published — visitors can read it" : "Draft — hidden from visitors"}
+          {isPublished ? "Published: visitors can read it" : "Draft: hidden from visitors"}
         </span>
       </p>
 
@@ -271,7 +271,7 @@ export function ArticleForm({
       </div>
 
       <label className="text-sm font-medium">
-        Short summary (excerpt) <span className="font-normal text-foreground/60">— shown on the Articles list</span>
+        Short summary (excerpt) <span className="font-normal text-foreground/60">(shown on the Articles list)</span>
         <textarea
           name="excerpt"
           rows={3}
@@ -302,7 +302,7 @@ export function ArticleForm({
           )}
         </div>
         <label className="mt-3 block text-sm font-medium">
-          Describe the image (alt text) <span className="font-normal text-foreground/60">— for blind readers and Google</span>
+          Describe the image (alt text) <span className="font-normal text-foreground/60">(for blind readers and Google)</span>
           <input
             name="imageAlt"
             maxLength={300}
@@ -388,8 +388,8 @@ export function ArticleForm({
                 <li>**bold** &nbsp; *italic*</li>
                 <li>- bullet item &nbsp; 1. numbered item</li>
                 <li>&gt; quote</li>
-                <li>[words](https://link) — use 🔗</li>
-                <li>Pictures — use 📷</li>
+                <li>[words](https://link): use 🔗</li>
+                <li>Pictures: use 📷</li>
                 <li>Empty line = new paragraph</li>
               </ul>
             </details>
@@ -416,14 +416,14 @@ export function ArticleForm({
 
       {/* SEO */}
       <details className="rounded-2xl border border-black/10 p-4 dark:border-white/10" open={Boolean(article.seoTitle || article.metaDescription)}>
-        <summary className="cursor-pointer text-sm font-semibold">Google &amp; sharing (SEO) — optional</summary>
+        <summary className="cursor-pointer text-sm font-semibold">Google &amp; sharing (SEO): optional</summary>
         <label className="mt-4 block text-sm font-medium">
-          SEO title <span className="font-normal text-foreground/60">— leave empty to use the title</span>
+          SEO title <span className="font-normal text-foreground/60">(leave empty to use the title)</span>
           <input name="seoTitle" maxLength={120} value={seoTitle} onChange={(e) => (setSeoTitle(e.target.value), setDirty(true))} className={fieldClasses} />
           <Counter value={seoTitle} ideal={60} max={120} />
         </label>
         <label className="mt-4 block text-sm font-medium">
-          Meta description <span className="font-normal text-foreground/60">— leave empty to use the summary</span>
+          Meta description <span className="font-normal text-foreground/60">(leave empty to use the summary)</span>
           <textarea name="metaDescription" rows={3} maxLength={300} value={meta} onChange={(e) => (setMeta(e.target.value), setDirty(true))} className={fieldClasses} />
           <Counter value={meta} ideal={160} max={300} />
         </label>

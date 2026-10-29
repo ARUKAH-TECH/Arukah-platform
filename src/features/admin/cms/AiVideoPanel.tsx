@@ -47,13 +47,13 @@ export function AiVideoPanel(props: AiVideoPanelProps) {
           redeploy.
         </p>
       ) : !props.hasImage ? (
-        <p className="mt-4 text-xs text-foreground/60">This request has no image yet — the requester&apos;s photo or an uploaded image is needed.</p>
+        <p className="mt-4 text-xs text-foreground/60">This request has no image yet. The requester&apos;s photo or an uploaded image is needed.</p>
       ) : (
         <div className="mt-4 flex flex-col gap-4">
           {props.status === "queued" ? (
             <form action={checkAction} className="flex flex-col gap-2">
               <input type="hidden" name="id" value={props.id} />
-              <p className="text-xs">Your video is being made. It usually takes 1–5 minutes.</p>
+              <p className="text-xs">Your video is being made. It usually takes 1 to 5 minutes.</p>
               <div>
                 <button type="submit" disabled={checking} className={primaryButtonClasses}>
                   {checking ? "Checking…" : "Check progress"}
@@ -75,7 +75,7 @@ export function AiVideoPanel(props: AiVideoPanelProps) {
                 />
               </label>
               <p className="text-xs text-foreground/60">
-                Say what should move — e.g. “Slow camera push-in on the product, soft light sweeping across, gentle
+                Say what should move: e.g. “Slow camera push-in on the product, soft light sweeping across, gentle
                 sparkle, professional advert style. Keep all text sharp and unchanged.”
               </p>
               {props.status === "failed" && props.error && (

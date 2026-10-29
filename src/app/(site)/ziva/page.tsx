@@ -17,7 +17,7 @@ import { SharePage } from "@/components/ui/SharePage";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "ZIVA Special Classes — Extra Classes from Primary 1 to SHS 3",
+  title: "ZIVA Special Classes: Extra Classes from Primary 1 to SHS 3",
   description:
     "ZIVA Special Classes offers extra tuition and special classes for pupils and students from Primary 1 to SHS 3 in Ghana. Excellence our hallmark.",
   alternates: { canonical: "/ziva" },

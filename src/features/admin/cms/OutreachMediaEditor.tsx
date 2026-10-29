@@ -56,7 +56,7 @@ export function OutreachMediaEditor({ item }: { item: OutreachMediaEditorItem })
             : "bg-amber-100 text-amber-900 dark:bg-amber-950 dark:text-amber-200"
         }`}
       >
-        {cleared ? "Cleared — shown on the site when the outreach is published" : "Hidden from the site — consent checklist not complete"}
+        {cleared ? "Cleared: shown on the site when the outreach is published" : "Hidden from the site: consent checklist not complete"}
       </p>
 
       <form action={formAction} className="flex flex-col gap-3">
@@ -73,7 +73,7 @@ export function OutreachMediaEditor({ item }: { item: OutreachMediaEditorItem })
         </label>
 
         <fieldset className="rounded-xl border border-black/10 p-3 text-xs dark:border-white/10">
-          <legend className="px-1 font-semibold">Consent checklist — does this show…</legend>
+          <legend className="px-1 font-semibold">Consent checklist: does this show…</legend>
           <div className="flex flex-col gap-2">
             {flag("identifiable", "People who can be recognised (faces, names, tattoos)")}
             {flag("children", "Children (under 18)")}

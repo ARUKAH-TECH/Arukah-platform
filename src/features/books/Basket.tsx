@@ -30,7 +30,7 @@ export function Basket({ afterOrderText, payOnline }: { afterOrderText: string; 
   if (state.status === "success" && state.reference) {
     return (
       <div className="rounded-2xl bg-green-50 p-6 text-green-950 dark:bg-green-950 dark:text-green-100">
-        <p className="text-sm font-semibold">Thank you — your order has been received.</p>
+        <p className="text-sm font-semibold">Thank you: your order has been received.</p>
         <p className="mt-3 text-sm">
           Your order number is <span className="font-mono text-lg font-bold">{state.reference}</span>. Please keep it.
         </p>

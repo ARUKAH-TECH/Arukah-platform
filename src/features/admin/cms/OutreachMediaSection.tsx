@@ -46,7 +46,7 @@ export async function OutreachMediaSection({ outreachId }: { outreachId: string 
     <section className="mt-12 border-t border-black/10 pt-8 dark:border-white/10">
       <h2 className="text-lg font-semibold">Photos and videos</h2>
       <p className="mt-1 max-w-2xl text-sm text-foreground/60">
-        Photos are stored privately. Each item appears on the website only after you complete its consent checklist —
+        Photos are stored privately. Each item appears on the website only after you complete its consent checklist,
         and if it shows recognisable people, children, patients or prisoners, only once written permission is recorded.
       </p>
 

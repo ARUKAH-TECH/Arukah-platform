@@ -20,7 +20,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "ZIVARUKAH BOOKS",
   description:
-    "ZIVARUKAH BOOKS — buy books to read online, download, or order as printed copies in Ghana. 10% off when you buy more than three.",
+    "ZIVARUKAH BOOKS: buy books to read online, download, or order as printed copies in Ghana. 10% off when you buy more than three.",
   alternates: { canonical: "/books" },
 };
 
@@ -33,7 +33,7 @@ export default async function BooksPage() {
   const defaultTagline = booksPage.groups[0].fields[0].default as string;
   const heroTagline =
     books.length > 0 && t.text("heroTagline") === defaultTagline
-      ? "Books by ZIVARUKAH — read online with read-aloud, download to your phone, or order a printed copy. 10% off when you buy more than three."
+      ? "Books by ZIVARUKAH: read online with read-aloud, download to your phone, or order a printed copy. 10% off when you buy more than three."
       : t.text("heroTagline");
 
   return (

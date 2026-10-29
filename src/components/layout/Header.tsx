@@ -20,6 +20,7 @@ export function Header() {
           <span className="text-lg font-bold tracking-tight">ZIVARUKAH</span>
         </Link>
 
+        <div className="flex items-center gap-3 md:gap-6">
         <nav aria-label="Primary" className="hidden items-center gap-6 text-sm font-medium md:flex">
           {mainNav.map((link, index) =>
             index === 1 ? (
@@ -60,6 +61,13 @@ export function Header() {
           )}
         </nav>
 
+        <Link
+          href="/ministry/support"
+          className="inline-flex shrink-0 items-center gap-1 rounded-full bg-brand-primary px-4 py-1.5 text-sm font-semibold text-brand-on-primary hover:bg-brand-primary-hover"
+        >
+          <span aria-hidden="true">🙏</span> Support
+        </Link>
+
         <details className="group md:hidden">
           <summary className="flex cursor-pointer list-none items-center justify-center rounded-md p-2 hover:bg-black/5 dark:hover:bg-white/10">
             <span className="sr-only">Open menu</span>
@@ -83,6 +91,9 @@ export function Header() {
                 {link.label}
               </Link>
             ))}
+            <Link href="/ministry/support" className="rounded-lg px-2 py-2 font-semibold text-brand-primary-text hover:bg-black/5 dark:hover:bg-white/10">
+              🙏 Support the outreach
+            </Link>
             <p className="mt-2 px-2 text-xs font-semibold uppercase tracking-wider text-foreground/60">
               Businesses
             </p>
@@ -97,6 +108,7 @@ export function Header() {
             ))}
           </nav>
         </details>
+        </div>
       </div>
     </header>
   );

@@ -18,7 +18,7 @@ import { SharePage } from "@/components/ui/SharePage";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "Repent Online Ministries — Rescue the Perishing",
+  title: "Repent Online Ministries: Rescue the Perishing",
   description:
     "Repent Online Ministries: Christian teaching, sermons, prayer and hospital, prison, street and community outreach. New here or growing in faith? Reach out.",
   alternates: { canonical: "/ministry" },
@@ -47,8 +47,9 @@ export default async function MinistryPage() {
             <div className="mt-4">
               <SocialLinks />
             </div>
-            <div className="mt-6">
-              <Button href="#respond">Get in touch</Button>
+            <div className="mt-6 flex flex-wrap gap-3">
+              <Button href="/ministry/support">🙏 Support the outreach</Button>
+              <Button href="#respond" variant="outline">Get in touch</Button>
             </div>
           </div>
           <Image
@@ -104,7 +105,7 @@ export default async function MinistryPage() {
       <SharePage
         path="/ministry"
         title="Repent Online Ministries"
-        message={"✝️ *Repent Online Ministries*\n\nHospital, prison, street and community outreach — and the Word online. Follow, pray with us and support the work 👇"}
+        message={"✝️ *Repent Online Ministries*\n\nHospital, prison, street and community outreach, and the Word online. Follow, pray with us and support the work 👇"}
         heading="🙏 Share the ministry"
         note="Invite someone to follow, pray and support the outreach."
         dark
