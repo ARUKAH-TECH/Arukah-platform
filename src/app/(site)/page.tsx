@@ -18,7 +18,7 @@ import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { socialLinks } from "@/config/social";
-import { NAME_MEANING_SHORT, ORG_DESCRIPTION, founderLd } from "@/config/founder";
+import { BRANCHES, NAME_MEANING_SHORT, ORG_DESCRIPTION, founderLd } from "@/config/founder";
 import { homePage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 import { SharePage } from "@/components/ui/SharePage";
@@ -51,6 +51,7 @@ export default async function Home() {
               "@id": `${SITE}/#organization`,
               name: "ZIVARUKAH",
               legalName: "ZIVARUKAH VENTURES",
+              alternateName: ["ZIVA ARUKAH", "Ziva Arukah", "Zivarukah Ventures"],
               url: SITE,
               logo: `${SITE}${brands.arukah.logo.src}`,
               slogan: "Creating Solutions. Building Skills. Serving Communities.",
@@ -59,13 +60,15 @@ export default async function Home() {
               areaServed: "GH",
               // Only real profile pages (search-result links are left out).
               sameAs: socialLinks.map((link) => link.href).filter((href) => !href.includes("/search/") && !href.includes("wa.me")),
-              department: [
-                { "@type": "Organization", name: "ARUKAH TECH", url: `${SITE}/tech` },
-                { "@type": "Organization", name: "ARUKAH WEAR", url: `${SITE}/footwear` },
-                { "@type": "EducationalOrganization", name: "ZIVA Special Classes", url: `${SITE}/ziva` },
-                { "@type": "Organization", name: "ARUKAH MEDIA", url: `${SITE}/media` },
-                { "@type": "Organization", name: "ZIVARUKAH BOOKS", url: `${SITE}/books` },
-              ],
+              department: BRANCHES.map((b) => ({
+                "@type": b.type,
+                name: b.name,
+                alternateName: b.alt,
+                url: `${SITE.replace(/\/$/, "")}${b.path}`,
+                description: b.description,
+                parentOrganization: { "@id": `${SITE.replace(/\/$/, "")}/#organization` },
+                founder: { "@id": `${SITE.replace(/\/$/, "")}/#founder` },
+              })),
             },
             founderLd(SITE),
             {

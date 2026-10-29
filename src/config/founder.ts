@@ -21,6 +21,17 @@ export const ORG_DESCRIPTION =
   "ZIVARUKAH, from the Hebrew ZIVA (light of God) and ARUKAH (total restoration), is a Ghanaian brand founded and led by Shepherd Justice Sarpong Oduro. " +
   "It brings God's light and restoration to people spiritually and physically through ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Literacy app, ARUKAH MEDIA, ZIVARUKAH BOOKS and Repent Online Ministries.";
 
+/** The ZIVA… and ARUKAH… branches, each tied to ZIVARUKAH in search data. */
+export const BRANCHES = [
+  { name: "ARUKAH TECH", alt: "Arukah Tech by ZIVARUKAH", path: "/tech", type: "Organization", description: "ARUKAH TECH, the technology branch of ZIVARUKAH: websites, software and management systems in Ghana." },
+  { name: "ARUKAH WEAR", alt: "Arukah Wear by ZIVARUKAH", path: "/footwear", type: "Organization", description: "ARUKAH WEAR, the footwear branch of ZIVARUKAH: handcrafted, Ghana-made footwear." },
+  { name: "ARUKAH MEDIA", alt: "Arukah Media by ZIVARUKAH", path: "/media", type: "Organization", description: "ARUKAH MEDIA, the media branch of ZIVARUKAH: video production and event coverage in Ghana." },
+  { name: "ZIVA Special Classes", alt: "ZIVA Classes by ZIVARUKAH", path: "/ziva", type: "EducationalOrganization", description: "ZIVA Special Classes, the education branch of ZIVARUKAH: extra classes from Primary 1 to SHS 3." },
+  { name: "ZIVA Literacy & Handwriting Coach", alt: "ZIVA Literacy by ZIVARUKAH", path: "/literacy", type: "EducationalOrganization", description: "ZIVA Literacy, the free reading and handwriting app by ZIVARUKAH for KG to JHS learners in Ghana (learn.zivarukah.com)." },
+  { name: "ZIVARUKAH BOOKS", alt: "Zivarukah Books", path: "/books", type: "Organization", description: "ZIVARUKAH BOOKS: books by Shepherd Justice Sarpong Oduro, to read online, download or order in print." },
+  { name: "Repent Online Ministries", alt: "Repent Online Ministries by ZIVARUKAH", path: "/ministry", type: "Organization", description: "Repent Online Ministries, the ministry of ZIVARUKAH led by Shepherd Justice Sarpong Oduro." },
+] as const;
+
 /** schema.org Person for the founder. */
 export function founderLd(site: string) {
   const base = site.replace(/\/$/, "");
