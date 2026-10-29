@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     "ZIVARUKAH joins two Hebrew words: ZIVA (light of God) and ARUKAH (total restoration). Founded and led by Shepherd Justice Sarpong Oduro — minister, teacher and author in Ghana.",
   alternates: { canonical: "/about" },
   openGraph: {
-    title: "About ZIVARUKAH — God's light. Total restoration.",
+    title: "About ZIVARUKAH — God's light brings total restoration.",
     description: "The meaning of ZIVARUKAH and the story of its founder, Shepherd Justice Sarpong Oduro.",
     url: "/about",
     type: "profile",
@@ -60,7 +60,7 @@ export default async function AboutPage() {
               url: SITE,
               logo: `${SITE}${logo.src}`,
               description: ORG_DESCRIPTION,
-              slogan: t.text("motto") || "God's light. Total restoration.",
+              slogan: t.text("motto") || "God's light brings total restoration.",
               founder: { "@id": `${SITE}/#founder` },
               areaServed: "GH",
             },
@@ -156,7 +156,7 @@ export default async function AboutPage() {
       <SharePage
         path="/about"
         title="About ZIVARUKAH"
-        message={"✨ *ZIVARUKAH* — God's light. Total restoration.\n\nWhat the name means, and the story of Shepherd Justice Sarpong Oduro 👇"}
+        message={"✨ *ZIVARUKAH* — God's light brings total restoration.\n\nWhat the name means, and the story of Shepherd Justice Sarpong Oduro 👇"}
         heading="Share our story"
         note="Tell someone what ZIVARUKAH means."
       />
