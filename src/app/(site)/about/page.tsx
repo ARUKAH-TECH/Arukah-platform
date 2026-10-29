@@ -19,7 +19,7 @@ const SITE = (process.env.SITE_URL || "https://zivarukah.com").replace(/\/$/, ""
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "About ZIVARUKAH — Meaning of the Name & Founder Shepherd Justice Sarpong Oduro",
+  title: { absolute: "What ZIVARUKAH Means · Founder Shepherd Justice Sarpong Oduro" },
   description:
     "ZIVARUKAH joins two Hebrew words: ZIVA (light of God) and ARUKAH (total restoration). Founded and led by Shepherd Justice Sarpong Oduro — minister, teacher and author in Ghana.",
   alternates: { canonical: "/about" },

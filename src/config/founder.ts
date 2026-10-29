@@ -10,7 +10,7 @@ export const FOUNDER = {
   legalName: "Sarpong Oduro Justice",
   alternateNames: ["Sarpong Oduro Justice", "Justice Sarpong Oduro", "Shepherd Justice Sarpong"],
   title: "Founder and Leader of ZIVARUKAH and Repent Online Ministries",
-  photo: { src: "/branding/founder/shepherd-justice-sarpong-oduro.webp", width: 661, height: 826 },
+  photo: { src: "/branding/founder/shepherd-justice-sarpong-oduro.webp", width: 655, height: 826 },
   location: { locality: "Nketia", district: "Atwima Nwabiagya North", region: "Ashanti Region", country: "GH" },
 };
 
