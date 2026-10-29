@@ -142,7 +142,7 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
       <label className="text-sm font-medium">
         Web address
         <span className="mt-1 flex items-center gap-1 text-sm font-normal">
-          <span className="shrink-0 text-foreground/50">/books/</span>
+          <span className="shrink-0 text-foreground/60">/books/</span>
           <input
             name="slug"
             maxLength={80}
@@ -179,7 +179,7 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
         </div>
         {coverStep && <p className="mt-2 text-sm text-green-700 dark:text-green-400">{coverStep}</p>}
         {uploadError && <p role="alert" className="mt-2 text-sm font-medium text-red-700 dark:text-red-400">{uploadError}</p>}
-        <p className="mt-1 text-xs text-foreground/50">Portrait book covers (2:3) look best. It uploads as soon as you pick it.</p>
+        <p className="mt-1 text-xs text-foreground/60">Portrait book covers (2:3) look best. It uploads as soon as you pick it.</p>
       </div>
 
       <div className="rounded-2xl border border-black/10 p-4 dark:border-white/10">
@@ -190,7 +190,7 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
         {pdf.path ? (
           <p className="mt-3 text-sm">
             📄 <span className="font-medium">{pdf.name || "Book PDF"}</span>
-            {pdf.size ? <span className="text-foreground/50"> · {(pdf.size / 1048576).toFixed(1)} MB</span> : null}
+            {pdf.size ? <span className="text-foreground/60"> · {(pdf.size / 1048576).toFixed(1)} MB</span> : null}
           </p>
         ) : (
           <p className="mt-3 text-sm text-foreground/60">No PDF yet.</p>
@@ -231,12 +231,12 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
       </fieldset>
 
       <label className="text-sm font-medium">
-        Description <span className="font-normal text-foreground/50">(blank line between paragraphs)</span>
+        Description <span className="font-normal text-foreground/60">(blank line between paragraphs)</span>
         <textarea name="description" rows={6} maxLength={10000} defaultValue={book.description} className={fieldClasses} />
       </label>
 
       <label className="text-sm font-medium">
-        Free sample <span className="font-normal text-foreground/50">(optional — a short excerpt visitors can read)</span>
+        Free sample <span className="font-normal text-foreground/60">(optional — a short excerpt visitors can read)</span>
         <textarea name="sampleText" rows={6} maxLength={20000} defaultValue={book.sampleText} className={fieldClasses} />
       </label>
 
@@ -250,7 +250,7 @@ export function BookForm({ book, justSaved }: { book: BookFormValues; justSaved?
           </select>
         </label>
         <label className="text-sm font-medium">
-          Order on the page <span className="font-normal text-foreground/50">(lower shows first)</span>
+          Order on the page <span className="font-normal text-foreground/60">(lower shows first)</span>
           <input name="sortOrder" type="number" defaultValue={book.sortOrder} className={fieldClasses} />
         </label>
       </div>

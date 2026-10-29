@@ -53,7 +53,7 @@ function Card({ item, priority }: { item: NewsItem; priority: boolean }) {
       </div>
       <div className="flex flex-1 flex-col p-5">
         <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
-          {item.label} · <span className="font-normal normal-case tracking-normal text-foreground/50">{timeAgo(item.date)}</span>
+          {item.label} · <span className="font-normal normal-case tracking-normal text-foreground/60">{timeAgo(item.date)}</span>
         </p>
         <h3 className="mt-2 line-clamp-2 text-lg font-bold leading-snug tracking-tight">{item.title}</h3>
         {item.teaser && <p className="mt-2 line-clamp-3 text-sm leading-6 text-foreground/70">{item.teaser}</p>}
@@ -87,14 +87,14 @@ export async function WhatsNew() {
               Fresh from ZIVARUKAH
             </h2>
           </div>
-          <p className="hidden text-sm text-foreground/50 sm:block">Tap any card to open it</p>
+          <p className="hidden text-sm text-foreground/60 sm:block">Tap any card to open it</p>
         </div>
         <div className="-mx-4 mt-6 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-2 sm:overflow-visible sm:px-0 lg:grid-cols-3">
           {items.map((item, i) => (
             <Card key={item.key} item={item} priority={i === 0} />
           ))}
         </div>
-        {items.length > 1 && <p className="mt-1 text-center text-xs text-foreground/50 sm:hidden">Swipe for more →</p>}
+        {items.length > 1 && <p className="mt-1 text-center text-xs text-foreground/60 sm:hidden">Swipe for more →</p>}
       </Container>
     </section>
   );

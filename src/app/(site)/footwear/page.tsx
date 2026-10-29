@@ -51,7 +51,7 @@ export default async function FootwearPage() {
               </div>
             ))}
           </div>
-          <p className="mt-6 text-center text-xs text-foreground/50">{t.text("productsNote")}</p>
+          <p className="mt-6 text-center text-xs text-foreground/60">{t.text("productsNote")}</p>
         </Container>
       </section>
 

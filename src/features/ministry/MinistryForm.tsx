@@ -17,7 +17,7 @@ export function MinistryForm({ dark = false }: MinistryFormProps) {
     : "mt-1 w-full rounded-lg border border-black/15 bg-transparent px-3 py-2 text-sm outline-none focus:border-brand-primary-text dark:border-white/15";
 
   const labelClasses = dark ? "block text-sm font-medium text-white" : "block text-sm font-medium";
-  const helpClasses = dark ? "-mt-2 text-xs text-white/50" : "-mt-2 text-xs text-foreground/50";
+  const helpClasses = dark ? "-mt-2 text-xs text-white/50" : "-mt-2 text-xs text-foreground/60";
 
   return (
     <form action={formAction} className="flex flex-col gap-4">

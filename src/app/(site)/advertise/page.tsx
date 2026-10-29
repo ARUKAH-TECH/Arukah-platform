@@ -38,7 +38,7 @@ export default async function AdvertisePage() {
                 </li>
               ))}
             </ol>
-            <p className="mt-6 text-xs text-foreground/50">{t.text("note")}</p>
+            <p className="mt-6 text-xs text-foreground/60">{t.text("note")}</p>
           </div>
           <div className="lg:col-span-3">
             {ONLINE_FORMS_ENABLED ? (

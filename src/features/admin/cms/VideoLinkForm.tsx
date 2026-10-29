@@ -23,7 +23,7 @@ export function VideoLinkForm({ projects, defaultProjectId }: VideoLinkFormProps
       </div>
       <div>
         <label htmlFor="videoCaption" className="block text-sm font-medium">
-          Caption <span className="font-normal text-foreground/50">(optional)</span>
+          Caption <span className="font-normal text-foreground/60">(optional)</span>
         </label>
         <input id="videoCaption" name="caption" maxLength={500} className={fieldClasses} />
       </div>

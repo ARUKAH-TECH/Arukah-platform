@@ -42,7 +42,7 @@ export default async function ProjectsPage() {
                 key={project.name}
                 className="flex flex-col gap-3 rounded-2xl border border-dashed border-black/15 p-6 dark:border-white/15"
               >
-                <div className="flex aspect-video items-center justify-center rounded-xl bg-black/5 text-xs text-foreground/50 dark:bg-white/5">
+                <div className="flex aspect-video items-center justify-center rounded-xl bg-black/5 text-xs text-foreground/60 dark:bg-white/5">
                   Preview coming soon
                 </div>
                 <h3 className="text-sm font-semibold">{project.name}</h3>

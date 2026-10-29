@@ -146,11 +146,11 @@ export function AddToBasket({ book, prices, quickPay = false }: Props) {
         </p>
       )}
       {!ONLINE_FORMS_ENABLED && quickPay && (
-        <p className="text-xs text-foreground/50">
+        <p className="text-xs text-foreground/60">
           Pay securely with Mobile Money (approve with your PIN) or card on Paystack&apos;s page. We don&apos;t ask for your details here.
         </p>
       )}
-      <p className="text-xs text-foreground/50">
+      <p className="text-xs text-foreground/60">
         Buy more than 3 copies and get 10% off.
         {!ONLINE_FORMS_ENABLED && " We confirm your order and how to pay on WhatsApp."}
       </p>

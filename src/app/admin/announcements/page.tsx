@@ -12,7 +12,7 @@ const statusStyles: Record<string, string> = {
   draft: "bg-black/5 text-foreground/70 dark:bg-white/10",
   scheduled: "bg-blue-100 text-blue-900 dark:bg-blue-950 dark:text-blue-200",
   published: "bg-green-100 text-green-900 dark:bg-green-950 dark:text-green-200",
-  archived: "bg-black/5 text-foreground/50 dark:bg-white/10",
+  archived: "bg-black/5 text-foreground/60 dark:bg-white/10",
 };
 
 function formatDate(iso: string | null) {
@@ -46,7 +46,7 @@ export default async function AdminAnnouncementsPage() {
       ) : (
         <div className="mt-8 overflow-x-auto rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-zinc-900">
           <table className="w-full text-left text-sm">
-            <thead className="border-b border-black/10 text-xs uppercase tracking-wider text-foreground/50 dark:border-white/10">
+            <thead className="border-b border-black/10 text-xs uppercase tracking-wider text-foreground/60 dark:border-white/10">
               <tr>
                 <th className="px-4 py-3 font-medium">Headline</th>
                 <th className="px-4 py-3 font-medium">Status</th>

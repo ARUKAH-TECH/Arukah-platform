@@ -45,12 +45,12 @@ export function ContactForm() {
         </div>
         <div>
           <label htmlFor="email" className="block text-sm font-medium">
-            Email <span className="font-normal text-foreground/50">(optional)</span>
+            Email <span className="font-normal text-foreground/60">(optional)</span>
           </label>
           <input id="email" name="email" type="email" className={inputClasses} />
         </div>
       </div>
-      <p className="-mt-2 text-xs text-foreground/50">
+      <p className="-mt-2 text-xs text-foreground/60">
         Please provide at least a phone number or an email so we can reach you.
       </p>
 

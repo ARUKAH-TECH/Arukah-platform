@@ -70,7 +70,7 @@ export function OutreachForm({ outreach, justSaved }: { outreach: OutreachFormVa
           Web address
         </label>
         <div className="mt-1 flex items-center gap-1 text-sm">
-          <span className="shrink-0 text-foreground/50">/ministry/outreach/</span>
+          <span className="shrink-0 text-foreground/60">/ministry/outreach/</span>
           <input
             id="slug"
             name="slug"
@@ -114,21 +114,21 @@ export function OutreachForm({ outreach, justSaved }: { outreach: OutreachFormVa
 
       <div>
         <label htmlFor="purpose" className="block text-sm font-medium">
-          Purpose <span className="font-normal text-foreground/50">(shown on cards, max 600 characters)</span>
+          Purpose <span className="font-normal text-foreground/60">(shown on cards, max 600 characters)</span>
         </label>
         <textarea id="purpose" name="purpose" rows={2} maxLength={600} defaultValue={outreach.purpose} className={fieldClasses} />
       </div>
 
       <div>
         <label htmlFor="body" className="block text-sm font-medium">
-          Full report <span className="font-normal text-foreground/50">(leave a blank line between paragraphs)</span>
+          Full report <span className="font-normal text-foreground/60">(leave a blank line between paragraphs)</span>
         </label>
         <textarea id="body" name="body" rows={8} maxLength={20000} defaultValue={outreach.body} className={fieldClasses} />
       </div>
 
       <div>
         <label htmlFor="needs" className="block text-sm font-medium">
-          Needs <span className="font-normal text-foreground/50">(one per line, e.g. “Bags of rice”, “Toiletries”)</span>
+          Needs <span className="font-normal text-foreground/60">(one per line, e.g. “Bags of rice”, “Toiletries”)</span>
         </label>
         <textarea id="needs" name="needs" rows={4} defaultValue={outreach.needs.join("\n")} className={fieldClasses} />
       </div>
@@ -179,7 +179,7 @@ export function OutreachForm({ outreach, justSaved }: { outreach: OutreachFormVa
         </div>
         <div>
           <label htmlFor="publishAt" className="block text-sm font-medium">
-            Publish at <span className="font-normal text-foreground/50">(Ghana time)</span>
+            Publish at <span className="font-normal text-foreground/60">(Ghana time)</span>
           </label>
           <input
             id="publishAt"
@@ -192,7 +192,7 @@ export function OutreachForm({ outreach, justSaved }: { outreach: OutreachFormVa
         </div>
         <div>
           <label htmlFor="unpublishAt" className="block text-sm font-medium">
-            Unpublish at <span className="font-normal text-foreground/50">(optional)</span>
+            Unpublish at <span className="font-normal text-foreground/60">(optional)</span>
           </label>
           <input
             id="unpublishAt"

@@ -67,7 +67,7 @@ export function AnnouncementForm({
 
       <div>
         <label htmlFor="title" className="block text-sm font-medium">
-          Headline <span className="font-normal text-foreground/50">(max 120 characters)</span>
+          Headline <span className="font-normal text-foreground/60">(max 120 characters)</span>
         </label>
         <input
           id="title"
@@ -82,7 +82,7 @@ export function AnnouncementForm({
 
       <div>
         <label htmlFor="message" className="block text-sm font-medium">
-          Message <span className="font-normal text-foreground/50">(optional, max 500 characters)</span>
+          Message <span className="font-normal text-foreground/60">(optional, max 500 characters)</span>
         </label>
         <textarea
           id="message"
@@ -98,7 +98,7 @@ export function AnnouncementForm({
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label htmlFor="linkUrl" className="block text-sm font-medium">
-            Link <span className="font-normal text-foreground/50">(optional)</span>
+            Link <span className="font-normal text-foreground/60">(optional)</span>
           </label>
           <input
             id="linkUrl"
@@ -112,7 +112,7 @@ export function AnnouncementForm({
         </div>
         <div>
           <label htmlFor="linkLabel" className="block text-sm font-medium">
-            Link text <span className="font-normal text-foreground/50">(e.g. “Register now”)</span>
+            Link text <span className="font-normal text-foreground/60">(e.g. “Register now”)</span>
           </label>
           <input
             id="linkLabel"
@@ -182,7 +182,7 @@ export function AnnouncementForm({
         </div>
         <div>
           <label htmlFor="publishAt" className="block text-sm font-medium">
-            Start <span className="font-normal text-foreground/50">(Ghana time)</span>
+            Start <span className="font-normal text-foreground/60">(Ghana time)</span>
           </label>
           <input
             id="publishAt"
@@ -195,7 +195,7 @@ export function AnnouncementForm({
         </div>
         <div>
           <label htmlFor="unpublishAt" className="block text-sm font-medium">
-            End <span className="font-normal text-foreground/50">(optional)</span>
+            End <span className="font-normal text-foreground/60">(optional)</span>
           </label>
           <input
             id="unpublishAt"
@@ -206,7 +206,7 @@ export function AnnouncementForm({
           />
         </div>
       </div>
-      <p className="-mt-3 text-xs text-foreground/50">
+      <p className="-mt-3 text-xs text-foreground/60">
         Scheduled announcements appear by themselves within about a minute of the start time, and disappear at the end
         time.
       </p>

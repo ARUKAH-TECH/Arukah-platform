@@ -50,7 +50,7 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
 
       <div className="mt-8 grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2">
         <section className="flex flex-col gap-4 rounded-2xl border border-black/10 bg-white p-6 text-sm dark:border-white/10 dark:bg-zinc-900">
-          <h2 className="text-xs font-semibold uppercase tracking-wider text-foreground/50">From the requester</h2>
+          <h2 className="text-xs font-semibold uppercase tracking-wider text-foreground/60">From the requester</h2>
           <p>
             <span className="font-medium">{r.contact_name}</span>
             {r.business_name && <span className="text-foreground/60"> · {r.business_name}</span>}
@@ -73,24 +73,24 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
             )}
           </div>
           <div>
-            <p className="text-xs uppercase tracking-wider text-foreground/50">What the advert is about</p>
+            <p className="text-xs uppercase tracking-wider text-foreground/60">What the advert is about</p>
             <p className="mt-1 whitespace-pre-line leading-6">{r.about}</p>
           </div>
           {r.location && (
             <div>
-              <p className="text-xs uppercase tracking-wider text-foreground/50">Location</p>
+              <p className="text-xs uppercase tracking-wider text-foreground/60">Location</p>
               <p className="mt-1">{r.location}</p>
             </div>
           )}
           <div>
-            <p className="text-xs uppercase tracking-wider text-foreground/50">Photo sent</p>
+            <p className="text-xs uppercase tracking-wider text-foreground/60">Photo sent</p>
             {requestPhoto ? (
               <a href={requestPhoto} target="_blank" rel="noopener noreferrer">
                 {/* eslint-disable-next-line @next/next/no-img-element -- private photo via short-lived signed link */}
                 <img src={requestPhoto} alt="Photo sent with the request" className="mt-2 w-full rounded-lg" />
               </a>
             ) : (
-              <p className="mt-1 text-foreground/50">None</p>
+              <p className="mt-1 text-foreground/60">None</p>
             )}
           </div>
         </section>

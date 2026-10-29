@@ -17,7 +17,7 @@ export async function AdSlot({ branch }: { branch: BranchId }) {
     <aside aria-label="Sponsored" className="py-10">
       <Container>
         <AdViewPing id={ad.id} />
-        <p className="text-xs font-semibold uppercase tracking-wider text-foreground/50">Sponsored · {ad.label}</p>
+        <p className="text-xs font-semibold uppercase tracking-wider text-foreground/60">Sponsored · {ad.label}</p>
         <div className="mt-3 max-w-2xl">
           {ownFile ? (
             <video

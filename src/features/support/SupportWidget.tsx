@@ -45,7 +45,7 @@ export function SupportWidget() {
               type="button"
               onClick={() => setOpen(false)}
               aria-label="Close chat"
-              className="text-foreground/50 hover:text-foreground"
+              className="text-foreground/60 hover:text-foreground"
             >
               ✕
             </button>

@@ -30,7 +30,7 @@ export async function AdStats({ adId }: { adId: string }) {
       </div>
       {rows.length > 0 ? (
         <table className="mt-4 w-full text-left text-xs">
-          <thead className="text-foreground/50">
+          <thead className="text-foreground/60">
             <tr>
               <th className="py-1 font-medium">Day</th>
               <th className="py-1 text-right font-medium">Views</th>
@@ -52,7 +52,7 @@ export async function AdStats({ adId }: { adId: string }) {
       ) : (
         <p className="mt-4 text-xs text-foreground/60">No views yet — numbers appear once the advert is showing.</p>
       )}
-      <p className="mt-3 text-xs text-foreground/50">
+      <p className="mt-3 text-xs text-foreground/60">
         A view is counted each time the advert appears on someone&apos;s screen; a click when they tap it. Numbers are a
         good guide but can&apos;t tell people from automated visitors.
       </p>

@@ -74,7 +74,7 @@ export function AiVideoPanel(props: AiVideoPanelProps) {
                   className={fieldClasses}
                 />
               </label>
-              <p className="text-xs text-foreground/50">
+              <p className="text-xs text-foreground/60">
                 Say what should move — e.g. “Slow camera push-in on the product, soft light sweeping across, gentle
                 sparkle, professional advert style. Keep all text sharp and unchanged.”
               </p>

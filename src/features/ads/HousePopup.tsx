@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { HouseAd } from "./houseAds";
+import { resized } from "@/lib/resizedImage";
 
 // The "our works" pop-up. A few seconds after a page opens it asks the server
 // whether the pop-up window is on (the 48 hours that follow 5 days without a
@@ -90,7 +91,7 @@ export function HousePopup() {
             {ad.image ? (
               // eslint-disable-next-line @next/next/no-img-element -- image from our own storage
               <img
-                src={ad.image.url}
+                src={resized(ad.image.url, 640)}
                 alt=""
                 className={ad.image.fit === "cover" ? "h-full w-full object-cover" : "h-[88%] w-auto object-contain drop-shadow-2xl"}
               />

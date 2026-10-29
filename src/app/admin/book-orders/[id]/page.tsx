@@ -70,7 +70,7 @@ export default async function BookOrderPage({ params }: PageProps<"/admin/book-o
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-wider text-foreground/50">Books</p>
+            <p className="text-xs uppercase tracking-wider text-foreground/60">Books</p>
             <ul className="mt-2 flex flex-col gap-2">
               {(items ?? []).map((item) => (
                 <li key={item.id} className="flex justify-between gap-3">
@@ -100,13 +100,13 @@ export default async function BookOrderPage({ params }: PageProps<"/admin/book-o
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-wider text-foreground/50">How they get it</p>
+            <p className="text-xs uppercase tracking-wider text-foreground/60">How they get it</p>
             <p className="mt-1">{FULFILMENT[o.fulfilment] ?? o.fulfilment}</p>
             {o.address && <p className="mt-1 whitespace-pre-line text-foreground/80">{o.address}</p>}
           </div>
           {o.customer_note && (
             <div>
-              <p className="text-xs uppercase tracking-wider text-foreground/50">Their note</p>
+              <p className="text-xs uppercase tracking-wider text-foreground/60">Their note</p>
               <p className="mt-1 whitespace-pre-line">{o.customer_note}</p>
             </div>
           )}

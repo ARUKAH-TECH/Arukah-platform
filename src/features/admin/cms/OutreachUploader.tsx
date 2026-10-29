@@ -58,7 +58,7 @@ export function OutreachImageUploader({ outreachId }: { outreachId: string }) {
       <input id="outreachImages" ref={fileInput} type="file" accept={IMAGE_PICKER_ACCEPT} multiple onChange={upload} className="hidden" />
       <div>
         <label htmlFor="outreachAlt" className="block text-sm font-medium">
-          Describe the photo <span className="font-normal text-foreground/50">(optional — type this first; for blind visitors and Google)</span>
+          Describe the photo <span className="font-normal text-foreground/60">(optional — type this first; for blind visitors and Google)</span>
         </label>
         <input
           id="outreachAlt"
@@ -80,7 +80,7 @@ export function OutreachImageUploader({ outreachId }: { outreachId: string }) {
         <button type="button" onClick={() => fileInput.current?.click()} disabled={busy} className={primaryButtonClasses}>
           {busy ? "Uploading…" : "Choose photos"}
         </button>
-        <p className="mt-2 text-xs text-foreground/50">They upload as soon as you pick them (resized, and location data removed, on your phone).</p>
+        <p className="mt-2 text-xs text-foreground/60">They upload as soon as you pick them (resized, and location data removed, on your phone).</p>
       </div>
     </div>
   );
@@ -99,7 +99,7 @@ export function OutreachVideoForm({ outreachId }: { outreachId: string }) {
       </div>
       <div>
         <label htmlFor="outreachVideoCaption" className="block text-sm font-medium">
-          Caption <span className="font-normal text-foreground/50">(optional)</span>
+          Caption <span className="font-normal text-foreground/60">(optional)</span>
         </label>
         <input id="outreachVideoCaption" name="caption" maxLength={500} className={fieldClasses} />
       </div>

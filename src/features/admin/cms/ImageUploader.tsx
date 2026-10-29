@@ -60,7 +60,7 @@ export function ImageUploader({ projects, defaultProjectId }: ImageUploaderProps
       <input id="images" ref={fileInput} type="file" accept={IMAGE_PICKER_ACCEPT} multiple onChange={upload} className="hidden" />
       <div>
         <label htmlFor="altText" className="block text-sm font-medium">
-          Describe the image <span className="font-normal text-foreground/50">(for blind visitors and Google)</span>
+          Describe the image <span className="font-normal text-foreground/60">(for blind visitors and Google)</span>
         </label>
         <input
           id="altText"
@@ -95,7 +95,7 @@ export function ImageUploader({ projects, defaultProjectId }: ImageUploaderProps
         <button type="button" onClick={() => fileInput.current?.click()} disabled={busy} className={primaryButtonClasses}>
           {busy ? "Uploading…" : "Choose images"}
         </button>
-        <p className="mt-2 text-xs text-foreground/50">Fill in the boxes above first — images upload as soon as you pick them.</p>
+        <p className="mt-2 text-xs text-foreground/60">Fill in the boxes above first — images upload as soon as you pick them.</p>
       </div>
     </div>
   );

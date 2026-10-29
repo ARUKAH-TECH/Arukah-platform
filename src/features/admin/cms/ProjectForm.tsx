@@ -69,7 +69,7 @@ export function ProjectForm({ project, images, justSaved }: ProjectFormProps) {
           Web address
         </label>
         <div className="mt-1 flex items-center gap-1 text-sm">
-          <span className="text-foreground/50">zivarukah.com/projects/</span>
+          <span className="text-foreground/60">zivarukah.com/projects/</span>
           <input
             id="slug"
             name="slug"
@@ -86,14 +86,14 @@ export function ProjectForm({ project, images, justSaved }: ProjectFormProps) {
 
       <div>
         <label htmlFor="summary" className="block text-sm font-medium">
-          Short summary <span className="font-normal text-foreground/50">(shown on cards, max 300 characters)</span>
+          Short summary <span className="font-normal text-foreground/60">(shown on cards, max 300 characters)</span>
         </label>
         <textarea id="summary" name="summary" rows={2} maxLength={300} defaultValue={project.summary} className={fieldClasses} />
       </div>
 
       <div>
         <label htmlFor="body" className="block text-sm font-medium">
-          Full description <span className="font-normal text-foreground/50">(leave a blank line between paragraphs)</span>
+          Full description <span className="font-normal text-foreground/60">(leave a blank line between paragraphs)</span>
         </label>
         <textarea id="body" name="body" rows={10} maxLength={20000} defaultValue={project.body} className={fieldClasses} />
       </div>
@@ -113,7 +113,7 @@ export function ProjectForm({ project, images, justSaved }: ProjectFormProps) {
             </label>
           ))}
         </div>
-        <p className="mt-1 text-xs text-foreground/50">Every published project also appears on the Projects page.</p>
+        <p className="mt-1 text-xs text-foreground/60">Every published project also appears on the Projects page.</p>
       </fieldset>
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
@@ -137,7 +137,7 @@ export function ProjectForm({ project, images, justSaved }: ProjectFormProps) {
         </div>
         <div>
           <label htmlFor="publishAt" className="block text-sm font-medium">
-            Publish at <span className="font-normal text-foreground/50">(Ghana time)</span>
+            Publish at <span className="font-normal text-foreground/60">(Ghana time)</span>
           </label>
           <input
             id="publishAt"
@@ -150,7 +150,7 @@ export function ProjectForm({ project, images, justSaved }: ProjectFormProps) {
         </div>
         <div>
           <label htmlFor="unpublishAt" className="block text-sm font-medium">
-            Unpublish at <span className="font-normal text-foreground/50">(optional)</span>
+            Unpublish at <span className="font-normal text-foreground/60">(optional)</span>
           </label>
           <input
             id="unpublishAt"

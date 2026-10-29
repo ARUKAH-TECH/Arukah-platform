@@ -76,7 +76,7 @@ export default async function AdminDashboardPage() {
             className="rounded-2xl border border-dashed border-black/15 bg-white p-6 dark:border-white/15 dark:bg-zinc-900"
           >
             <h2 className="text-sm font-semibold">{section}</h2>
-            <p className="mt-1 text-xs text-foreground/50">Coming in a later phase</p>
+            <p className="mt-1 text-xs text-foreground/60">Coming in a later phase</p>
           </div>
         ))}
       </div>

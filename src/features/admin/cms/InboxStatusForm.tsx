@@ -27,7 +27,7 @@ export function InboxStatusForm({ id, status, adminNote }: { id: string; status:
       </fieldset>
       <div>
         <label htmlFor="adminNote" className="block text-sm font-medium">
-          Private note <span className="font-normal text-foreground/50">(e.g. who followed up, when)</span>
+          Private note <span className="font-normal text-foreground/60">(e.g. who followed up, when)</span>
         </label>
         <textarea id="adminNote" name="adminNote" rows={3} maxLength={2000} defaultValue={adminNote} className={fieldClasses} />
       </div>
