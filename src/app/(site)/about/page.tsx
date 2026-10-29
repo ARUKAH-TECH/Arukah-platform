@@ -91,15 +91,24 @@ export default async function AboutPage() {
           </div>
 
           <div className="mx-auto mt-10 grid max-w-4xl grid-cols-1 gap-6 sm:grid-cols-2">
-            <div className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5">
-              <p className="text-3xl font-black tracking-tight">ZIVA</p>
+            <div id="ziva" className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5">
+              <h2 className="text-3xl font-black tracking-tight">ZIVA</h2>
               <p className="mt-1 text-sm font-semibold uppercase tracking-wide text-brand-primary-text">Light · the light of God</p>
               <p className="mt-3 leading-7 text-foreground/75">{t.text("zivaText")}</p>
+              <p className="mt-3 text-sm text-foreground/75">
+                Our ZIVA branches: <Link href="/ziva" className="font-semibold underline">ZIVA Special Classes</Link> and the free{" "}
+                <Link href="/literacy" className="font-semibold underline">ZIVA Literacy app</Link>.
+              </p>
             </div>
-            <div className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5">
-              <p className="text-3xl font-black tracking-tight">ARUKAH</p>
+            <div id="arukah" className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5">
+              <h2 className="text-3xl font-black tracking-tight">ARUKAH</h2>
               <p className="mt-1 text-sm font-semibold uppercase tracking-wide text-brand-primary-text">Healing · total restoration</p>
               <p className="mt-3 leading-7 text-foreground/75">{t.text("arukahText")}</p>
+              <p className="mt-3 text-sm text-foreground/75">
+                Our ARUKAH branches: <Link href="/tech" className="font-semibold underline">ARUKAH TECH</Link>,{" "}
+                <Link href="/footwear" className="font-semibold underline">ARUKAH WEAR</Link> and{" "}
+                <Link href="/media" className="font-semibold underline">ARUKAH MEDIA</Link>.
+              </p>
             </div>
           </div>
 
