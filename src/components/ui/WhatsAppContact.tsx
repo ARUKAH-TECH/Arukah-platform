@@ -1,6 +1,6 @@
-import { PHONE_DISPLAY, WHATSAPP_NUMBER, whatsappLink } from "@/config/forms";
+import { WHATSAPP_USERNAME, whatsappLink } from "@/config/forms";
 
-/** Used instead of a form: opens WhatsApp with a ready message, or calls. */
+/** Used instead of a form: opens a WhatsApp chat (by username) with a ready message. */
 export function WhatsAppContact({
   message,
   label = "Message us on WhatsApp",
@@ -24,15 +24,10 @@ export function WhatsAppContact({
         >
           {label}
         </a>
-        <a
-          href={`tel:+${WHATSAPP_NUMBER}`}
-          className={`inline-flex items-center justify-center rounded-full border px-6 py-2.5 text-sm font-medium ${
-            dark ? "border-white/25" : "border-black/15 dark:border-white/15"
-          }`}
-        >
-          Call {PHONE_DISPLAY}
-        </a>
       </div>
+      <p className={`mt-3 text-sm ${muted}`}>
+        WhatsApp: <strong>@{WHATSAPP_USERNAME}</strong>
+      </p>
       {note && <p className={`mt-4 text-sm leading-6 ${muted}`}>{note}</p>}
     </div>
   );

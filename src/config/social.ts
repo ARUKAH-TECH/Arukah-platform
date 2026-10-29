@@ -4,8 +4,8 @@ export interface SocialLink {
 }
 
 export const socialLinks: SocialLink[] = [
-  { platform: "Facebook", href: "https://www.facebook.com/search/people/?q=Sarpong%20Oduro%20Justice" },
+  { platform: "Facebook", href: "https://www.facebook.com/sarpong.justice.7792" },
   { platform: "YouTube", href: "https://youtube.com/@repenttv24" },
-  { platform: "TikTok", href: "https://tiktok.com/@shepherdjusticesarpong" },
-  { platform: "WhatsApp", href: "https://wa.me/233597573842" },
+  { platform: "TikTok", href: "https://www.tiktok.com/@shepherdjusticesarpong" },
+  { platform: "WhatsApp", href: "https://wa.me/ShepherdJusticeSarpongOduro" },
 ];

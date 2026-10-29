@@ -16,7 +16,7 @@ import {
   degrees,
   rgb,
 } from "pdf-lib";
-import { PHONE_DISPLAY } from "@/config/forms";
+import { CONTACT_DISPLAY } from "@/config/forms";
 
 // Makes a stamped, "read-only" copy of a book PDF for a buyer: it opens normally with
 // no password, but PDF readers are told not to allow printing, copying text,
@@ -125,7 +125,7 @@ const BRAND = "ZIVA SERIES";
 async function addWatermark(doc: PDFDocument, reference: string) {
   const bold = await doc.embedFont(StandardFonts.HelveticaBold);
   const regular = await doc.embedFont(StandardFonts.Helvetica);
-  const footer = `${BRAND}  ·  Licensed copy  ·  Ref ${reference}  ·  WhatsApp/Call ${PHONE_DISPLAY}  ·  zivarukah.com`;
+  const footer = `${BRAND}  ·  Licensed copy  ·  Ref ${reference}  ·  ${CONTACT_DISPLAY}  ·  zivarukah.com`;
   for (const page of doc.getPages()) {
     const { width, height } = page.getSize();
     const { x: left, y: bottom } = page.getMediaBox();

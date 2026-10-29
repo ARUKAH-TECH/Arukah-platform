@@ -1,4 +1,6 @@
-export const WHATSAPP_LINK = "https://wa.me/233597573842";
+import { WHATSAPP_URL } from "@/config/forms";
+
+export const WHATSAPP_LINK = WHATSAPP_URL;
 
 interface FaqRule {
   keywords: string[];
