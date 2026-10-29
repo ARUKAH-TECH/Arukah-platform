@@ -49,8 +49,10 @@ for (const run of runs) {
     } catch (e) { errors.push("goto: " + String(e).slice(0, 150)); }
     const ms = Date.now() - t0;
     const info = await page.evaluate(() => {
-      const lum = (c) => { const m = c.match(/[\d.]+/g); if (!m) return null; const [r, g, b, a] = m.map(Number); if (a === 0) return null; const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
-      const bgOf = (el) => { for (let e = el; e; e = e.parentElement) { const s = getComputedStyle(e); if (s.backgroundImage && s.backgroundImage !== "none") return null; const c = s.backgroundColor; const m = c.match(/[\d.]+/g); if (m && (m.length < 4 || Number(m[3]) > 0.9)) return c; } return "rgb(255,255,255)"; };
+      const cv = document.createElement("canvas"); cv.width = cv.height = 1; const cx = cv.getContext("2d", { willReadFrequently: true });
+      const rgba = (c) => { cx.clearRect(0, 0, 1, 1); cx.fillStyle = "#000"; cx.fillStyle = c; cx.fillRect(0, 0, 1, 1); const d = cx.getImageData(0, 0, 1, 1).data; return [d[0], d[1], d[2], d[3] / 255]; };
+      const lum = (c) => { const [r, g, b, a] = rgba(c); if (a === 0) return null; const f = (v) => { v /= 255; return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4; }; return 0.2126 * f(r) + 0.7152 * f(g) + 0.0722 * f(b); };
+      const bgOf = (el) => { for (let e = el; e; e = e.parentElement) { const s = getComputedStyle(e); if (s.backgroundImage && s.backgroundImage !== "none") return null; const c = s.backgroundColor; if (rgba(c)[3] > 0.85) return c; } return getComputedStyle(document.body).backgroundColor || "rgb(255,255,255)"; };
       const low = [];
       for (const el of document.querySelectorAll("p,span,a,li,h1,h2,h3,h4,button,label,td,small,strong")) {
         if (!el.childNodes.length || ![...el.childNodes].some((n) => n.nodeType === 3 && n.textContent.trim().length > 2)) continue;
@@ -78,7 +80,7 @@ for (const run of runs) {
       try { const r = await new AxeBuilder({ page }).withTags(["wcag2a", "wcag2aa"]).analyze(); axe = r.violations.map((v) => `${v.impact}:${v.id}(${v.nodes.length})`); } catch {}
     }
     const slug = url.replace(/https:\/\//, "").replace(/[^a-z0-9]+/gi, "_").slice(0, 80);
-    if (!run.contrastOnly || info.unreadable?.length) await page.screenshot({ path: `shots/${run.name.replace(/[^a-z]+/gi, "_")}__${slug}.png` }).catch(() => {});
+    await page.screenshot({ path: `shots/${run.name.replace(/[^a-z]+/gi, "_")}__${slug}.png` }).catch(() => {});
     results.push({ url, status, ms, errors: errors.slice(0, 6), failed: failed.slice(0, 6), ...info, axe });
     await page.close();
   }

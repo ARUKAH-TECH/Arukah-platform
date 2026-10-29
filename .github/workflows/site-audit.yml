@@ -32,10 +32,10 @@ jobs:
       - name: Save results to the branch
         if: always()
         run: |
-          mkdir -p audit/results
+          rm -rf audit/results; mkdir -p audit/results
           cp audit/report.json audit/lighthouse.json audit/results/ 2>/dev/null || true
           mkdir -p audit/results/shots
-          ls audit/shots | grep -E "Safari_iPhone_DARK|Safari_iPhone_WebKit__zivarukah_com_$|Safari_iPhone_WebKit__learn_zivarukah_com_$|Firefox|Edge" | head -40 | while read f; do cp "audit/shots/$f" audit/results/shots/; done || true
+          ls audit/shots | grep -E "^Safari_iPhone" | head -80 | while read f; do cp "audit/shots/$f" audit/results/shots/; done || true
           git config user.name "audit-bot"; git config user.email "audit-bot@users.noreply.github.com"
           git add audit/results && git commit -m "Audit results [skip ci]" && git push || true
       - uses: actions/upload-artifact@v4
