@@ -18,7 +18,11 @@ jobs:
           npm init -y >/dev/null
           npm i playwright@1.56.1 @axe-core/playwright@4.10.2 lighthouse@12.8.2 >/dev/null
           npx playwright install --with-deps chromium firefox webkit msedge
+      - name: Details (contrast nodes)
+        working-directory: audit
+        run: node detail.mjs
       - name: Browsers and pages
+        if: ${{ !contains(github.event.head_commit.message, '[detail-only]') }}
         working-directory: audit
         run: node audit.mjs
       - name: Lighthouse (mobile)
@@ -26,16 +30,16 @@ jobs:
         run: |
           for u in https://zivarukah.com/ https://zivarukah.com/books https://learn.zivarukah.com/ https://learn.zivarukah.com/stages/; do
             n=$(echo $u | sed 's#https://##; s#[^a-z0-9]#_#g')
-            npx lighthouse "$u" --quiet --output=json --output-path="lh_$n.json" --only-categories=performance,accessibility,best-practices,seo --chrome-flags="--headless=new --no-sandbox" || true
+            npx lighthouse "$u" --quiet --form-factor=mobile --output=json --output-path="lh_$n.json" --only-categories=performance,accessibility,best-practices,seo --chrome-flags="--headless=new --no-sandbox" || true
           done
-          node -e 'const fs=require("fs");const out={};for(const f of fs.readdirSync(".").filter(f=>f.startsWith("lh_"))){const j=JSON.parse(fs.readFileSync(f));out[j.finalDisplayedUrl]={scores:Object.fromEntries(Object.entries(j.categories).map(([k,v])=>[k,Math.round(v.score*100)])),lcp:j.audits["largest-contentful-paint"]?.displayValue,cls:j.audits["cumulative-layout-shift"]?.displayValue,tbt:j.audits["total-blocking-time"]?.displayValue,fails:Object.values(j.audits).filter(a=>a.score!==null&&a.score<0.5&&a.scoreDisplayMode!=="informative").map(a=>a.id).slice(0,25)}}fs.writeFileSync("lighthouse.json",JSON.stringify(out,null,1))'
+          node -e 'const fs=require("fs");const out={};for(const f of fs.readdirSync(".").filter(f=>f.startsWith("lh_"))){const j=JSON.parse(fs.readFileSync(f));out[j.finalDisplayedUrl]={scores:Object.fromEntries(Object.entries(j.categories).map(([k,v])=>[k,Math.round(v.score*100)])),lcp:j.audits["largest-contentful-paint"]?.displayValue,cls:j.audits["cumulative-layout-shift"]?.displayValue,tbt:j.audits["total-blocking-time"]?.displayValue,lcpEl:JSON.stringify(j.audits["largest-contentful-paint-element"]?.details?.items?.[0]?.items?.[0]?.node?.snippet??"").slice(0,300),boot:(j.audits["bootup-time"]?.details?.items??[]).slice(0,6).map(i=>[i.url.slice(-60),Math.round(i.total)]),bytes:(j.audits["total-byte-weight"]?.details?.items??[]).slice(0,8).map(i=>[i.url.slice(-70),Math.round(i.totalBytes/1024)]),images:(j.audits["uses-responsive-images"]?.details?.items??[]).slice(0,6).map(i=>[i.url.slice(-70),Math.round(i.wastedBytes/1024)]),fails:Object.values(j.audits).filter(a=>a.score!==null&&a.score<0.5&&a.scoreDisplayMode!=="informative").map(a=>a.id).slice(0,25)}}fs.writeFileSync("lighthouse.json",JSON.stringify(out,null,1))'
       - name: Save results to the branch
         if: always()
         run: |
           rm -rf audit/results; mkdir -p audit/results
-          cp audit/report.json audit/lighthouse.json audit/results/ 2>/dev/null || true
+          cp audit/report.json audit/lighthouse.json audit/detail.json audit/results/ 2>/dev/null || true
           mkdir -p audit/results/shots
-          ls audit/shots | grep -E "^Safari_iPhone" | head -80 | while read f; do cp "audit/shots/$f" audit/results/shots/; done || true
+          ls audit/shots | grep -E "^Safari_iPhone" | head -80 || true | while read f; do cp "audit/shots/$f" audit/results/shots/; done || true
           git config user.name "audit-bot"; git config user.email "audit-bot@users.noreply.github.com"
           git add audit/results && git commit -m "Audit results [skip ci]" && git push || true
       - uses: actions/upload-artifact@v4
