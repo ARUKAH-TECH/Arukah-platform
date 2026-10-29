@@ -10,6 +10,7 @@ import { JsonLd } from "@/components/seo/JsonLd";
 import { brands } from "@/config/brands";
 import { businessNav } from "@/config/nav";
 import { FOUNDER, ORG_DESCRIPTION, founderLd } from "@/config/founder";
+import { ABOUT_FAQ } from "@/config/aboutFaq";
 import { aboutPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 
@@ -21,7 +22,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: { absolute: "What ZIVARUKAH Means · Founder Shepherd Justice Sarpong Oduro" },
   description:
-    "ZIVARUKAH joins two Hebrew words: ZIVA (light of God) and ARUKAH (total restoration). Founded and led by Shepherd Justice Sarpong Oduro, minister, teacher and author in Ghana.",
+    "ZIVARUKAH means “God's light brings total restoration”: a name joining the Hebrew words ZIVA (light of God) and ARUKAH (total restoration), created by founder Shepherd Justice Sarpong Oduro of Ghana.",
   alternates: { canonical: "/about" },
   openGraph: {
     title: "About ZIVARUKAH: God's light brings total restoration.",
@@ -65,6 +66,15 @@ export default async function AboutPage() {
               areaServed: "GH",
             },
             founderLd(SITE),
+            {
+              "@type": "FAQPage",
+              "@id": `${SITE}/about#faq`,
+              mainEntity: ABOUT_FAQ.map((f) => ({
+                "@type": "Question",
+                name: f.q,
+                acceptedAnswer: { "@type": "Answer", text: f.a },
+              })),
+            },
           ],
         }}
       />
@@ -134,6 +144,21 @@ export default async function AboutPage() {
               </div>
             </div>
           </div>
+        </Container>
+      </section>
+
+      {/* ── questions ── */}
+      <section id="faq" className="border-t border-black/10 py-16 dark:border-white/10">
+        <Container>
+          <SectionHeading eyebrow="Questions" title="ZIVARUKAH in short" align="center" />
+          <dl className="mx-auto mt-8 flex max-w-3xl flex-col gap-4">
+            {ABOUT_FAQ.map((f) => (
+              <div key={f.q} className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5">
+                <dt className="text-lg font-bold">{f.q}</dt>
+                <dd className="mt-2 leading-7 text-foreground/80">{f.a}</dd>
+              </div>
+            ))}
+          </dl>
         </Container>
       </section>
 

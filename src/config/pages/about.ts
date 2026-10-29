@@ -12,7 +12,7 @@ export const aboutPage: PageDef = {
       title: "The name",
       fields: [
         { key: "nameTitle", label: "Heading", kind: "text", max: 100, default: "What does ZIVARUKAH mean?" },
-        { key: "nameIntro", label: "Introduction", kind: "textarea", max: 300, default: "ZIVARUKAH joins two Hebrew words: ZIVA and ARUKAH." },
+        { key: "nameIntro", label: "Introduction", kind: "textarea", max: 300, default: "ZIVARUKAH is not a dictionary word or a misspelling. It is a name created by Shepherd Justice Sarpong Oduro by joining two Hebrew words: ZIVA and ARUKAH." },
         {
           key: "zivaText",
           label: "ZIVA",
