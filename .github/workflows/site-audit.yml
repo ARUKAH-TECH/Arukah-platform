@@ -1,0 +1,37 @@
+name: Site audit (cross-browser)
+on:
+  push:
+    branches: [site-audit]
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - name: Install Playwright and browsers
+        working-directory: audit
+        run: |
+          npm init -y >/dev/null
+          npm i playwright@1.56.1 @axe-core/playwright@4.10.2 lighthouse@12.8.2 >/dev/null
+          npx playwright install --with-deps chromium firefox webkit msedge
+      - name: Browsers and pages
+        working-directory: audit
+        run: node audit.mjs
+      - name: Lighthouse (mobile)
+        working-directory: audit
+        run: |
+          for u in https://zivarukah.com/ https://zivarukah.com/books https://learn.zivarukah.com/ https://learn.zivarukah.com/stages/; do
+            n=$(echo $u | sed 's#https://##; s#[^a-z0-9]#_#g')
+            npx lighthouse "$u" --quiet --output=json --output-path="lh_$n.json" --only-categories=performance,accessibility,best-practices,seo --chrome-flags="--headless=new --no-sandbox" || true
+          done
+          node -e 'const fs=require("fs");const out={};for(const f of fs.readdirSync(".").filter(f=>f.startsWith("lh_"))){const j=JSON.parse(fs.readFileSync(f));out[j.finalDisplayedUrl]={scores:Object.fromEntries(Object.entries(j.categories).map(([k,v])=>[k,Math.round(v.score*100)])),lcp:j.audits["largest-contentful-paint"]?.displayValue,cls:j.audits["cumulative-layout-shift"]?.displayValue,tbt:j.audits["total-blocking-time"]?.displayValue,fails:Object.values(j.audits).filter(a=>a.score!==null&&a.score<0.5&&a.scoreDisplayMode!=="informative").map(a=>a.id).slice(0,25)}}fs.writeFileSync("lighthouse.json",JSON.stringify(out,null,1))'
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: audit
+          path: |
+            audit/report.json
+            audit/lighthouse.json
+            audit/shots/
