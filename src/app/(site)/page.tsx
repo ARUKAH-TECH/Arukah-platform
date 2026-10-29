@@ -159,7 +159,7 @@ export default async function Home() {
                 ))}
               </ul>
               <div className="mt-6 flex flex-wrap gap-4">
-                <Button href="/tech">Learn more</Button>
+                <Button href="/tech">More about ARUKAH TECH</Button>
                 <Button href="/contact" variant="outline">
                   Discuss a project
                 </Button>
@@ -237,7 +237,7 @@ export default async function Home() {
               </ul>
               <p className="mt-4 text-xs text-foreground/60">{t.text("wearNote")}</p>
               <div className="mt-6">
-                <Button href="/footwear">Learn more</Button>
+                <Button href="/footwear">See ARUKAH WEAR</Button>
               </div>
             </div>
           </div>
@@ -254,7 +254,7 @@ export default async function Home() {
                 description={t.text("zivaText")}
               />
               <div className="mt-6 flex flex-wrap gap-4">
-                <Button href="/ziva">Learn more</Button>
+                <Button href="/ziva">More about ZIVA classes</Button>
                 <Button href="/contact" variant="outline">
                   Enquire about ZIVA
                 </Button>
@@ -285,7 +285,7 @@ export default async function Home() {
             ))}
           </div>
           <div className="mt-8 text-center">
-            <Button href="/media">Learn more</Button>
+            <Button href="/media">More about ARUKAH MEDIA</Button>
           </div>
         </Container>
       </section>
