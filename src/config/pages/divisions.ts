@@ -60,16 +60,16 @@ export const techPage: PageDef = {
       ],
     },
     {
-      title: "Featured projects box",
+      title: "Our work section",
       fields: [
-        { key: "projectsTitle", label: "Heading", kind: "text", max: 100, default: "Systems in development" },
+        { key: "projectsTitle", label: "Heading", kind: "text", max: 100, default: "Completed work: a website and a management system" },
         {
           key: "projectsText",
           label: "Text",
           kind: "textarea",
           max: 400,
           default:
-            "School and church management systems are in active development. Case studies and screenshots are added here as projects are completed.",
+            "Our first completed projects, both for Bethel Inspiration Foundation: their public website and their church management system. School, hospital and fuel station systems are next.",
         },
       ],
     },

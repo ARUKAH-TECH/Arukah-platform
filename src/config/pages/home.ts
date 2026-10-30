@@ -68,14 +68,14 @@ export const homePage: PageDef = {
     {
       title: "Featured projects section",
       fields: [
-        { key: "projectsTitle", label: "Heading", kind: "text", max: 100, default: "Systems in development" },
+        { key: "projectsTitle", label: "Heading", kind: "text", max: 100, default: "Completed work by ARUKAH TECH" },
         {
           key: "projectsText",
           label: "Text",
           kind: "textarea",
           max: 400,
           default:
-            "A look at the kind of management systems ARUKAH TECH builds. Screenshots and case studies are added here as projects are completed.",
+            "A website and a church management system, both built for Bethel Inspiration Foundation. We build websites and management systems for churches, schools and businesses.",
         },
       ],
     },

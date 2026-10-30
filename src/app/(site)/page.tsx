@@ -22,6 +22,7 @@ import { BRANCHES, NAME_MEANING_SHORT, ORG_DESCRIPTION, founderLd } from "@/conf
 import { homePage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 import { SharePage } from "@/components/ui/SharePage";
+import { CompletedWork } from "@/features/portfolio/CompletedWork";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
@@ -197,18 +198,8 @@ export default async function Home() {
             title={t.text("projectsTitle")}
             description={t.text("projectsText")}
           />
-          <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2">
-            {["School Management System", "Church Management System"].map(
-              (project) => (
-                <div
-                  key={project}
-                  className="flex aspect-video flex-col items-center justify-center rounded-2xl border border-dashed border-black/15 p-6 text-center dark:border-white/15"
-                >
-                  <p className="text-sm font-medium">{project}</p>
-                  <p className="mt-1 text-xs text-foreground/60">Preview coming soon</p>
-                </div>
-              ),
-            )}
+          <div className="mt-10">
+            <CompletedWork />
           </div>
           <div className="mt-8 text-center">
             <Button href="/projects" variant="outline">
