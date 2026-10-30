@@ -142,7 +142,7 @@ export function speechChunks(text: string, max = 220): string[] {
       current = "";
     }
     if (sentence.length > max) {
-      for (const part of sentence.split(/(?<=,)\s+/)) {
+      for (const part of sentence.replace(/,\s+/g, ",\u0000").split("\u0000")) {
         if ((current + part).length > max && current) {
           chunks.push(current.trim());
           current = "";
