@@ -147,7 +147,54 @@ export const zivaPage: PageDef = {
           kind: "textarea",
           max: 300,
           default:
-            "Excellence our hallmark. Special classes for students from Primary 1 to SHS 3, focused on genuine academic growth.",
+            "Excellence our hallmark. Admissions are open for special teaching from Primary 1 to JHS, by home service or online.",
+        },
+      ],
+    },
+    {
+      title: "Admissions",
+      fields: [
+        { key: "admissionsBadge", label: "Badge", kind: "text", max: 40, default: "Admissions open" },
+        { key: "admissionsTitle", label: "Heading", kind: "text", max: 120, default: "Admissions are open: special teaching from Primary 1 to JHS" },
+        {
+          key: "admissionsText",
+          label: "Text",
+          kind: "textarea",
+          max: 400,
+          default:
+            "ZIVA Online and Special Classes is now admitting learners from Primary 1 to JHS 3 who want extra, focused teaching. Choose one subject or several.",
+        },
+        {
+          key: "subjects",
+          label: "Subjects (one per line)",
+          kind: "list",
+          max: 60,
+          maxItems: 12,
+          default: ["Mathematics", "Science", "English Language", "Creative Arts", "Career Technology", "Religious and Moral Education (R.M.E)"],
+        },
+        { key: "homeTitle", label: "Home service: title", kind: "text", max: 60, default: "Home service" },
+        {
+          key: "homeText",
+          label: "Home service: text",
+          kind: "textarea",
+          max: 250,
+          default: "A ZIVA teacher comes to the learner's home, where your location allows.",
+        },
+        { key: "onlineTitle", label: "Online service: title", kind: "text", max: 60, default: "Online service" },
+        {
+          key: "onlineText",
+          label: "Online service: text",
+          kind: "textarea",
+          max: 250,
+          default: "Live lessons on a phone, tablet or computer, for learners anywhere.",
+        },
+        {
+          key: "applyText",
+          label: "How to apply",
+          kind: "textarea",
+          max: 300,
+          default:
+            "Tap Apply now and send us the learner's class, the subjects you want and your town. We'll tell you whether home or online service suits your location, and the next steps.",
         },
       ],
     },
