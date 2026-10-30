@@ -4,34 +4,128 @@ import { requireAdmin } from "@/server/auth";
 import { AdminShell } from "@/features/admin/AdminShell";
 import { InstallAdminApp } from "@/features/admin/AdminApp";
 import { createClient } from "@/lib/supabase/server";
+import { ChartLegend, DailyChart, dayPoints, isoDay, monthPoints, type DayTotal } from "@/features/analytics/DailyChart";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
-const ready = [
-  { title: "Visitors", description: "Graphs of how many people view each page, and where they come from.", href: "/admin/visitors" },
-  { title: "Inbox", description: "Messages from the Contact page and the Ministry response form.", href: "/admin/inbox" },
-  { title: "Articles", description: "Write, preview, publish and unpublish articles and blog posts.", href: "/admin/articles" },
-  { title: "Projects", description: "Create, schedule, publish and archive projects, and choose where they appear.", href: "/admin/projects" },
-  { title: "Media library", description: "Upload photos and add YouTube or TikTok links, then attach them to projects.", href: "/admin/media" },
-  { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
-  { title: "Ministry outreach", description: "Hospital, prison, street, community and crusade outreach reports.", href: "/admin/outreach" },
-  { title: "Adverts", description: "Approve or reject advert requests, set their dates, and record payment.", href: "/admin/adverts" },
-  { title: "Books", description: "Add books with covers, prices per format and a free sample.", href: "/admin/books" },
-  { title: "Book orders", description: "Orders from the books basket: payment, printing and delivery.", href: "/admin/book-orders" },
-  { title: "Page text", description: "Change the headings and wording on the website's pages.", href: "/admin/pages" },
+// The dashboard: the visitors graph first, then every admin section tucked
+// into a few dropdowns so the page stays short on a phone.
+
+type Section = { title: string; description: string; href: string };
+
+const GROUPS: { id: string; icon: string; title: string; sections: Section[]; upcoming?: string[] }[] = [
+  {
+    id: "messages",
+    icon: "📥",
+    title: "Messages & orders",
+    sections: [
+      { title: "Inbox", description: "Messages from the Contact page and the Ministry response form.", href: "/admin/inbox" },
+      { title: "Book orders", description: "Orders from the books basket: payment, printing and delivery.", href: "/admin/book-orders" },
+      { title: "Adverts", description: "Approve or reject advert requests, set their dates, and record payment.", href: "/admin/adverts" },
+    ],
+  },
+  {
+    id: "content",
+    icon: "📝",
+    title: "Website content",
+    sections: [
+      { title: "Articles", description: "Write, preview, publish and unpublish articles and blog posts.", href: "/admin/articles" },
+      { title: "Projects", description: "Create, schedule, publish and archive projects, and choose where they appear.", href: "/admin/projects" },
+      { title: "Media library", description: "Upload photos and add YouTube or TikTok links, then attach them to projects.", href: "/admin/media" },
+      { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
+      { title: "Page text", description: "Change the headings and wording on the website's pages.", href: "/admin/pages" },
+    ],
+  },
+  {
+    id: "ministry",
+    icon: "🙏",
+    title: "Ministry & books",
+    sections: [
+      { title: "Ministry outreach", description: "Hospital, prison, street, community and crusade outreach reports.", href: "/admin/outreach" },
+      { title: "Books", description: "Add books with covers, prices per format and a free sample.", href: "/admin/books" },
+    ],
+    upcoming: ["Support & donations"],
+  },
+  {
+    id: "visitors",
+    icon: "📊",
+    title: "Visitor details",
+    sections: [
+      { title: "Visitors", description: "Most viewed pages, where visitors come from, and the busiest day.", href: "/admin/visitors" },
+    ],
+  },
 ];
 
-// Sections land here one phase at a time (see docs/EXPANSION-PLAN.md).
-const upcoming = ["Support & donations"];
+// Graph periods: days for the short ones, months for the year.
+const PERIODS = [
+  { id: "7", label: "7 days", days: 7, by: "day" },
+  { id: "30", label: "30 days", days: 30, by: "day" },
+  { id: "90", label: "3 months", days: 90, by: "day" },
+  { id: "12m", label: "12 months", days: 0, by: "month" },
+] as const;
 
-export default async function AdminDashboardPage() {
+const PAGE = 1000;
+
+export default async function AdminDashboardPage({ searchParams }: PageProps<"/admin">) {
   const admin = await requireAdmin();
+  const { graph } = await searchParams;
+  const period = PERIODS.find((p) => p.id === String(graph)) ?? PERIODS[1];
+
+  const today = new Date();
+  const start =
+    period.by === "month"
+      ? new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth() - 11, 1))
+      : new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate() - (period.days - 1)));
+  const dayCount = Math.round((Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate()) - start.getTime()) / 86_400_000) + 1;
+
   const supabase = await createClient();
-  const [{ count: newMessages }, { count: pendingAdvertisers }, { count: newOrders }] = await Promise.all([
+
+  // Daily totals, one row per page per day; read in pages so a long period isn't cut short.
+  async function readViews() {
+    const rows: { day: string; views: number; visits: number }[] = [];
+    for (let from = 0; from < PAGE * 50; from += PAGE) {
+      const { data, error } = await supabase
+        .from("page_view_daily")
+        .select("day, views, visits")
+        .gte("day", isoDay(start))
+        .order("day")
+        .range(from, from + PAGE - 1);
+      if (error) return { rows, error: true };
+      rows.push(...(data ?? []));
+      if (!data || data.length < PAGE) break;
+    }
+    return { rows, error: false };
+  }
+
+  const [views, { count: newMessages }, { count: pendingAdvertisers }, { count: newOrders }] = await Promise.all([
+    readViews(),
     supabase.from("inbox_messages").select("id", { count: "exact", head: true }).eq("status", "new"),
     supabase.from("ad_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
     supabase.from("book_orders").select("id", { count: "exact", head: true }).eq("status", "new"),
   ]);
+
+  const byDay = new Map<string, { views: number; visits: number }>();
+  for (const r of views.rows) {
+    const d = byDay.get(r.day) ?? { views: 0, visits: 0 };
+    d.views += r.views;
+    d.visits += r.visits;
+    byDay.set(r.day, d);
+  }
+  const series: DayTotal[] = Array.from({ length: dayCount }, (_, i) => {
+    const day = isoDay(new Date(start.getTime() + i * 86_400_000));
+    return { day, ...(byDay.get(day) ?? { views: 0, visits: 0 }) };
+  });
+  const points = period.by === "month" ? monthPoints(series) : dayPoints(series);
+  const totalViews = series.reduce((s, d) => s + d.views, 0);
+  const totalVisits = series.reduce((s, d) => s + d.visits, 0);
+  const todayViews = series[series.length - 1]?.views ?? 0;
+  const best = points.reduce((b, d) => (d.views > b.views ? d : b), points[0]);
+
+  const counts: Record<string, number> = {
+    "/admin/inbox": newMessages ?? 0,
+    "/admin/adverts": pendingAdvertisers ?? 0,
+    "/admin/book-orders": newOrders ?? 0,
+  };
   const waiting = [
     newMessages ? { label: `${newMessages} new message${newMessages === 1 ? "" : "s"}`, href: "/admin/inbox" } : null,
     pendingAdvertisers
@@ -59,26 +153,105 @@ export default async function AdminDashboardPage() {
         </div>
       )}
 
-      <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {ready.map((section) => (
-          <Link
-            key={section.href}
-            href={section.href}
-            className="rounded-2xl border border-black/10 bg-white p-6 hover:border-brand-primary-text dark:border-white/10 dark:bg-zinc-900"
-          >
-            <h2 className="text-sm font-semibold">{section.title}</h2>
-            <p className="mt-1 text-xs leading-5 text-foreground/60">{section.description}</p>
-          </Link>
-        ))}
-        {upcoming.map((section) => (
-          <div
-            key={section}
-            className="rounded-2xl border border-dashed border-black/15 bg-white p-6 dark:border-white/15 dark:bg-zinc-900"
-          >
-            <h2 className="text-sm font-semibold">{section}</h2>
-            <p className="mt-1 text-xs text-foreground/60">Coming in a later phase</p>
+      {/* ── the graph ── */}
+      <section className="mt-6 rounded-2xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="font-semibold">Website visitors</h2>
+            <p className="text-xs text-foreground/60">{period.by === "month" ? "Month by month" : "Day by day"}</p>
           </div>
-        ))}
+          <nav aria-label="Graph period" className="flex flex-wrap gap-1.5 text-sm">
+            {PERIODS.map((p) => (
+              <Link
+                key={p.id}
+                href={`/admin?graph=${p.id}`}
+                scroll={false}
+                aria-current={p.id === period.id ? "page" : undefined}
+                className={`rounded-full border px-3 py-1.5 ${p.id === period.id ? "border-transparent bg-[var(--admin-gold,#e3a82a)] font-semibold text-[#14110c]" : "border-black/10 dark:border-white/10"}`}
+              >
+                {p.label}
+              </Link>
+            ))}
+          </nav>
+        </div>
+
+        <div className="mt-4 grid grid-cols-3 gap-2">
+          {[
+            { label: "Page views", value: totalViews, tone: "bg-[#0b3d91] text-white" },
+            { label: "Visits", value: totalVisits, tone: "bg-[#e3a82a] text-[#14110c]" },
+            { label: "Today", value: todayViews, tone: "bg-black/5 dark:bg-white/10" },
+          ].map((t) => (
+            <div key={t.label} className={`rounded-xl p-3 ${t.tone}`}>
+              <p className="text-xl font-bold tabular-nums">{t.value.toLocaleString()}</p>
+              <p className="text-xs opacity-80">{t.label}</p>
+            </div>
+          ))}
+        </div>
+
+        {views.error && (
+          <p className="mt-3 rounded-xl bg-red-50 p-3 text-sm text-red-900 dark:bg-red-950 dark:text-red-100">Visitor numbers couldn&apos;t be loaded just now.</p>
+        )}
+
+        <div className="mt-4">
+          <ChartLegend />
+        </div>
+        <div className="mt-2 sm:hidden">
+          <DailyChart points={points} compact />
+        </div>
+        <div className="mt-2 hidden sm:block">
+          <DailyChart points={points} />
+        </div>
+        <p className="mt-2 text-xs text-foreground/60">
+          {totalViews > 0 && best ? `Busiest ${period.by === "month" ? "month" : "day"}: ${best.title}, ${best.views} views. ` : ""}
+          <Link href="/admin/visitors" className="font-semibold underline">
+            More visitor details
+          </Link>
+        </p>
+      </section>
+
+      {/* ── everything else, in dropdowns ── */}
+      <div className="mt-6 flex flex-col gap-3">
+        {GROUPS.map((group) => {
+          const due = group.sections.reduce((n, s) => n + (counts[s.href] ?? 0), 0);
+          return (
+            <details key={group.id} className="group rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-zinc-900">
+              <summary className="flex cursor-pointer list-none items-center gap-3 p-4 [&::-webkit-details-marker]:hidden">
+                <span aria-hidden="true" className="text-xl">
+                  {group.icon}
+                </span>
+                <span className="flex-1 font-semibold">{group.title}</span>
+                {due > 0 && <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900 dark:bg-amber-950 dark:text-amber-200">{due} new</span>}
+                <span aria-hidden="true" className="text-foreground/50 transition-transform group-open:rotate-180">
+                  ▼
+                </span>
+              </summary>
+              <ul className="flex flex-col gap-2 border-t border-black/10 p-3 dark:border-white/10">
+                {group.sections.map((section) => (
+                  <li key={section.href}>
+                    <Link href={section.href} className="flex items-center gap-3 rounded-xl p-3 hover:bg-black/5 dark:hover:bg-white/5">
+                      <span className="flex-1">
+                        <span className="block text-sm font-semibold">
+                          {section.title}
+                          {counts[section.href] ? <span className="ml-2 text-xs font-bold text-amber-700 dark:text-amber-300">{counts[section.href]} new</span> : null}
+                        </span>
+                        <span className="mt-0.5 block text-xs leading-5 text-foreground/60">{section.description}</span>
+                      </span>
+                      <span aria-hidden="true" className="text-foreground/40">
+                        →
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+                {group.upcoming?.map((name) => (
+                  <li key={name} className="rounded-xl border border-dashed border-black/15 p-3 dark:border-white/15">
+                    <span className="block text-sm font-semibold">{name}</span>
+                    <span className="block text-xs text-foreground/60">Coming in a later phase</span>
+                  </li>
+                ))}
+              </ul>
+            </details>
+          );
+        })}
       </div>
     </AdminShell>
   );
