@@ -4,57 +4,13 @@ import { requireAdmin } from "@/server/auth";
 import { AdminShell } from "@/features/admin/AdminShell";
 import { InstallAdminApp } from "@/features/admin/AdminApp";
 import { createClient } from "@/lib/supabase/server";
+import { ADMIN_GROUPS } from "@/features/admin/sections";
 import { ChartLegend, DailyChart, dayPoints, isoDay, monthPoints, type DayTotal } from "@/features/analytics/DailyChart";
 
 export const metadata: Metadata = { title: "Dashboard" };
 
 // The dashboard: the visitors graph first, then every admin section tucked
 // into a few dropdowns so the page stays short on a phone.
-
-type Section = { title: string; description: string; href: string };
-
-const GROUPS: { id: string; icon: string; title: string; sections: Section[]; upcoming?: string[] }[] = [
-  {
-    id: "visitors",
-    icon: "📊",
-    title: "Visitor details",
-    sections: [
-      { title: "Visitors", description: "Most viewed pages, where visitors come from, and the busiest day.", href: "/admin/visitors" },
-    ],
-  },
-  {
-    id: "messages",
-    icon: "📥",
-    title: "Messages & orders",
-    sections: [
-      { title: "Inbox", description: "Messages from the Contact page and the Ministry response form.", href: "/admin/inbox" },
-      { title: "Book orders", description: "Orders from the books basket: payment, printing and delivery.", href: "/admin/book-orders" },
-      { title: "Adverts", description: "Approve or reject advert requests, set their dates, and record payment.", href: "/admin/adverts" },
-    ],
-  },
-  {
-    id: "content",
-    icon: "📝",
-    title: "Website content",
-    sections: [
-      { title: "Articles", description: "Write, preview, publish and unpublish articles and blog posts.", href: "/admin/articles" },
-      { title: "Projects", description: "Create, schedule, publish and archive projects, and choose where they appear.", href: "/admin/projects" },
-      { title: "Media library", description: "Upload photos and add YouTube or TikTok links, then attach them to projects.", href: "/admin/media" },
-      { title: "Announcements", description: "Banners at the top of chosen pages, with optional start and end times.", href: "/admin/announcements" },
-      { title: "Page text", description: "Change the headings and wording on the website's pages.", href: "/admin/pages" },
-    ],
-  },
-  {
-    id: "ministry",
-    icon: "🙏",
-    title: "Ministry & books",
-    sections: [
-      { title: "Ministry outreach", description: "Hospital, prison, street, community and crusade outreach reports.", href: "/admin/outreach" },
-      { title: "Books", description: "Add books with covers, prices per format and a free sample.", href: "/admin/books" },
-    ],
-    upcoming: ["Support & donations"],
-  },
-];
 
 // Graph periods: days for the short ones, months for the year.
 const PERIODS = [
@@ -207,7 +163,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps<"/a
           </span>
         </summary>
         <div className="flex flex-col gap-4 border-t border-black/10 p-3 dark:border-white/10">
-          {GROUPS.map((group) => (
+          {ADMIN_GROUPS.map((group) => (
             <section key={group.id} aria-label={group.title}>
               <h2 className="px-3 pt-1 text-xs font-semibold uppercase tracking-wide text-foreground/60">
                 <span aria-hidden="true">{group.icon} </span>
