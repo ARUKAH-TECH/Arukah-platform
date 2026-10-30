@@ -166,7 +166,7 @@ export const projectsPage: PageDef = {
           kind: "textarea",
           max: 500,
           default:
-            "These are the kinds of management systems in active development. Screenshots and case studies are added here as projects are completed. None are presented as finished work for a named client until that's confirmed.",
+            "The management systems ARUKAH TECH builds. Our church management system is complete and in use by Bethel Inspiration Overcommers Ministry Int; school, hospital and fuel station systems are next.",
         },
         { key: "card1Name", label: "Card 1: name", kind: "text", max: 80, default: "School Management System" },
         { key: "card1Text", label: "Card 1: text", kind: "textarea", max: 250, default: "Enrollment, attendance, grading, and communication tools for schools." },

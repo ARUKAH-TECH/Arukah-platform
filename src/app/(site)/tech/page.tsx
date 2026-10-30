@@ -12,6 +12,7 @@ import { AdBanner } from "@/features/ads/AdBanner";
 import { techPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 import { SharePage } from "@/components/ui/SharePage";
+import { CompletedWork } from "@/features/portfolio/CompletedWork";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -66,22 +67,18 @@ export default async function TechPage() {
         </Container>
       </section>
 
-      <section className="py-16">
+      <section id="work" className="py-16">
         <Container>
-          <div className="rounded-3xl border border-black/10 bg-black/5 p-10 text-center dark:border-white/10 dark:bg-white/5">
-            <SectionHeading
-              align="center"
-              eyebrow="Featured projects"
-              title={t.text("projectsTitle")}
-              description={t.text("projectsText")}
-            />
-            <Link
-              href="/#projects"
-              className="mt-6 inline-block text-sm font-medium text-brand-primary-text hover:underline"
-            >
-              See project previews on the homepage →
-            </Link>
+          <SectionHeading align="center" eyebrow="Our work" title={t.text("projectsTitle")} description={t.text("projectsText")} />
+          <div className="mt-10">
+            <CompletedWork />
           </div>
+          <p className="mt-8 text-center text-sm text-foreground/70">
+            Need a website or a management system for your church, school or business?{" "}
+            <Link href="/contact" className="font-semibold text-brand-primary-text underline">
+              Let&apos;s talk
+            </Link>
+          </p>
         </Container>
       </section>
 
