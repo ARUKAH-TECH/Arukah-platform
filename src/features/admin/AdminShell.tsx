@@ -4,23 +4,6 @@ import { brands } from "@/config/brands";
 import { AdminNav } from "@/features/admin/AdminNav";
 import { signOut } from "@/features/admin/actions";
 
-const nav = [
-  { label: "Dashboard", href: "/admin" },
-  { label: "Visitors", href: "/admin/visitors" },
-  { label: "Inbox", href: "/admin/inbox" },
-  { label: "Literacy comments", href: "/admin/literacy-comments" },
-  { label: "Projects", href: "/admin/projects" },
-  { label: "Articles", href: "/admin/articles" },
-  { label: "Media", href: "/admin/media" },
-  { label: "Gallery", href: "/admin/gallery" },
-  { label: "Outreach", href: "/admin/outreach" },
-  { label: "Announcements", href: "/admin/announcements" },
-  { label: "Adverts", href: "/admin/adverts" },
-  { label: "Books", href: "/admin/books" },
-  { label: "Book orders", href: "/admin/book-orders" },
-  { label: "Payments", href: "/admin/payments" },
-  { label: "Page text", href: "/admin/pages" },
-];
 
 // Rendered only by pages that have already passed requireAdmin().
 export function AdminShell({ email, children }: { email: string; children: React.ReactNode }) {
@@ -50,7 +33,7 @@ export function AdminShell({ email, children }: { email: string; children: React
               </form>
             </div>
           </div>
-          <AdminNav items={nav} />
+          <AdminNav />
         </div>
       </header>
       <div className="mx-auto w-full max-w-5xl px-4 py-8 sm:px-6">{children}</div>
