@@ -4,6 +4,7 @@ import { requireAdmin } from "@/server/auth";
 import { createClient } from "@/lib/supabase/server";
 import { AdminShell } from "@/features/admin/AdminShell";
 import { SOURCE_LABELS, type Source } from "@/features/analytics/sources";
+import { ChartLegend, DailyChart, dayPoints, isoDay } from "@/features/analytics/DailyChart";
 
 export const metadata: Metadata = { title: "Visitors" };
 
@@ -57,63 +58,6 @@ const SOURCE_ICONS: Record<Source, string> = {
   search: "🔍",
   other: "🌐",
 };
-
-function isoDay(d: Date) {
-  return d.toISOString().slice(0, 10);
-}
-
-function niceMax(n: number) {
-  if (n <= 5) return 5;
-  const p = 10 ** Math.floor(Math.log10(n));
-  return Math.ceil(n / p) * p;
-}
-
-function DailyChart({ days, compact = false }: { days: { day: string; views: number; visits: number }[]; compact?: boolean }) {
-  // The phone version uses a narrower drawing so the numbers stay readable.
-  const W = compact ? 360 : 720;
-  const H = compact ? 230 : 240;
-  const pad = { l: 36, r: 10, t: 12, b: 28 };
-  const max = niceMax(Math.max(1, ...days.map((d) => d.views)));
-  const x = (i: number) => pad.l + (days.length === 1 ? (W - pad.l - pad.r) / 2 : (i * (W - pad.l - pad.r)) / (days.length - 1));
-  const y = (v: number) => pad.t + (H - pad.t - pad.b) * (1 - v / max);
-  const line = (key: "views" | "visits") => days.map((d, i) => `${i ? "L" : "M"}${x(i).toFixed(1)},${y(d[key]).toFixed(1)}`).join(" ");
-  const area = `${line("views")} L${x(days.length - 1).toFixed(1)},${y(0)} L${x(0).toFixed(1)},${y(0)} Z`;
-  const every = Math.max(1, Math.ceil(days.length / (compact ? 4 : 7)));
-  const fmt = (iso: string) => new Date(`${iso}T00:00:00Z`).toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
-  return (
-    <svg viewBox={`0 0 ${W} ${H}`} className="h-auto w-full" role="img" aria-label="Daily page views and visits">
-      <defs>
-        <linearGradient id={compact ? "viewsFillS" : "viewsFill"} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0%" stopColor="#0b3d91" stopOpacity="0.35" />
-          <stop offset="100%" stopColor="#0b3d91" stopOpacity="0.02" />
-        </linearGradient>
-      </defs>
-      {[0, 0.25, 0.5, 0.75, 1].map((f) => (
-        <g key={f}>
-          <line x1={pad.l} x2={W - pad.r} y1={y(max * f)} y2={y(max * f)} stroke="currentColor" strokeOpacity="0.1" />
-          <text x={pad.l - 6} y={y(max * f) + 4} textAnchor="end" fontSize="11" fill="currentColor" fillOpacity="0.55">
-            {Math.round(max * f)}
-          </text>
-        </g>
-      ))}
-      <path d={area} fill={`url(#${compact ? "viewsFillS" : "viewsFill"})`} />
-      <path d={line("views")} fill="none" stroke="#0b3d91" strokeWidth="2.5" strokeLinejoin="round" />
-      <path d={line("visits")} fill="none" stroke="#e3a82a" strokeWidth="2.5" strokeDasharray="6 4" strokeLinejoin="round" />
-      {days.map((d, i) => (
-        <g key={d.day}>
-          <circle cx={x(i)} cy={y(d.views)} r={days.length > 40 || (compact && days.length > 14) ? 2 : 3.5} fill="#0b3d91">
-            <title>{`${fmt(d.day)}: ${d.views} views, ${d.visits} visits`}</title>
-          </circle>
-          {i % every === 0 && (
-            <text x={x(i)} y={H - 8} textAnchor="middle" fontSize="11" fill="currentColor" fillOpacity="0.55">
-              {fmt(d.day)}
-            </text>
-          )}
-        </g>
-      ))}
-    </svg>
-  );
-}
 
 function Bar({ label, value, max, color, icon }: { label: string; value: number; max: number; color: string; icon?: string }) {
   return (
@@ -211,20 +155,13 @@ export default async function VisitorsPage({ searchParams }: PageProps<"/admin/v
       <section className="mt-6 rounded-2xl border border-black/10 p-4 dark:border-white/10">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="font-semibold">Every day</h2>
-          <p className="flex items-center gap-4 text-xs text-foreground/70">
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block h-1 w-5 rounded bg-[#0b3d91]" /> Page views
-            </span>
-            <span className="flex items-center gap-1.5">
-              <span className="inline-block h-1 w-5 rounded border-t-2 border-dashed border-[#e3a82a]" /> Visits
-            </span>
-          </p>
+          <ChartLegend />
         </div>
         <div className="mt-3 sm:hidden">
-          <DailyChart days={series} compact />
+          <DailyChart points={dayPoints(series)} compact />
         </div>
         <div className="mt-3 hidden sm:block">
-          <DailyChart days={series} />
+          <DailyChart points={dayPoints(series)} />
         </div>
         {totalViews > 0 && (
           <p className="mt-2 text-xs text-foreground/60">
