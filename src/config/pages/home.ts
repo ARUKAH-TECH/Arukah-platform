@@ -33,7 +33,7 @@ export const homePage: PageDef = {
         { key: "businessesTitle", label: "Heading", kind: "text", max: 100, default: "What ZIVARUKAH builds" },
         { key: "techCard", label: "ARUKAH TECH card", kind: "text", max: 120, default: "Software, websites, and management systems." },
         { key: "wearCard", label: "ARUKAH WEAR card", kind: "text", max: 120, default: "Ghana-made, handcrafted footwear." },
-        { key: "zivaCard", label: "ZIVA Special Classes card", kind: "text", max: 120, default: "Special classes from Primary 1 to SHS 3." },
+        { key: "zivaCard", label: "ZIVA Special Classes card", kind: "text", max: 120, default: "Admissions open: special teaching, Primary 1 to JHS, at home or online." },
         { key: "mediaCard", label: "ARUKAH MEDIA card", kind: "text", max: 120, default: "Video production and creative media." },
         { key: "booksCard", label: "ZIVARUKAH BOOKS card", kind: "text", max: 120, default: "Books to read online, download, or order in print. Coming soon." },
       ],
