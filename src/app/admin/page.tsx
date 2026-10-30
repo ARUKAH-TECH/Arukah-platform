@@ -15,6 +15,14 @@ type Section = { title: string; description: string; href: string };
 
 const GROUPS: { id: string; icon: string; title: string; sections: Section[]; upcoming?: string[] }[] = [
   {
+    id: "visitors",
+    icon: "📊",
+    title: "Visitor details",
+    sections: [
+      { title: "Visitors", description: "Most viewed pages, where visitors come from, and the busiest day.", href: "/admin/visitors" },
+    ],
+  },
+  {
     id: "messages",
     icon: "📥",
     title: "Messages & orders",
@@ -45,14 +53,6 @@ const GROUPS: { id: string; icon: string; title: string; sections: Section[]; up
       { title: "Books", description: "Add books with covers, prices per format and a free sample.", href: "/admin/books" },
     ],
     upcoming: ["Support & donations"],
-  },
-  {
-    id: "visitors",
-    icon: "📊",
-    title: "Visitor details",
-    sections: [
-      { title: "Visitors", description: "Most viewed pages, where visitors come from, and the busiest day.", href: "/admin/visitors" },
-    ],
   },
 ];
 
@@ -126,32 +126,12 @@ export default async function AdminDashboardPage({ searchParams }: PageProps<"/a
     "/admin/adverts": pendingAdvertisers ?? 0,
     "/admin/book-orders": newOrders ?? 0,
   };
-  const waiting = [
-    newMessages ? { label: `${newMessages} new message${newMessages === 1 ? "" : "s"}`, href: "/admin/inbox" } : null,
-    pendingAdvertisers
-      ? { label: `${pendingAdvertisers} advert request${pendingAdvertisers === 1 ? "" : "s"} to review`, href: "/admin/adverts" }
-      : null,
-    newOrders ? { label: `${newOrders} new book order${newOrders === 1 ? "" : "s"}`, href: "/admin/book-orders" } : null,
-  ].filter((item): item is { label: string; href: string } => item !== null);
+  const totalDue = Object.values(counts).reduce((n, c) => n + c, 0);
 
   return (
     <AdminShell email={admin.email}>
       <h1 className="text-2xl font-semibold tracking-tight">Dashboard</h1>
       <InstallAdminApp />
-
-      {waiting.length > 0 && (
-        <div className="mt-6 flex flex-wrap gap-3">
-          {waiting.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-full bg-amber-100 px-4 py-2 text-sm font-medium text-amber-900 hover:bg-amber-200 dark:bg-amber-950 dark:text-amber-200"
-            >
-              {item.label} →
-            </Link>
-          ))}
-        </div>
-      )}
 
       {/* ── the graph ── */}
       <section className="mt-6 rounded-2xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
@@ -209,30 +189,42 @@ export default async function AdminDashboardPage({ searchParams }: PageProps<"/a
         </p>
       </section>
 
-      {/* ── everything else, in dropdowns ── */}
-      <div className="mt-6 flex flex-col gap-3">
-        {GROUPS.map((group) => {
-          const due = group.sections.reduce((n, s) => n + (counts[s.href] ?? 0), 0);
-          return (
-            <details key={group.id} className="group rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-zinc-900">
-              <summary className="flex cursor-pointer list-none items-center gap-3 p-4 [&::-webkit-details-marker]:hidden">
-                <span aria-hidden="true" className="text-xl">
-                  {group.icon}
-                </span>
-                <span className="flex-1 font-semibold">{group.title}</span>
-                {due > 0 && <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900 dark:bg-amber-950 dark:text-amber-200">{due} new</span>}
-                <span aria-hidden="true" className="text-foreground/50 transition-transform group-open:rotate-180">
-                  ▼
-                </span>
-              </summary>
-              <ul className="flex flex-col gap-2 border-t border-black/10 p-3 dark:border-white/10">
+      {/* ── every other section, in one dropdown ── */}
+      <details className="group mt-6 rounded-2xl border border-black/10 bg-white dark:border-white/10 dark:bg-zinc-900">
+        <summary className="flex cursor-pointer list-none items-center gap-3 p-4 [&::-webkit-details-marker]:hidden">
+          <span aria-hidden="true" className="text-xl">
+            ☰
+          </span>
+          <span className="flex-1">
+            <span className="block font-semibold">All sections</span>
+            <span className="block text-xs text-foreground/60">Visitors, Inbox, orders, adverts, articles, books and more</span>
+          </span>
+          {totalDue > 0 && (
+            <span className="rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-bold text-amber-900 dark:bg-amber-950 dark:text-amber-200">{totalDue} new</span>
+          )}
+          <span aria-hidden="true" className="text-foreground/50 transition-transform group-open:rotate-180">
+            ▼
+          </span>
+        </summary>
+        <div className="flex flex-col gap-4 border-t border-black/10 p-3 dark:border-white/10">
+          {GROUPS.map((group) => (
+            <section key={group.id} aria-label={group.title}>
+              <h2 className="px-3 pt-1 text-xs font-semibold uppercase tracking-wide text-foreground/60">
+                <span aria-hidden="true">{group.icon} </span>
+                {group.title}
+              </h2>
+              <ul className="mt-1 flex flex-col">
                 {group.sections.map((section) => (
                   <li key={section.href}>
                     <Link href={section.href} className="flex items-center gap-3 rounded-xl p-3 hover:bg-black/5 dark:hover:bg-white/5">
                       <span className="flex-1">
                         <span className="block text-sm font-semibold">
                           {section.title}
-                          {counts[section.href] ? <span className="ml-2 text-xs font-bold text-amber-700 dark:text-amber-300">{counts[section.href]} new</span> : null}
+                          {counts[section.href] ? (
+                            <span className="ml-2 rounded-full bg-amber-100 px-2 py-0.5 text-xs font-bold text-amber-900 dark:bg-amber-950 dark:text-amber-200">
+                              {counts[section.href]} new
+                            </span>
+                          ) : null}
                         </span>
                         <span className="mt-0.5 block text-xs leading-5 text-foreground/60">{section.description}</span>
                       </span>
@@ -243,16 +235,16 @@ export default async function AdminDashboardPage({ searchParams }: PageProps<"/a
                   </li>
                 ))}
                 {group.upcoming?.map((name) => (
-                  <li key={name} className="rounded-xl border border-dashed border-black/15 p-3 dark:border-white/15">
+                  <li key={name} className="mx-3 mt-1 rounded-xl border border-dashed border-black/15 p-3 dark:border-white/15">
                     <span className="block text-sm font-semibold">{name}</span>
                     <span className="block text-xs text-foreground/60">Coming in a later phase</span>
                   </li>
                 ))}
               </ul>
-            </details>
-          );
-        })}
-      </div>
+            </section>
+          ))}
+        </div>
+      </details>
     </AdminShell>
   );
 }
