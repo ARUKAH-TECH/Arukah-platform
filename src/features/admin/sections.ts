@@ -18,6 +18,7 @@ export const ADMIN_GROUPS: AdminGroup[] = [
     sections: [
       { title: "Inbox", description: "Messages from the Contact page and the Ministry response form.", href: "/admin/inbox" },
       { title: "Literacy comments", description: "Comments and suggestions from learn.zivarukah.com, to approve and reply to.", href: "/admin/literacy-comments" },
+      { title: "Nursing class", description: "Free Saturday Zoom class: number of students, most needed subjects, courses and schools.", href: "/admin/nursing-class" },
       { title: "Book orders", description: "Orders from the books basket: payment, printing and delivery.", href: "/admin/book-orders" },
       { title: "Payments", description: "Gifts and payments received through Paystack.", href: "/admin/payments" },
       { title: "Adverts", description: "Approve or reject advert requests, set their dates, and record payment.", href: "/admin/adverts" },

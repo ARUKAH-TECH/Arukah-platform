@@ -53,11 +53,12 @@ export default async function AdminDashboardPage({ searchParams }: PageProps<"/a
     return { rows, error: false };
   }
 
-  const [views, { count: newMessages }, { count: pendingAdvertisers }, { count: newOrders }] = await Promise.all([
+  const [views, { count: newMessages }, { count: pendingAdvertisers }, { count: newOrders }, { count: newNursing }] = await Promise.all([
     readViews(),
     supabase.from("inbox_messages").select("id", { count: "exact", head: true }).eq("status", "new"),
     supabase.from("ad_requests").select("id", { count: "exact", head: true }).eq("status", "pending"),
     supabase.from("book_orders").select("id", { count: "exact", head: true }).eq("status", "new"),
+    supabase.from("nursing_signups").select("id", { count: "exact", head: true }).eq("checked", false),
   ]);
 
   const byDay = new Map<string, { views: number; visits: number }>();
@@ -81,6 +82,7 @@ export default async function AdminDashboardPage({ searchParams }: PageProps<"/a
     "/admin/inbox": newMessages ?? 0,
     "/admin/adverts": pendingAdvertisers ?? 0,
     "/admin/book-orders": newOrders ?? 0,
+    "/admin/nursing-class": newNursing ?? 0,
   };
   const totalDue = Object.values(counts).reduce((n, c) => n + c, 0);
 
