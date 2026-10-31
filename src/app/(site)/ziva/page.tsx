@@ -13,6 +13,7 @@ import { zivaPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 import { SharePage } from "@/components/ui/SharePage";
 import { whatsappLink } from "@/config/forms";
+import { NursingClass } from "@/features/ziva/NursingClass";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -20,7 +21,7 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "ZIVA Online and Special Classes: Admissions Open, Primary 1 to JHS",
   description:
-    "Admissions open at ZIVA Online and Special Classes by ZIVARUKAH: special teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to JHS, by home service or online.",
+    "Admissions open at ZIVA Online and Special Classes by ZIVARUKAH: special teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to JHS, by home service or online. Plus a free Saturday Zoom class for nursing students.",
   alternates: { canonical: "/ziva" },
 };
 
@@ -37,7 +38,7 @@ export default async function ZivaPage() {
         title="ZIVA Special Classes"
         tagline={t.text("heroTagline")}
         primaryCta={{ label: "Apply for admission", href: "#admissions" }}
-        secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
+        secondaryCta={{ label: "🩺 Free nursing class", href: "#nursing" }}
       />
 
       <section id="admissions" className="scroll-mt-20 py-16">
@@ -85,6 +86,38 @@ export default async function ZivaPage() {
                 🎓 Apply now on WhatsApp
               </a>
             </div>
+          </div>
+        </Container>
+      </section>
+
+      <section id="nursing" className="scroll-mt-20 pb-16">
+        <Container>
+          <div className="mx-auto max-w-4xl rounded-3xl bg-gradient-to-br from-sky-50 to-emerald-50 p-6 shadow-md sm:p-10 dark:from-white/5 dark:to-white/5">
+            <p className="inline-flex items-center gap-2 rounded-full bg-sky-100 px-3 py-1 text-xs font-bold uppercase tracking-wide text-sky-900">
+              <span aria-hidden="true">🩺</span> Nursing students only · Free
+            </p>
+            <h2 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">Free online class for nursing students</h2>
+            <p className="mt-3 leading-7 text-foreground/80">
+              Are you a nursing or midwifery student who needs help with a subject? Join our free Saturday class on Zoom.
+            </p>
+            <ul className="mt-5 grid grid-cols-1 gap-2 text-sm sm:grid-cols-3">
+              <li className="rounded-xl bg-white p-4 shadow-sm dark:bg-white/10">
+                <span className="block text-xs font-semibold uppercase text-foreground/60">When</span>
+                <span className="font-bold">Every Saturday, 3:00pm to 4:00pm</span>
+              </li>
+              <li className="rounded-xl bg-white p-4 shadow-sm dark:bg-white/10">
+                <span className="block text-xs font-semibold uppercase text-foreground/60">Where</span>
+                <span className="font-bold">Online on Zoom</span>
+              </li>
+              <li className="rounded-xl bg-white p-4 shadow-sm dark:bg-white/10">
+                <span className="block text-xs font-semibold uppercase text-foreground/60">Cost</span>
+                <span className="font-bold">Free for now</span>
+              </li>
+            </ul>
+            <p className="mt-4 text-sm leading-6 text-foreground/80">
+              The Zoom link and any time changes are shared in our WhatsApp group. Tell us your school, course and the subject you need help with, then join the group.
+            </p>
+            <NursingClass />
           </div>
         </Container>
       </section>
