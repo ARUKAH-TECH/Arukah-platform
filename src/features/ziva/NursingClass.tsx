@@ -1,11 +1,15 @@
 "use client";
 
 import { useState } from "react";
+import { registerNursingStudent } from "@/features/ziva/actions";
 
 // Free Saturday Zoom class for nursing students. Before the WhatsApp group
 // link opens, the student fills in their school, course and the subject they
-// need help with. Nothing typed here is sent to or saved by this website:
-// it only becomes an introduction message the student pastes in the group.
+// need help with. Those three answers (no name or phone number) are counted
+// for the owner in Admin → Nursing class, and also become an introduction
+// message the student pastes in the group.
+
+const SENT_KEY = "ziva:nursing-signup";
 
 export const NURSING_GROUP_URL = "https://chat.whatsapp.com/F0hhsg3tAqfC1kb5hqu6dC";
 
@@ -26,6 +30,7 @@ export function NursingClass() {
   const [otherCourse, setOtherCourse] = useState("");
   const [subject, setSubject] = useState("");
   const [copied, setCopied] = useState<"yes" | "no" | null>(null);
+  const [saved, setSaved] = useState<{ ok: boolean; message?: string } | null>(null);
 
   const courseName = course === "Other" ? otherCourse.trim() : course;
   const ready = school.trim().length > 1 && courseName.length > 1 && subject.trim().length > 1;
@@ -36,6 +41,29 @@ export function NursingClass() {
       e.preventDefault();
       return;
     }
+    // Count the sign-up once per set of answers on this phone (the group opens in a new tab meanwhile).
+    const key = `${school.trim()}|${courseName}|${subject.trim()}`.toLowerCase();
+    let already = false;
+    try {
+      already = localStorage.getItem(SENT_KEY) === key;
+    } catch {
+      // ignore
+    }
+    if (already) setSaved({ ok: true });
+    else
+      registerNursingStudent(school, courseName, subject).then(
+        (r) => {
+          setSaved(r);
+          if (r.ok) {
+            try {
+              localStorage.setItem(SENT_KEY, key);
+            } catch {
+              // ignore
+            }
+          }
+        },
+        () => setSaved({ ok: false, message: "Your details couldn't be sent just now, but you can still join the group." }),
+      );
     // Copy the introduction so it can be pasted in the group (the link itself can't carry it).
     try {
       navigator.clipboard.writeText(intro).then(
@@ -88,6 +116,8 @@ export function NursingClass() {
       </a>
       {!ready && <p className="-mt-2 text-center text-xs text-foreground/60">Fill in all three to open the WhatsApp group.</p>}
 
+      {saved?.ok && <p className="rounded-xl bg-emerald-50 p-3 text-sm font-semibold text-emerald-900 dark:bg-emerald-950 dark:text-emerald-100">✅ You are registered for the free nursing class.</p>}
+      {saved && !saved.ok && <p className="rounded-xl bg-amber-50 p-3 text-sm text-amber-950 dark:bg-white/10 dark:text-white">{saved.message}</p>}
       {copied === "yes" && (
         <p className="rounded-xl bg-emerald-50 p-3 text-sm text-emerald-900 dark:bg-emerald-950 dark:text-emerald-100">
           ✅ Your introduction is copied. In the WhatsApp group, press and hold the message box, tap <strong>Paste</strong> and send it, so the tutor knows your school, course and subject.
@@ -100,7 +130,7 @@ export function NursingClass() {
         </div>
       )}
 
-      <p className="text-xs leading-5 text-foreground/60">This website does not save what you type here. It only goes into the message you send in the group.</p>
+      <p className="text-xs leading-5 text-foreground/60">We keep only your school, course and subject, to plan the lessons. No name or phone number is asked for or saved.</p>
     </div>
   );
 }
