@@ -110,3 +110,15 @@ export function linkReleaseAt(startsAt: string, tz: string, rule: string): strin
   }
   return null;
 }
+
+/** The website section a programme's category belongs to, e.g. "Ministry" → the Ministry page. */
+export function branchForCategory(text: string): string | null {
+  const t = text.toLowerCase();
+  if (/minist|church|bible|pray|gospel|crusade|revival|worship|evangel|repent|christ|deliverance/.test(t)) return "ministry";
+  if (/nurs|midwi|class|lesson|tutor|school|exam|maths|science|english|literacy|student|teach/.test(t)) return "ziva";
+  if (/tech|web|software|computer|coding|digital|app\b|ict/.test(t)) return "tech";
+  if (/shoe|footwear|sandal|leather|wear/.test(t)) return "wear";
+  if (/media|video|photo|film|camera|editing/.test(t)) return "media";
+  if (/book|author|writing|reading club/.test(t)) return "books";
+  return null;
+}

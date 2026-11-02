@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ProgrammesSection } from "@/features/programmes/ProgrammesSection";
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { SocialLinks } from "@/components/ui/SocialLinks";
@@ -31,6 +32,7 @@ export default async function MinistryPage() {
   return (
     <div data-brand="ministry" className="bg-black text-white">
       <AnnouncementBar branch="ministry" />
+      <ProgrammesSection branch="ministry" dark />
       <Container>
         <div className="grid grid-cols-1 items-center gap-10 py-20 lg:grid-cols-2">
           <div>

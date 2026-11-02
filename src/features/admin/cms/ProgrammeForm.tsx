@@ -3,10 +3,11 @@
 import { useActionState, useRef, useState } from "react";
 import { saveProgramme } from "@/features/admin/cms/programmeActions";
 import { initialCmsFormState } from "@/features/admin/cms/shared";
+import { BRANCHES } from "@/config/branches";
 import { fieldClasses, primaryButtonClasses } from "@/features/admin/ui";
 import { createClient } from "@/lib/supabase/browser";
 import { IMAGE_PICKER_ACCEPT, resize } from "@/lib/resizeImage";
-import { LINK_RELEASES, LINK_RELEASE_LABELS, PLATFORMS, PLATFORM_LABELS, PROGRAMME_STATUSES, PROGRAMME_STATUS_LABELS, TIME_ZONES, isoToZonedInput } from "@/features/programmes/shared";
+import { branchForCategory, LINK_RELEASES, LINK_RELEASE_LABELS, PLATFORMS, PLATFORM_LABELS, PROGRAMME_STATUSES, PROGRAMME_STATUS_LABELS, TIME_ZONES, isoToZonedInput } from "@/features/programmes/shared";
 
 export interface ProgrammeFormValues {
   id?: string;
@@ -33,6 +34,7 @@ export interface ProgrammeFormValues {
   codeValidHours: number;
   codeSingleUse: boolean;
   linkRelease: string;
+  branches: string[];
   joinLink: string;
   joinInstructions: string;
 }
@@ -61,6 +63,14 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
   const [platform, setPlatform] = useState(values.platform);
   const [paid, setPaid] = useState(values.priceGhs > 0);
   const [approval, setApproval] = useState(values.approval);
+  const [branches, setBranches] = useState<string[]>(values.branches);
+  // Until the admin ticks boxes themselves, follow the category ("Ministry" → Ministry page).
+  const [branchesTouched, setBranchesTouched] = useState(Boolean(values.id));
+  function onCategory(value: string) {
+    if (branchesTouched) return;
+    const matched = branchForCategory(value);
+    setBranches(matched ? ["home", matched] : ["home"]);
+  }
   const [image, setImage] = useState<{ path: string; width: number | null; height: number | null } | null>(
     values.imagePath ? { path: values.imagePath, width: values.imageWidth, height: values.imageHeight } : null,
   );
@@ -103,7 +113,7 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
         </label>
         <label className="text-sm">
           Category <span className="text-foreground/60">(e.g. Nursing, Bible study, Tech training)</span>
-          <input name="category" maxLength={60} defaultValue={values.category} className={fieldClasses} />
+          <input name="category" maxLength={60} defaultValue={values.category} onChange={(e) => onCategory(e.target.value)} className={fieldClasses} />
         </label>
         <label className="text-sm">
           Short summary <span className="text-foreground/60">(one or two lines, shown on the list)</span>
@@ -267,6 +277,35 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
             Each code shows the joining details once only
           </label>
         </div>
+      </Section>
+
+      <Section title="Show it on these pages">
+        <div className="flex flex-wrap gap-2">
+          {BRANCHES.map((b) => {
+            const on = branches.includes(b.id);
+            return (
+              <label
+                key={b.id}
+                className={`flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 text-sm ${on ? "border-brand-primary-text font-medium" : "border-black/10 dark:border-white/10"}`}
+              >
+                <input
+                  type="checkbox"
+                  name="branches"
+                  value={b.id}
+                  checked={on}
+                  onChange={(e) => {
+                    setBranchesTouched(true);
+                    setBranches((cur) => (e.target.checked ? [...cur, b.id] : cur.filter((x) => x !== b.id)));
+                  }}
+                />
+                {b.label}
+              </label>
+            );
+          })}
+        </div>
+        <p className="text-xs text-foreground/60">
+          While it is published and not yet over, its flyer and a Register button appear on these pages. It is always listed on zivarukah.com/programmes too.
+        </p>
       </Section>
 
       <Section title="Status">

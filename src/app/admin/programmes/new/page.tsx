@@ -40,6 +40,7 @@ export default async function NewProgrammePage() {
             codeValidHours: 24,
             codeSingleUse: false,
             linkRelease: "3_days",
+            branches: ["home"],
             joinLink: "",
             joinInstructions: "",
           }}

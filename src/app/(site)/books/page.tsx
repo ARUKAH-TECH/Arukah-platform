@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ProgrammesSection } from "@/features/programmes/ProgrammesSection";
 import { Hero } from "@/components/ui/Hero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -47,6 +48,7 @@ export default async function BooksPage() {
         primaryCta={books.length ? { label: "Browse books", href: "#books" } : { label: "Get notified", href: "/contact" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
+      <ProgrammesSection branch="books" />
 
       {books.length > 0 && (
         <section id="books" className="py-16">

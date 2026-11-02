@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ProgrammesSection } from "@/features/programmes/ProgrammesSection";
 import { Hero } from "@/components/ui/Hero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -46,6 +47,7 @@ export default async function ZivaPage() {
         primaryCta={{ label: "Apply for admission", href: "#admissions" }}
         secondaryCta={{ label: "🩺 Free nursing class", href: "#nursing" }}
       />
+      <ProgrammesSection branch="ziva" />
 
       <section id="admissions" className="scroll-mt-20 py-16">
         <Container>
