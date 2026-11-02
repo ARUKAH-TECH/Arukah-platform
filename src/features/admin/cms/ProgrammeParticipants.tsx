@@ -1,10 +1,12 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { deleteRegistration, revokeRegistrationCode, setRegistrationPayment, setRegistrationStatus } from "@/features/admin/cms/programmeActions";
+import { deleteRegistration, revokeRegistrationCode, setOptOut, setRegistrationPayment, setRegistrationStatus } from "@/features/admin/cms/programmeActions";
+import { MESSAGE_LABELS, messageText, waLink, type MessageKind, type MessageProgramme } from "@/features/programmes/messages";
 import { formatGhs } from "@/config/books";
-import { ReissueCode } from "@/features/admin/cms/ParticipantTools";
+import { MessageButton, ReissueCode } from "@/features/admin/cms/ParticipantTools";
 
-type Reg = { id: string; name: string; phone: string; status: string; payment_status: string; whatsapp_consent: boolean; created_at: string };
+type Reg = { id: string; name: string; phone: string; status: string; payment_status: string; whatsapp_consent: boolean; whatsapp_opt_out: boolean; created_at: string };
+type Note = { registration_id: string; kind: string; created_at: string };
 type Pay = { registration_id: string; amount_ghs: number | string; status: string; channel: string; code_delivered: boolean; created_at: string };
 type Code = { registration_id: string; expires_at: string; revoked_at: string | null; redeemed_at: string | null; created_at: string };
 
@@ -27,13 +29,22 @@ function codeState(c: Code | undefined) {
   return "Code not used yet";
 }
 
-export async function ProgrammeParticipants({ programmeId, title, capacity, q }: { programmeId: string; title: string; capacity: number | null; q: string }) {
+export async function ProgrammeParticipants({ programmeId, title, capacity, q, programme }: { programmeId: string; title: string; capacity: number | null; q: string; programme: MessageProgramme & { status: string } }) {
   const supabase = await createClient();
-  const [{ data: regs }, { data: codes }, { data: pays }] = await Promise.all([
-    supabase.from("programme_registrations").select("id, name, phone, status, payment_status, whatsapp_consent, created_at").eq("programme_id", programmeId).order("created_at", { ascending: false }).limit(5000),
+  const [{ data: regs }, { data: codes }, { data: pays }, { data: notes }] = await Promise.all([
+    supabase.from("programme_registrations").select("id, name, phone, status, payment_status, whatsapp_consent, whatsapp_opt_out, created_at").eq("programme_id", programmeId).order("created_at", { ascending: false }).limit(5000),
     supabase.from("programme_codes").select("registration_id, expires_at, revoked_at, redeemed_at, created_at").eq("programme_id", programmeId).order("created_at", { ascending: false }).limit(10000),
     supabase.from("programme_payments").select("registration_id, amount_ghs, status, channel, code_delivered, created_at").eq("programme_id", programmeId).order("created_at", { ascending: false }).limit(10000),
+    supabase.from("programme_notifications").select("registration_id, kind, created_at").eq("programme_id", programmeId).order("created_at", { ascending: false }).limit(20000),
   ]);
+  // Latest message of each kind per registration.
+  const opened = new Map<string, string>();
+  for (const n of (notes ?? []) as Note[]) {
+    const key = `${n.registration_id}:${n.kind}`;
+    if (!opened.has(key)) opened.set(key, when(n.created_at));
+  }
+  const lastNote = new Map<string, Note>();
+  for (const n of (notes ?? []) as Note[]) if (!lastNote.has(n.registration_id)) lastNote.set(n.registration_id, n);
   // Latest successful (else latest) Paystack payment per registration.
   const payOf = new Map<string, Pay>();
   for (const p of (pays ?? []) as Pay[]) {
@@ -75,6 +86,9 @@ export async function ProgrammeParticipants({ programmeId, title, capacity, q }:
             🔍
           </button>
         </form>
+        <a href={`${base}/messages`} className="rounded-full bg-[#25D366] px-4 py-2 text-sm font-bold text-black">
+          💬 Message everyone
+        </a>
         <a href={`${base}/export`} className="rounded-full bg-[var(--admin-gold,#e3a82a)] px-4 py-2 text-sm font-bold text-[#14110c]">
           ⬇️ Download list (CSV)
         </a>
@@ -130,7 +144,45 @@ export async function ProgrammeParticipants({ programmeId, title, capacity, q }:
                   Registered {when(r.created_at)} · {codeState(c)}
                   {r.whatsapp_consent ? " · ✅ WhatsApp consent" : ""}
                 </p>
+                {(() => {
+                  const n = lastNote.get(r.id);
+                  return n ? (
+                    <p className="mt-1 text-xs text-foreground/60">
+                      💬 Last WhatsApp: {MESSAGE_LABELS[n.kind as MessageKind] ?? n.kind}, opened {when(n.created_at)} (delivery not confirmed)
+                    </p>
+                  ) : null;
+                })()}
+                {r.whatsapp_consent && !r.whatsapp_opt_out && (
+                  <details className="mt-2">
+                    <summary className="cursor-pointer text-xs font-semibold text-[#128C7E]">💬 WhatsApp messages</summary>
+                    <div className="mt-2 flex flex-wrap gap-2">
+                      {(["confirmation", "approved", "reminder", "change", "cancellation"] as MessageKind[])
+                        .filter((k) => (k === "approved" ? r.status === "approved" : k === "cancellation" ? true : r.status !== "rejected" && r.status !== "cancelled"))
+                        .map((k) => (
+                          <MessageButton
+                            key={k}
+                            registrationId={r.id}
+                            programmeId={programmeId}
+                            kind={k}
+                            label={MESSAGE_LABELS[k]}
+                            opened={opened.get(`${r.id}:${k}`)}
+                            href={waLink(r.phone, messageText(k, programme, r.name, r.payment_status === "paid"))}
+                          />
+                        ))}
+                    </div>
+                    <p className="mt-1 text-[11px] text-foreground/60">Opens your WhatsApp with the message typed in. You can edit it before sending. To send their code, use 🔄 New code.</p>
+                  </details>
+                )}
+                {r.whatsapp_opt_out && <p className="mt-1 text-xs font-semibold text-red-700 dark:text-red-400">🚫 Asked to stop WhatsApp messages</p>}
                 <div className="mt-3 flex flex-wrap items-center gap-2">
+                  <form action={setOptOut}>
+                    {hidden("id", r.id)}
+                    {hidden("programmeId", programmeId)}
+                    {hidden("optOut", r.whatsapp_opt_out ? "false" : "true")}
+                    <button type="submit" className="rounded-full border border-black/15 px-3 py-1 text-xs dark:border-white/15">
+                      {r.whatsapp_opt_out ? "Allow messages again" : "They said STOP"}
+                    </button>
+                  </form>
                   {r.status !== "approved" && statusButton("approved", "✓ Approve", "bg-green-700 text-white")}
                   {r.status === "pending" && statusButton("rejected", "✕ Reject", "border border-black/15 dark:border-white/15")}
                   {r.status === "approved" && statusButton("cancelled", "Cancel place", "border border-black/15 dark:border-white/15")}
