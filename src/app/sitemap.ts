@@ -3,6 +3,7 @@ import { getPublicProjects } from "@/db/projects";
 import { getPublicOutreaches } from "@/db/outreaches";
 import { getPublishedBooks } from "@/db/books";
 import { allArticleSlugs } from "@/db/articles";
+import { getPublicProgrammes } from "@/db/programmes";
 
 // SITE_URL must be set to the real production domain before deploying —
 // otherwise the sitemap ships localhost URLs. See docs/ENVIRONMENT.md.
@@ -56,5 +57,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  return [...pages, ...projectPages, ...outreachPages, ...bookPages, ...articlePages];
+  const programmes = await getPublicProgrammes();
+  const programmePages: MetadataRoute.Sitemap = programmes
+    .filter((p) => p.status !== "cancelled")
+    .map((p) => ({ url: `${baseUrl}/programmes/${p.slug}`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 }));
+
+  return [...pages, ...projectPages, ...outreachPages, ...bookPages, ...articlePages, ...programmePages];
 }

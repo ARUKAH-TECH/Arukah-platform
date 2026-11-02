@@ -18,6 +18,7 @@ function revalidateProgrammePages(slug?: string) {
   revalidatePath("/admin/programmes");
   revalidatePath("/programmes");
   revalidatePath("/sitemap.xml");
+  revalidatePath("/ziva");
   if (slug) revalidatePath(`/programmes/${slug}`);
 }
 
