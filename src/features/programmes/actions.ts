@@ -56,7 +56,13 @@ export type AccessResult =
       joinInstructions: string;
       singleUse: boolean;
     }
-  | { ok: false; reason: string; title?: string };
+  | {
+      ok: false;
+      reason: string;
+      title?: string;
+      /** When the link is not released yet. */
+      notYet?: { name: string; releaseAt: string; startsAt: string; endsAt: string; timeZone: string; scheduleNote: string; platform: string; platformName: string };
+    };
 
 /** A one-way, daily-changing fingerprint of the visitor's network address, used only to limit wrong guesses. */
 async function visitorHash() {
@@ -75,7 +81,22 @@ export async function checkProgrammeCode(code: string): Promise<AccessResult> {
     return { ok: false, reason: "error" };
   }
   const d = data as Record<string, unknown>;
-  if (d.ok !== true) return { ok: false, reason: String(d.reason ?? "invalid"), title: typeof d.title === "string" ? d.title : undefined };
+  if (d.ok !== true) {
+    const notYet =
+      d.reason === "not_yet"
+        ? {
+            name: String(d.name ?? ""),
+            releaseAt: String(d.release_at),
+            startsAt: String(d.starts_at),
+            endsAt: String(d.ends_at),
+            timeZone: String(d.time_zone ?? "Africa/Accra"),
+            scheduleNote: String(d.schedule_note ?? ""),
+            platform: String(d.platform ?? ""),
+            platformName: String(d.platform_name ?? ""),
+          }
+        : undefined;
+    return { ok: false, reason: String(d.reason ?? "invalid"), title: typeof d.title === "string" ? d.title : undefined, notYet };
+  }
   return {
     ok: true,
     name: String(d.name ?? ""),

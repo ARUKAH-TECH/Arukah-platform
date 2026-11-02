@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { audit, requireAdmin } from "@/server/auth";
 import { slugify, type CmsFormState } from "@/features/admin/cms/shared";
-import { PLATFORMS, PROGRAMME_STATUSES, isTimeZone, zonedInputToIso, type Platform, type ProgrammeStatus } from "@/features/programmes/shared";
+import { LINK_RELEASES, PLATFORMS, PROGRAMME_STATUSES, isTimeZone, zonedInputToIso, type LinkRelease, type Platform, type ProgrammeStatus } from "@/features/programmes/shared";
 
 const UUID = /^[0-9a-f-]{36}$/;
 const IMAGE = /^programmes\/[0-9a-f-]{36}\.webp$/;
@@ -108,6 +108,7 @@ export async function saveProgramme(_prev: CmsFormState, formData: FormData): Pr
     platform_name: platform === "other" ? platformName : "",
     code_valid_hours: codeValidHours,
     code_single_use: formData.get("codeSingleUse") === "on",
+    link_release: LINK_RELEASES.includes(text(formData, "linkRelease", 10) as LinkRelease) ? text(formData, "linkRelease", 10) : "always",
     updated_at: new Date().toISOString(),
   };
 

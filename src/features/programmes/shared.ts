@@ -88,3 +88,25 @@ export function formatWhen(iso: string, tz: string) {
 export function formatTime(iso: string, tz: string) {
   return new Date(iso).toLocaleTimeString("en-GB", { hour: "numeric", minute: "2-digit", hour12: true, timeZone: tz }).replace(" am", "am").replace(" pm", "pm");
 }
+
+export const LINK_RELEASES = ["always", "3_days", "day_of", "1_hour"] as const;
+export type LinkRelease = (typeof LINK_RELEASES)[number];
+
+export const LINK_RELEASE_LABELS: Record<LinkRelease, string> = {
+  always: "As soon as they register (or are approved / paid)",
+  "3_days": "3 days before it starts",
+  day_of: "On the day it starts (from midnight)",
+  "1_hour": "1 hour before it starts",
+};
+
+/** When the joining link opens, mirroring programme_link_release_at() in the database. */
+export function linkReleaseAt(startsAt: string, tz: string, rule: string): string | null {
+  const start = Date.parse(startsAt);
+  if (rule === "3_days") return new Date(start - 3 * 86_400_000).toISOString();
+  if (rule === "1_hour") return new Date(start - 3_600_000).toISOString();
+  if (rule === "day_of") {
+    const local = isoToZonedInput(startsAt, tz).slice(0, 10);
+    return zonedInputToIso(`${local}T00:00`, tz);
+  }
+  return null;
+}

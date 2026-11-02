@@ -39,6 +39,7 @@ export default async function NewProgrammePage() {
             platformName: "",
             codeValidHours: 24,
             codeSingleUse: false,
+            linkRelease: "3_days",
             joinLink: "",
             joinInstructions: "",
           }}
