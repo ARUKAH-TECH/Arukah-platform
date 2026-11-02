@@ -174,6 +174,7 @@ export async function confirmPayment(reference: string): Promise<ConfirmResult> 
         status: "success",
         paystack_transaction_id: tx.id,
         channel: tx.channel,
+        fees_ghs: tx.feesPesewas != null ? tx.feesPesewas / 100 : null,
         paid_at: tx.paidAt ?? new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })

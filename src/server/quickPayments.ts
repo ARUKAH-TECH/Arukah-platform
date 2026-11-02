@@ -163,6 +163,7 @@ export async function confirmQuickPayment(reference: string): Promise<QuickConfi
         status: "success",
         paystack_transaction_id: tx.id,
         channel: tx.channel,
+        fees_ghs: tx.feesPesewas != null ? tx.feesPesewas / 100 : null,
         paid_at: tx.paidAt ?? new Date().toISOString(),
         updated_at: new Date().toISOString(),
       })
@@ -219,4 +220,27 @@ export async function bookSlug(bookId: string | null) {
   if (!bookId || !quickPaymentsEnabled()) return null;
   const { data } = await createServiceClient().from("books").select("slug").eq("id", bookId).maybeSingle();
   return (data?.slug as string | undefined) ?? null;
+}
+
+/**
+ * Paid payments recorded before Paystack's fee was saved: ask Paystack for the
+ * fee once and store it, so Admin → Payments can show "you receive". A few at
+ * a time; anything that fails is simply tried again on the next visit.
+ */
+export async function fillMissingFees(limit = 15): Promise<void> {
+  if (!quickPaymentsEnabled()) return;
+  const supabase = createServiceClient();
+  for (const table of ["quick_payments", "payments"] as const) {
+    const { data: rows } = await supabase.from(table).select("id, reference").eq("status", "success").is("fees_ghs", null).limit(limit);
+    for (const row of rows ?? []) {
+      try {
+        const tx = await verifyTransaction(row.reference);
+        if (tx.status === "success" && tx.feesPesewas != null) {
+          await supabase.from(table).update({ fees_ghs: tx.feesPesewas / 100 }).eq("id", row.id);
+        }
+      } catch (error) {
+        console.error("[payments] fee lookup failed", error instanceof Error ? error.message : error);
+      }
+    }
+  }
 }
