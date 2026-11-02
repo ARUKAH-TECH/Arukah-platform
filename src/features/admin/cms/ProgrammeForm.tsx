@@ -6,7 +6,7 @@ import { initialCmsFormState } from "@/features/admin/cms/shared";
 import { fieldClasses, primaryButtonClasses } from "@/features/admin/ui";
 import { createClient } from "@/lib/supabase/browser";
 import { IMAGE_PICKER_ACCEPT, resize } from "@/lib/resizeImage";
-import { PLATFORMS, PLATFORM_LABELS, PROGRAMME_STATUSES, PROGRAMME_STATUS_LABELS, TIME_ZONES, isoToZonedInput } from "@/features/programmes/shared";
+import { LINK_RELEASES, LINK_RELEASE_LABELS, PLATFORMS, PLATFORM_LABELS, PROGRAMME_STATUSES, PROGRAMME_STATUS_LABELS, TIME_ZONES, isoToZonedInput } from "@/features/programmes/shared";
 
 export interface ProgrammeFormValues {
   id?: string;
@@ -32,6 +32,7 @@ export interface ProgrammeFormValues {
   platformName: string;
   codeValidHours: number;
   codeSingleUse: boolean;
+  linkRelease: string;
   joinLink: string;
   joinInstructions: string;
 }
@@ -238,6 +239,19 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
         <label className="text-sm">
           Joining instructions <span className="text-foreground/60">(meeting ID, passcode, what to prepare…)</span>
           <textarea name="joinInstructions" rows={4} maxLength={3000} defaultValue={values.joinInstructions} className={fieldClasses} />
+        </label>
+        <label className="text-sm">
+          Show the joining link to registered people
+          <select name="linkRelease" defaultValue={values.linkRelease} className={fieldClasses}>
+            {LINK_RELEASES.map((r) => (
+              <option key={r} value={r}>
+                {LINK_RELEASE_LABELS[r]}
+              </option>
+            ))}
+          </select>
+          <span className="mt-1 block text-xs text-foreground/60">
+            Before then, their code still works and the page tells them the date and time the link appears. It opens by itself; you don&apos;t need to do anything.
+          </span>
         </label>
         <p className="rounded-xl bg-sky-50 p-3 text-xs leading-5 text-sky-950 dark:bg-white/10 dark:text-white">
           🔒 Only you can see these. Participants will see them only after entering a valid secret code. The website code does not lock the meeting itself: also

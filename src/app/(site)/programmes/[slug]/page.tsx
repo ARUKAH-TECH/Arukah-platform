@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { formatGhs } from "@/config/books";
 import { getPublicProgramme, registrationState } from "@/db/programmes";
 import { RegisterForm } from "@/features/programmes/RegisterForm";
-import { formatTime, formatWhen, platformName } from "@/features/programmes/shared";
+import { formatTime, formatWhen, linkReleaseAt, platformName } from "@/features/programmes/shared";
 import { SharePage } from "@/components/ui/SharePage";
 import { programmePaymentsEnabled } from "@/server/programmePayments";
 
@@ -37,6 +37,7 @@ export default async function ProgrammePage({ params }: PageProps<"/programmes/[
     { k: "Where", v: `Online on ${platform}` },
     { k: "Cost", v: p.priceGhs > 0 ? formatGhs(p.priceGhs) : "Free" },
     { k: "Register by", v: formatWhen(p.regClosesAt ?? p.endsAt, p.timeZone) },
+    ...(p.linkRelease !== "always" ? [{ k: "Joining link", v: `Opens with your code from ${formatWhen(linkReleaseAt(p.startsAt, p.timeZone, p.linkRelease)!, p.timeZone)}` }] : []),
     ...(left != null ? [{ k: "Places", v: `${left} of ${p.capacity} left` }] : []),
   ];
 

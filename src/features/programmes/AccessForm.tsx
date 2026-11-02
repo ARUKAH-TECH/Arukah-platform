@@ -63,6 +63,29 @@ export function AccessForm() {
     );
   }
 
+  if (result && !result.ok && result.notYet) {
+    const n = result.notYet;
+    const platform = platformName(n.platform, n.platformName);
+    return (
+      <div className="rounded-3xl border-2 border-sky-400 bg-white p-5 shadow-md dark:bg-zinc-900">
+        <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">✅ Your code is valid{n.name ? `, ${n.name}` : ""}! You are registered.</p>
+        <h2 className="mt-2 text-2xl font-bold tracking-tight">{result.title}</h2>
+        <p className="mt-2 text-sm text-foreground/80">
+          {n.scheduleNote || `${formatWhen(n.startsAt, n.timeZone)} to ${formatTime(n.endsAt, n.timeZone)}`} · on {platform}
+        </p>
+        <p className="mt-4 rounded-2xl bg-sky-50 p-4 text-center text-sky-950 dark:bg-white/10 dark:text-white">
+          ⏳ The {platform} joining link will appear here from
+          <br />
+          <strong className="text-lg">{formatWhen(n.releaseAt, n.timeZone)}</strong>
+        </p>
+        <p className="mt-3 text-sm text-foreground/70">Keep your code safe and come back to this page then. Your code has not been used up.</p>
+        <button type="button" onClick={() => setResult(null)} className="mt-4 text-sm font-semibold underline">
+          Check another code
+        </button>
+      </div>
+    );
+  }
+
   return (
     <form onSubmit={submit} className="flex flex-col gap-4">
       <label className="block">

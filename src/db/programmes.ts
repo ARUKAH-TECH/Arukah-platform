@@ -25,10 +25,11 @@ export interface PublicProgramme {
   status: "published" | "closed" | "completed" | "cancelled";
   platform: string;
   platformName: string;
+  linkRelease: string;
 }
 
 const COLUMNS =
-  "id, slug, title, summary, description, category, image_path, image_width, image_height, starts_at, ends_at, time_zone, schedule_note, reg_opens_at, reg_closes_at, capacity, price_ghs, approval, status, platform, platform_name";
+  "id, slug, title, summary, description, category, image_path, image_width, image_height, starts_at, ends_at, time_zone, schedule_note, reg_opens_at, reg_closes_at, capacity, price_ghs, approval, status, platform, platform_name, link_release";
 
 interface Row {
   id: string;
@@ -52,6 +53,7 @@ interface Row {
   status: string;
   platform: string;
   platform_name: string;
+  link_release?: string;
 }
 
 function toProgramme(r: Row, taken: number): PublicProgramme {
@@ -76,6 +78,7 @@ function toProgramme(r: Row, taken: number): PublicProgramme {
     status: r.status as PublicProgramme["status"],
     platform: r.platform,
     platformName: r.platform_name,
+    linkRelease: r.link_release ?? "always",
   };
 }
 
