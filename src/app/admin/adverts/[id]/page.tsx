@@ -12,9 +12,10 @@ import { aiVideoConfigured } from "@/server/falVideo";
 
 export const metadata: Metadata = { title: "Advert request" };
 
-export default async function AdRequestPage({ params }: PageProps<"/admin/adverts/[id]">) {
+export default async function AdRequestPage({ params, searchParams }: PageProps<"/admin/adverts/[id]">) {
   const admin = await requireAdmin();
   const { id } = await params;
+  const { new: justAdded } = await searchParams;
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
 
   const supabase = await createClient();
@@ -46,7 +47,13 @@ export default async function AdRequestPage({ params }: PageProps<"/admin/advert
         ← All adverts
       </Link>
       <h1 className="mt-2 text-2xl font-semibold tracking-tight">{r.business_name || r.contact_name}</h1>
-      <p className="mt-1 text-sm text-foreground/60">Received {received}</p>
+      <p className="mt-1 text-sm text-foreground/60">{r.admin_note.startsWith("Agreed in person") ? `Added in person ${received}` : `Received ${received}`}</p>
+      {justAdded === "1" && (
+        <p className="mt-4 max-w-3xl rounded-2xl bg-emerald-50 p-4 text-sm text-emerald-950 dark:bg-emerald-950 dark:text-emerald-100">
+          ✅ Details saved. Now, in the form below: choose <strong>Approve</strong>, set the <strong>start and end dates</strong>, the <strong>amount and payment</strong>, and
+          upload the <strong>picture</strong> (or add a video link or a designed text advert). Then save, and it shows on the website between those dates.
+        </p>
+      )}
 
       <div className="mt-8 grid max-w-5xl grid-cols-1 gap-8 lg:grid-cols-2">
         <section className="flex flex-col gap-4 rounded-2xl border border-black/10 bg-white p-6 text-sm dark:border-white/10 dark:bg-zinc-900">

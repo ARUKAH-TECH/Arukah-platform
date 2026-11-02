@@ -317,3 +317,36 @@ export async function useAiVideo(formData: FormData) {
   await audit("ad_request.ai_video_use", { id });
   revalidateAdPages(id);
 }
+
+/**
+ * An advert agreed in person (not sent through the website). Saves the
+ * advertiser's details, then opens the usual advert page, where the admin
+ * approves it, sets the dates and payment and chooses the picture or video.
+ */
+export async function createInPersonAd(_prev: CmsFormState, formData: FormData): Promise<CmsFormState> {
+  await requireAdmin();
+  const contactName = text(formData, "contactName", 150);
+  const businessName = text(formData, "businessName", 150);
+  const phone = text(formData, "phone", 40);
+  const email = text(formData, "email", 200);
+  const about = text(formData, "about", 3000);
+  const location = text(formData, "location", 200);
+  if (!contactName) return { status: "error", message: "Enter the advertiser's name." };
+  if (!phone && !email) return { status: "error", message: "Enter the advertiser's phone number (or email), so you can reach them." };
+  if (!about) return { status: "error", message: "Say briefly what the advert is about." };
+
+  const id = crypto.randomUUID();
+  const supabase = await createClient();
+  const { error } = await supabase
+    .from("ad_requests")
+    .insert({ id, contact_name: contactName, business_name: businessName, phone, email, about, location });
+  if (error) {
+    console.error("[admin] in-person advert failed", error.message);
+    return { status: "error", message: "Couldn't save the advert just now. Please try again." };
+  }
+  // Mark where it came from (the insert itself only allows a blank note).
+  await supabase.from("ad_requests").update({ admin_note: "Agreed in person (added by admin)." }).eq("id", id);
+  await audit("ad_request.create_in_person", { id });
+  revalidateAdPages(id);
+  redirect(`/admin/adverts/${id}?new=1`);
+}
