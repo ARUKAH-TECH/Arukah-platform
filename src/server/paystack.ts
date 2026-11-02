@@ -60,6 +60,8 @@ export interface VerifiedTransaction {
   id: number | null;
   channel: string;
   paidAt: string | null;
+  /** Paystack's fee on this payment (null when Paystack doesn't say). */
+  feesPesewas: number | null;
 }
 
 export async function verifyTransaction(reference: string): Promise<VerifiedTransaction> {
@@ -70,7 +72,7 @@ export async function verifyTransaction(reference: string): Promise<VerifiedTran
   const body = (await response.json().catch(() => null)) as {
     status?: boolean;
     message?: string;
-    data?: { status?: string; amount?: number; currency?: string; reference?: string; id?: number; channel?: string; paid_at?: string | null };
+    data?: { status?: string; amount?: number; currency?: string; reference?: string; id?: number; channel?: string; paid_at?: string | null; fees?: number | null };
   } | null;
   if (!response.ok || !body?.status || !body.data) throw new Error(body?.message || `Paystack returned ${response.status}`);
   return {
@@ -81,6 +83,7 @@ export async function verifyTransaction(reference: string): Promise<VerifiedTran
     id: typeof body.data.id === "number" ? body.data.id : null,
     channel: String(body.data.channel ?? "").slice(0, 40),
     paidAt: body.data.paid_at ?? null,
+    feesPesewas: typeof body.data.fees === "number" && body.data.fees >= 0 ? body.data.fees : null,
   };
 }
 

@@ -4,7 +4,7 @@ import { requireAdmin } from "@/server/auth";
 import { createClient } from "@/lib/supabase/server";
 import { AdminShell } from "@/features/admin/AdminShell";
 import { formatGhs } from "@/config/books";
-import { paymentSetup, quickPaymentsEnabled } from "@/server/quickPayments";
+import { fillMissingFees, paymentSetup, quickPaymentsEnabled } from "@/server/quickPayments";
 import { setDelivered } from "@/features/admin/cms/quickPaymentActions";
 import { BOOK_FORMATS } from "@/config/books";
 
@@ -17,28 +17,77 @@ const STATUS: Record<string, { label: string; cls: string }> = {
   abandoned: { label: "Abandoned", cls: "bg-black/5 text-foreground/60 dark:bg-white/10" },
 };
 
+/** Paystack's local (Ghana) fee, used only to estimate when Paystack hasn't told us the real fee yet. */
+const ESTIMATED_FEE_RATE = 0.0195;
+
+function money(p: { amount_ghs: number | string; fees_ghs: number | string | null }) {
+  const amount = Number(p.amount_ghs);
+  const known = p.fees_ghs != null;
+  const fee = known ? Number(p.fees_ghs) : Math.round(amount * ESTIMATED_FEE_RATE * 100) / 100;
+  return { amount, fee, receive: Math.round((amount - fee) * 100) / 100, known };
+}
+
+function Receive({ p }: { p: { amount_ghs: number | string; fees_ghs: number | string | null } }) {
+  const m = money(p);
+  return (
+    <span className="text-xs">
+      <span className="font-semibold text-green-800 dark:text-green-300">
+        You receive {m.known ? "" : "about "}
+        {formatGhs(m.receive)}
+      </span>
+      <span className="text-foreground/60"> · Paystack fee {formatGhs(m.fee)}</span>
+    </span>
+  );
+}
+
+function Totals({ rows }: { rows: { status: string; amount_ghs: number | string; fees_ghs: number | string | null }[] }) {
+  const paid = rows.filter((p) => p.status === "success").map(money);
+  if (paid.length === 0) return null;
+  const sum = (k: "amount" | "fee" | "receive") => Math.round(paid.reduce((t, m) => t + m[k], 0) * 100) / 100;
+  const estimated = paid.some((m) => !m.known);
+  return (
+    <div className="mt-3 grid max-w-xl grid-cols-3 gap-2 text-center">
+      <div className="rounded-xl bg-black/5 p-3 dark:bg-white/10">
+        <p className="text-lg font-bold tabular-nums">{formatGhs(sum("amount"))}</p>
+        <p className="text-xs text-foreground/70">People paid</p>
+      </div>
+      <div className="rounded-xl bg-black/5 p-3 dark:bg-white/10">
+        <p className="text-lg font-bold tabular-nums">{formatGhs(sum("fee"))}</p>
+        <p className="text-xs text-foreground/70">Paystack fees</p>
+      </div>
+      <div className="rounded-xl bg-green-100 p-3 text-green-950 dark:bg-green-950 dark:text-green-100">
+        <p className="text-lg font-bold tabular-nums">
+          {estimated ? "≈ " : ""}
+          {formatGhs(sum("receive"))}
+        </p>
+        <p className="text-xs">You receive</p>
+      </div>
+    </div>
+  );
+}
+
 export default async function PaymentsPage({ searchParams }: PageProps<"/admin/payments">) {
   const admin = await requireAdmin();
   const { show } = await searchParams;
   const paidOnly = show !== "all";
+  // Older paid payments: fetch Paystack's real fee once, so "you receive" is exact.
+  await fillMissingFees();
   const supabase = await createClient();
   let query = supabase
     .from("payments")
-    .select("id, reference, purpose, book_order_id, payer_name, email, phone, message, amount_ghs, status, channel, paid_at, created_at, outreaches(title), book_orders(reference)")
+    .select("id, reference, purpose, book_order_id, payer_name, email, phone, message, amount_ghs, fees_ghs, status, channel, paid_at, created_at, outreaches(title), book_orders(reference)")
     .order("created_at", { ascending: false })
     .limit(300);
   if (paidOnly) query = query.eq("status", "success");
   const { data: payments } = await query;
   let quickQuery = supabase
     .from("quick_payments")
-    .select("id, reference, kind, book_title, book_format, quantity, outreach_title, amount_ghs, status, channel, paid_at, created_at, delivered")
+    .select("id, reference, kind, book_title, book_format, quantity, outreach_title, amount_ghs, fees_ghs, status, channel, paid_at, created_at, delivered")
     .order("created_at", { ascending: false })
     .limit(300);
   if (paidOnly) quickQuery = quickQuery.eq("status", "success");
   const { data: quick } = await quickQuery;
-  const quickTotal = (quick ?? []).filter((p) => p.status === "success").reduce((sum, p) => sum + Number(p.amount_ghs), 0);
   const setup = paymentSetup();
-  const total = (payments ?? []).filter((p) => p.status === "success").reduce((sum, p) => sum + Number(p.amount_ghs), 0);
 
   return (
     <AdminShell email={admin.email}>
@@ -75,8 +124,21 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
           All attempts
         </Link>
       </nav>
+      <details className="mt-4 max-w-2xl rounded-xl bg-sky-50 p-4 text-sm text-sky-950 dark:bg-white/10 dark:text-white">
+        <summary className="cursor-pointer font-semibold">💡 Matching these with your MoMo messages</summary>
+        <ul className="mt-2 flex list-disc flex-col gap-1 pl-5">
+          <li>
+            <strong>You receive</strong> = what the person paid minus Paystack&apos;s fee (about 1.95% for MoMo). This is the amount that reaches your MoMo.
+          </li>
+          <li>Paystack pays it into your MoMo the <strong>next working day</strong>, with all of that day&apos;s payments together in one MoMo message.</li>
+          <li>
+            The MoMo message shows Paystack&apos;s own reference (e.g. <span className="font-mono">PSTK…</span>), not the website&apos;s{" "}
+            <span className="font-mono">ZS-…</span>. To see which payments are inside it, open Payouts on dashboard.paystack.com.
+          </li>
+        </ul>
+      </details>
       <h2 className="mt-8 text-sm font-semibold uppercase tracking-wider text-foreground/60">Pay-now (books and gifts)</h2>
-      {quick && quick.length > 0 && <p className="mt-2 text-sm text-foreground/70">Paid in this list: <strong>{formatGhs(quickTotal)}</strong></p>}
+      {quick && quick.length > 0 && <Totals rows={quick} />}
       {!quick?.length ? (
         <p className="mt-3 text-sm text-foreground/60">None yet.</p>
       ) : (
@@ -99,6 +161,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
                     {p.channel ? ` · ${String(p.channel).replace("_", " ")}` : ""} ·{" "}
                     {new Date(p.paid_at ?? p.created_at).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Africa/Accra" })}
                   </span>
+                  {p.status === "success" && <Receive p={p} />}
                 </span>
                 {p.kind === "book" && p.status === "success" && (
                   <form action={setDelivered}>
@@ -121,7 +184,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
       )}
 
       <h2 className="mt-10 text-sm font-semibold uppercase tracking-wider text-foreground/60">Orders and gifts with details (when forms are on)</h2>
-      {payments && payments.length > 0 && <p className="mt-4 text-sm text-foreground/70">Paid in this list: <strong>{formatGhs(total)}</strong></p>}
+      {payments && payments.length > 0 && <Totals rows={payments} />}
       {!payments?.length ? (
         <p className="mt-3 text-sm text-foreground/60">None yet.</p>
       ) : (
@@ -154,6 +217,7 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
                   {p.phone ? ` · ${p.phone}` : ""} · {p.reference} ·{" "}
                   {new Date(p.paid_at ?? p.created_at).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Africa/Accra" })}
                 </span>
+                {p.status === "success" && <Receive p={p} />}
                 {p.message && <span className="text-xs italic text-foreground/70">“{p.message}”</span>}
               </li>
             );
