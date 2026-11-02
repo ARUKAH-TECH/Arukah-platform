@@ -230,7 +230,7 @@ export async function bookSlug(bookId: string | null) {
 export async function fillMissingFees(limit = 15): Promise<void> {
   if (!quickPaymentsEnabled()) return;
   const supabase = createServiceClient();
-  for (const table of ["quick_payments", "payments"] as const) {
+  for (const table of ["quick_payments", "payments", "programme_payments"] as const) {
     const { data: rows } = await supabase.from(table).select("id, reference").eq("status", "success").is("fees_ghs", null).limit(limit);
     for (const row of rows ?? []) {
       try {

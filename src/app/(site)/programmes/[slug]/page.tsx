@@ -8,6 +8,7 @@ import { getPublicProgramme, registrationState } from "@/db/programmes";
 import { RegisterForm } from "@/features/programmes/RegisterForm";
 import { formatTime, formatWhen, platformName } from "@/features/programmes/shared";
 import { SharePage } from "@/components/ui/SharePage";
+import { programmePaymentsEnabled } from "@/server/programmePayments";
 
 export const revalidate = 60;
 
@@ -67,16 +68,18 @@ export default async function ProgrammePage({ params }: PageProps<"/programmes/[
           <aside id="register" className="scroll-mt-24">
             <div className="rounded-3xl border border-black/10 bg-white p-5 shadow-md dark:border-white/10 dark:bg-white/5 lg:sticky lg:top-28">
               <h2 className="text-xl font-bold">{reg.open ? (p.approval === "manual" ? "Request a place" : "Register") : reg.label}</h2>
-              {reg.open && p.priceGhs > 0 ? (
-                <p className="mt-3 text-sm text-foreground/75">Online payment for this programme opens soon. Please check back.</p>
+              {reg.open && p.priceGhs > 0 && !programmePaymentsEnabled() ? (
+                <p className="mt-3 text-sm text-foreground/75">Online payment for this programme is being set up. Please check back soon.</p>
               ) : reg.open ? (
                 <>
                   <p className="mt-1 mb-4 text-sm text-foreground/70">
-                    {p.approval === "manual"
-                      ? "Places are confirmed by our team. You get your secret code now; it opens the joining details once approved."
-                      : "You get your secret code straight away. It opens the joining details."}
+                    {p.priceGhs > 0
+                      ? `Fee: ${formatGhs(p.priceGhs)}. You get your secret code as soon as Paystack confirms your payment.`
+                      : p.approval === "manual"
+                        ? "Places are confirmed by our team. You get your secret code now; it opens the joining details once approved."
+                        : "You get your secret code straight away. It opens the joining details."}
                   </p>
-                  <RegisterForm slug={p.slug} title={p.title} manual={p.approval === "manual"} />
+                  <RegisterForm slug={p.slug} title={p.title} manual={p.approval === "manual"} price={p.priceGhs > 0 ? formatGhs(p.priceGhs) : undefined} />
                 </>
               ) : (
                 <p className="mt-3 text-sm text-foreground/75">
