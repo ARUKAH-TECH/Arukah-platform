@@ -22,7 +22,7 @@ export default async function AdRequestPage({ params, searchParams }: PageProps<
   const { data: r } = await supabase
     .from("ad_requests")
     .select(
-      "id, contact_name, business_name, phone, email, about, location, request_image_path, status, starts_at, ends_at, amount_ghs, payment_status, payment_reference, display_kind, display_image_path, video_url, link_url, admin_note, display_seconds, banner_style, is_text_ad, ai_video_status, ai_video_prompt, ai_video_path, ai_video_error, created_at",
+      "id, contact_name, business_name, phone, email, about, location, request_image_path, status, starts_at, ends_at, amount_ghs, payment_status, payment_reference, display_kind, display_image_path, video_url, link_url, public_phone, contact_action, admin_note, display_seconds, banner_style, is_text_ad, ai_video_status, ai_video_prompt, ai_video_path, ai_video_error, created_at",
     )
     .eq("id", id)
     .maybeSingle();
@@ -119,6 +119,9 @@ export default async function AdRequestPage({ params, searchParams }: PageProps<
               hasRequesterPhoto: Boolean(r.request_image_path),
               videoUrl: r.video_url ?? "",
               linkUrl: r.link_url ?? "",
+              // New adverts start with the number the advertiser gave.
+              publicPhone: r.public_phone || (r.status === "pending" ? r.phone : ""),
+              contactAction: (["whatsapp", "call", "link", "none"].includes(r.contact_action) ? r.contact_action : "whatsapp") as "whatsapp" | "call" | "link" | "none",
               adminNote: r.admin_note,
               displaySeconds: r.display_seconds,
               bannerStyle: r.banner_style === "fit" ? "fit" : "roll",

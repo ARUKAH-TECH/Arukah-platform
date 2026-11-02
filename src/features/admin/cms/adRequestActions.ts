@@ -52,6 +52,9 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
   const videoRaw = text(formData, "videoUrl", 500);
   const link = httpsOrNull(text(formData, "linkUrl", 500));
   const note = text(formData, "adminNote", 2000);
+  const publicPhone = text(formData, "publicPhone", 40);
+  const contactActionRaw = text(formData, "contactAction", 10);
+  const contactAction = ["whatsapp", "call", "link", "none"].includes(contactActionRaw) ? contactActionRaw : "whatsapp";
   const seconds = Math.round(Number(formData.get("displaySeconds")) || 8);
   const bannerStyle = text(formData, "bannerStyle", 10) === "fit" ? "fit" : "roll";
   const textAdChosen = formData.get("textAd") === "1";
@@ -61,6 +64,12 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
   if (startsAt && endsAt && endsAt <= startsAt) return { status: "error", message: "The end must be after the start." };
   if (seconds < 3 || seconds > 120) return { status: "error", message: "Time on screen must be between 3 and 120 seconds." };
   if (link === "invalid") return { status: "error", message: "The link must be a website address (https://…)." };
+  const phoneDigits = publicPhone.replace(/\D/g, "");
+  if (publicPhone && (phoneDigits.length < 9 || phoneDigits.length > 15)) return { status: "error", message: "Check the phone number shown on the advert, e.g. 024 123 4567." };
+  if ((contactAction === "whatsapp" || contactAction === "call") && !publicPhone) {
+    return { status: "error", message: "Enter the phone number to show, so a tap can open WhatsApp or call them." };
+  }
+  if (contactAction === "link" && !link) return { status: "error", message: "Enter their website link, or choose WhatsApp or Call." };
 
   let amount: number | null = null;
   if (amountRaw) {
@@ -146,6 +155,8 @@ export async function saveAdRequest(_prev: CmsFormState, formData: FormData): Pr
       display_image_height: image.height,
       video_url: videoUrl,
       link_url: link,
+      public_phone: publicPhone,
+      contact_action: contactAction,
       admin_note: note,
       display_seconds: seconds,
       banner_style: bannerStyle,
