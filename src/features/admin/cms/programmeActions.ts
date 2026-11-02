@@ -245,3 +245,31 @@ export async function setRegistrationPayment(formData: FormData) {
   revalidatePath(`/admin/programmes/${programmeId}`);
   revalidatePath("/programmes");
 }
+
+// WhatsApp messages ---------------------------------------------------------------
+
+const KINDS = ["confirmation", "approved", "code", "reminder", "change", "cancellation"] as const;
+
+/** Records that the admin opened a prepared WhatsApp message (not that it was delivered). */
+export async function logProgrammeMessage(registrationId: string, programmeId: string, kind: string): Promise<void> {
+  await requireAdmin();
+  if (!UUID.test(registrationId) || !UUID.test(programmeId) || !KINDS.includes(kind as (typeof KINDS)[number])) return;
+  const supabase = await createClient();
+  const { error } = await supabase.from("programme_notifications").insert({ registration_id: registrationId, programme_id: programmeId, kind });
+  if (error) console.error("[admin] message log failed", error.message);
+  revalidatePath(`/admin/programmes/${programmeId}`);
+  revalidatePath(`/admin/programmes/${programmeId}/messages`);
+}
+
+export async function setOptOut(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  const programmeId = String(formData.get("programmeId") ?? "");
+  const optOut = formData.get("optOut") === "true";
+  if (!UUID.test(id) || !UUID.test(programmeId)) return;
+  const supabase = await createClient();
+  const { error } = await supabase.from("programme_registrations").update({ whatsapp_opt_out: optOut, updated_at: new Date().toISOString() }).eq("id", id);
+  if (error) console.error("[admin] opt-out failed", error.message);
+  await audit("programme.whatsapp_opt_out", { id, optOut });
+  revalidatePath(`/admin/programmes/${programmeId}`);
+}

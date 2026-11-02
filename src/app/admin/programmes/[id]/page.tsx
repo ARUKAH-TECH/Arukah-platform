@@ -72,7 +72,23 @@ export default async function EditProgrammePage({ params, searchParams }: PagePr
           }}
         />
       </div>
-      <ProgrammeParticipants programmeId={p.id} title={p.title} capacity={p.capacity} q={typeof q === "string" ? q : ""} />
+      <ProgrammeParticipants
+        programmeId={p.id}
+        title={p.title}
+        capacity={p.capacity}
+        q={typeof q === "string" ? q : ""}
+        programme={{
+          title: p.title,
+          startsAt: p.starts_at,
+          endsAt: p.ends_at,
+          timeZone: p.time_zone,
+          scheduleNote: p.schedule_note,
+          platform: p.platform,
+          platformName: p.platform_name,
+          priceGhs: Number(p.price_ghs),
+          status: p.status,
+        }}
+      />
       <section className="mt-12 max-w-2xl border-t border-black/10 pt-8 dark:border-white/10">
         <details className="text-sm">
           <summary className="cursor-pointer text-red-700 dark:text-red-400">Delete this programme…</summary>

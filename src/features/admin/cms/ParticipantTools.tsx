@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { reissueRegistrationCode } from "@/features/admin/cms/programmeActions";
+import { logProgrammeMessage, reissueRegistrationCode } from "@/features/admin/cms/programmeActions";
 
 /** "New code" button: shows the new code once, with a ready WhatsApp message to send it. */
 export function ReissueCode({ id, programmeId, phone, name, title }: { id: string; programmeId: string; phone: string; name: string; title: string }) {
@@ -25,6 +25,7 @@ export function ReissueCode({ id, programmeId, phone, name, title }: { id: strin
         New code (shown only now): <strong className="font-mono text-base tracking-widest">{result.code}</strong>
         <a
           href={`https://wa.me/${phone.replace(/\D/g, "")}?text=${encodeURIComponent(text)}`}
+          onClick={() => void logProgrammeMessage(id, programmeId, "code")}
           target="_blank"
           rel="noopener noreferrer"
           className="ml-2 inline-block rounded-full bg-[#25D366] px-3 py-1 text-xs font-bold text-black"
@@ -42,5 +43,41 @@ export function ReissueCode({ id, programmeId, phone, name, title }: { id: strin
       </button>
       {result && !result.ok && <span className="text-xs text-red-700">{result.message}</span>}
     </>
+  );
+}
+
+/** A prepared WhatsApp message: opens the chat with the text typed in, and records "opened". */
+export function MessageButton({
+  registrationId,
+  programmeId,
+  kind,
+  label,
+  href,
+  opened,
+}: {
+  registrationId: string;
+  programmeId: string;
+  kind: string;
+  label: string;
+  href: string;
+  opened?: string;
+}) {
+  const [justOpened, setJustOpened] = useState(false);
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={() => {
+        setJustOpened(true);
+        void logProgrammeMessage(registrationId, programmeId, kind);
+      }}
+      className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
+        opened || justOpened ? "bg-green-100 text-green-900 dark:bg-green-950 dark:text-green-200" : "bg-[#25D366] text-black"
+      }`}
+    >
+      💬 {label}
+      {opened || justOpened ? ` · opened${opened ? ` ${opened}` : ""}` : ""}
+    </a>
   );
 }
