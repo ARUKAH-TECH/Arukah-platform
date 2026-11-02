@@ -2,6 +2,7 @@ import { signatureIsValid } from "@/server/paystack";
 import { confirmPayment } from "@/server/payments";
 import { confirmQuickPayment } from "@/server/quickPayments";
 import { confirmSubscription } from "@/server/literacySubs";
+import { confirmProgrammePayment } from "@/server/programmePayments";
 
 // Paystack calls this after a payment (set the URL in the Paystack dashboard:
 // Settings → API Keys & Webhooks → https://zivarukah.com/api/paystack/webhook).
@@ -22,7 +23,9 @@ export async function POST(request: Request) {
 
   const reference = event?.data?.reference;
   if (event?.event === "charge.success" && typeof reference === "string") {
-    const result = reference.startsWith("ZL-")
+    const result = reference.startsWith("ZP-")
+      ? await confirmProgrammePayment(reference, false)
+      : reference.startsWith("ZL-")
       ? await confirmSubscription(reference)
       : reference.startsWith("ZS-")
         ? await confirmQuickPayment(reference)

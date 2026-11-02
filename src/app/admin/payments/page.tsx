@@ -87,6 +87,13 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
     .limit(300);
   if (paidOnly) quickQuery = quickQuery.eq("status", "success");
   const { data: quick } = await quickQuery;
+  let progQuery = supabase
+    .from("programme_payments")
+    .select("id, reference, amount_ghs, fees_ghs, status, channel, paid_at, created_at, code_delivered, programme_id, programmes(title)")
+    .order("created_at", { ascending: false })
+    .limit(300);
+  if (paidOnly) progQuery = progQuery.eq("status", "success");
+  const { data: prog } = await progQuery;
   const setup = paymentSetup();
 
   return (
@@ -177,6 +184,37 @@ export default async function PaymentsPage({ searchParams }: PageProps<"/admin/p
                     </button>
                   </form>
                 )}
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      <h2 className="mt-10 text-sm font-semibold uppercase tracking-wider text-foreground/60">Online programmes</h2>
+      {prog && prog.length > 0 && <Totals rows={prog} />}
+      {!prog?.length ? (
+        <p className="mt-3 text-sm text-foreground/60">None yet.</p>
+      ) : (
+        <ul className="mt-4 flex flex-col divide-y divide-black/5 overflow-hidden rounded-2xl border border-black/10 bg-white dark:divide-white/5 dark:border-white/10 dark:bg-zinc-900">
+          {prog.map((p) => {
+            const s = STATUS[p.status] ?? { label: p.status, cls: "bg-black/5" };
+            const title = (p.programmes as unknown as { title: string } | null)?.title ?? "Programme";
+            return (
+              <li key={p.id} className="flex flex-col gap-1 px-4 py-3 text-sm">
+                <span className="flex flex-wrap items-center gap-2">
+                  <span className={`rounded-full px-2 py-0.5 text-[11px] font-medium ${s.cls}`}>{s.label}</span>
+                  <span className="font-semibold">{formatGhs(Number(p.amount_ghs))}</span>
+                  <Link href={`/admin/programmes/${p.programme_id}#participants`} className="underline">
+                    {title}
+                  </Link>
+                </span>
+                <span className="text-xs text-foreground/60">
+                  <span className="font-mono">{p.reference}</span>
+                  {p.channel ? ` · ${String(p.channel).replace("_", " ")}` : ""} ·{" "}
+                  {new Date(p.paid_at ?? p.created_at).toLocaleString("en-GB", { dateStyle: "medium", timeStyle: "short", timeZone: "Africa/Accra" })}
+                  {p.status === "success" && !p.code_delivered ? " · ⚠️ code not shown yet" : ""}
+                </span>
+                {p.status === "success" && <Receive p={p} />}
               </li>
             );
           })}

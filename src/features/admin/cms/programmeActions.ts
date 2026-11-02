@@ -227,3 +227,21 @@ export async function deleteRegistration(formData: FormData) {
   revalidatePath(`/admin/programmes/${programmeId}`);
   revalidatePath("/programmes");
 }
+
+const PAYMENT_STATUSES = ["paid", "refunded", "cancelled"] as const;
+
+/** Admin: mark a place paid (e.g. cash or MoMo sent directly), refunded or cancelled. Refunded/cancelled stops the code. */
+export async function setRegistrationPayment(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  const programmeId = String(formData.get("programmeId") ?? "");
+  const payment = String(formData.get("payment") ?? "");
+  if (!UUID.test(id) || !UUID.test(programmeId) || !PAYMENT_STATUSES.includes(payment as (typeof PAYMENT_STATUSES)[number])) return;
+  const supabase = await createClient();
+  const { error } = await supabase.from("programme_registrations").update({ payment_status: payment, updated_at: new Date().toISOString() }).eq("id", id);
+  if (error) console.error("[admin] payment status failed", error.message);
+  if (payment !== "paid") await supabase.rpc("programme_admin_revoke", { p_registration: id });
+  await audit("programme.payment_status", { id, payment });
+  revalidatePath(`/admin/programmes/${programmeId}`);
+  revalidatePath("/programmes");
+}

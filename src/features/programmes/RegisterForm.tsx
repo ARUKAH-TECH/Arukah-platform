@@ -6,7 +6,7 @@ import { registerForProgramme, type RegisterResult } from "@/features/programmes
 
 const field = "mt-1 w-full rounded-xl border border-black/15 bg-white px-4 py-3 text-base text-[#14110c] dark:border-white/20";
 
-export function RegisterForm({ slug, title, manual }: { slug: string; title: string; manual: boolean }) {
+export function RegisterForm({ slug, title, manual, price }: { slug: string; title: string; manual: boolean; price?: string }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+233 ");
   const [consent, setConsent] = useState(false);
@@ -18,7 +18,13 @@ export function RegisterForm({ slug, title, manual }: { slug: string; title: str
     e.preventDefault();
     setBusy(true);
     try {
-      setResult(await registerForProgramme(slug, name, phone, consent));
+      const r = await registerForProgramme(slug, name, phone, consent);
+      if (r.ok && "payUrl" in r) {
+        // Off to Paystack's own page; the code is shown when they come back.
+        window.location.href = r.payUrl;
+        return;
+      }
+      setResult(r);
     } catch {
       setResult({ ok: false, message: "Registration couldn't be completed just now. Please check your connection and try again." });
     } finally {
@@ -35,7 +41,7 @@ export function RegisterForm({ slug, title, manual }: { slug: string; title: str
     }
   }
 
-  if (result?.ok) {
+  if (result?.ok && "code" in result) {
     const shareText = `My code for "${result.title}" on zivarukah.com: ${result.code}\nOpen: https://zivarukah.com/programmes/access`;
     return (
       <div className="rounded-3xl border-2 border-emerald-500 bg-emerald-50 p-5 text-[#14110c] dark:bg-emerald-950 dark:text-white">
@@ -99,9 +105,14 @@ export function RegisterForm({ slug, title, manual }: { slug: string; title: str
           I agree to receive messages about <strong>{title}</strong> on WhatsApp (confirmation, joining details, reminders and changes). I can ask to stop at any time.
         </span>
       </label>
+      {price && (
+        <p className="text-xs leading-5 text-foreground/70">
+          💳 Next you pay {price} on Paystack&apos;s secure page (Mobile Money or card). Your secret code appears when you come back here after paying.
+        </p>
+      )}
       {result && !result.ok && <p className="rounded-xl bg-red-50 p-3 text-sm text-red-900 dark:bg-red-950 dark:text-red-100">{result.message}</p>}
       <button type="submit" disabled={busy} className="rounded-full bg-[#0b3d91] px-6 py-3.5 text-base font-bold text-white disabled:opacity-60">
-        {busy ? "Registering…" : manual ? "Request a place" : "Register"}
+        {busy ? "Please wait…" : price ? `Register and pay ${price}` : manual ? "Request a place" : "Register"}
       </button>
       <p className="text-xs leading-5 text-foreground/60">
         Your name and WhatsApp number are used only for this programme and are seen only by the ZIVARUKAH team. They are never shown on the website.

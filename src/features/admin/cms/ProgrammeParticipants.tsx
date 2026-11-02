@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { createClient } from "@/lib/supabase/server";
-import { deleteRegistration, revokeRegistrationCode, setRegistrationStatus } from "@/features/admin/cms/programmeActions";
+import { deleteRegistration, revokeRegistrationCode, setRegistrationPayment, setRegistrationStatus } from "@/features/admin/cms/programmeActions";
+import { formatGhs } from "@/config/books";
 import { ReissueCode } from "@/features/admin/cms/ParticipantTools";
 
 type Reg = { id: string; name: string; phone: string; status: string; payment_status: string; whatsapp_consent: boolean; created_at: string };
+type Pay = { registration_id: string; amount_ghs: number | string; status: string; channel: string; code_delivered: boolean; created_at: string };
 type Code = { registration_id: string; expires_at: string; revoked_at: string | null; redeemed_at: string | null; created_at: string };
 
 const STATUS: Record<string, string> = {
@@ -27,10 +29,17 @@ function codeState(c: Code | undefined) {
 
 export async function ProgrammeParticipants({ programmeId, title, capacity, q }: { programmeId: string; title: string; capacity: number | null; q: string }) {
   const supabase = await createClient();
-  const [{ data: regs }, { data: codes }] = await Promise.all([
+  const [{ data: regs }, { data: codes }, { data: pays }] = await Promise.all([
     supabase.from("programme_registrations").select("id, name, phone, status, payment_status, whatsapp_consent, created_at").eq("programme_id", programmeId).order("created_at", { ascending: false }).limit(5000),
     supabase.from("programme_codes").select("registration_id, expires_at, revoked_at, redeemed_at, created_at").eq("programme_id", programmeId).order("created_at", { ascending: false }).limit(10000),
+    supabase.from("programme_payments").select("registration_id, amount_ghs, status, channel, code_delivered, created_at").eq("programme_id", programmeId).order("created_at", { ascending: false }).limit(10000),
   ]);
+  // Latest successful (else latest) Paystack payment per registration.
+  const payOf = new Map<string, Pay>();
+  for (const p of (pays ?? []) as Pay[]) {
+    const had = payOf.get(p.registration_id);
+    if (!had || (had.status !== "success" && p.status === "success")) payOf.set(p.registration_id, p);
+  }
   const all = (regs ?? []) as Reg[];
   // Latest code per registration.
   const latest = new Map<string, Code>();
@@ -105,15 +114,46 @@ export async function ProgrammeParticipants({ programmeId, title, capacity, q }:
                     {r.phone}
                   </a>
                 </div>
+                {r.payment_status !== "not_required" && (() => {
+                  const pay = payOf.get(r.id);
+                  const paid = r.payment_status === "paid";
+                  return (
+                    <p className={`mt-1 text-xs font-semibold ${paid ? "text-green-800 dark:text-green-300" : "text-amber-800 dark:text-amber-300"}`}>
+                      {paid ? "💳 Paid" : `💳 Payment: ${r.payment_status === "pending" ? "not finished" : r.payment_status}`}
+                      {pay && paid ? ` ${formatGhs(Number(pay.amount_ghs))}${pay.channel ? ` by ${pay.channel.replace("_", " ")}` : ""}` : ""}
+                      {paid && pay && !pay.code_delivered ? " · ⚠️ code not shown to them yet: tap New code and send it on WhatsApp" : ""}
+                      {paid && !pay ? " (marked by admin)" : ""}
+                    </p>
+                  );
+                })()}
                 <p className="mt-1 text-xs text-foreground/60">
                   Registered {when(r.created_at)} · {codeState(c)}
-                  {r.payment_status !== "not_required" ? ` · Payment: ${r.payment_status}` : ""}
                   {r.whatsapp_consent ? " · ✅ WhatsApp consent" : ""}
                 </p>
                 <div className="mt-3 flex flex-wrap items-center gap-2">
                   {r.status !== "approved" && statusButton("approved", "✓ Approve", "bg-green-700 text-white")}
                   {r.status === "pending" && statusButton("rejected", "✕ Reject", "border border-black/15 dark:border-white/15")}
                   {r.status === "approved" && statusButton("cancelled", "Cancel place", "border border-black/15 dark:border-white/15")}
+                  {r.payment_status !== "not_required" && r.payment_status !== "paid" && (
+                    <form action={setRegistrationPayment}>
+                      {hidden("id", r.id)}
+                      {hidden("programmeId", programmeId)}
+                      {hidden("payment", "paid")}
+                      <button type="submit" className="rounded-full border border-green-700 px-3 py-1 text-xs font-semibold text-green-800 dark:text-green-300">
+                        Mark paid (cash / direct MoMo)
+                      </button>
+                    </form>
+                  )}
+                  {r.payment_status === "paid" && (
+                    <form action={setRegistrationPayment}>
+                      {hidden("id", r.id)}
+                      {hidden("programmeId", programmeId)}
+                      {hidden("payment", "refunded")}
+                      <button type="submit" className="rounded-full border border-black/15 px-3 py-1 text-xs dark:border-white/15">
+                        Mark refunded
+                      </button>
+                    </form>
+                  )}
                   <ReissueCode id={r.id} programmeId={programmeId} phone={r.phone} name={r.name} title={title} />
                   {c && !c.revoked_at && (
                     <form action={revokeRegistrationCode}>

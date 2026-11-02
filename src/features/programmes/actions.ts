@@ -4,6 +4,7 @@ import { createHash } from "node:crypto";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { createPublicClient } from "@/lib/supabase/public";
+import { startProgrammePayment } from "@/server/programmePayments";
 
 // Registration and code checks. All rules (places, duplicates, deadlines,
 // code expiry and wrong-guess limits) are enforced inside the database.
@@ -11,7 +12,10 @@ import { createPublicClient } from "@/lib/supabase/public";
 // Messages written by the database functions are safe to show as they are.
 const FRIENDLY = /^(This |Registration |Online payment|Please |Enter |Sorry|Many )/;
 
-export type RegisterResult = { ok: true; code: string; status: "approved" | "pending"; title: string } | { ok: false; message: string };
+export type RegisterResult =
+  | { ok: true; code: string; status: "approved" | "pending"; title: string }
+  | { ok: true; payUrl: string }
+  | { ok: false; message: string };
 
 export async function registerForProgramme(slug: string, name: string, phone: string, consent: boolean): Promise<RegisterResult> {
   const clean = (v: unknown, max: number) => (typeof v === "string" ? v.trim().slice(0, max) : "");
@@ -27,8 +31,13 @@ export async function registerForProgramme(slug: string, name: string, phone: st
   }
   revalidatePath("/programmes");
   revalidatePath(`/programmes/${slug}`);
-  const d = data as { code: string; status: "approved" | "pending"; title: string };
-  return { ok: true, code: d.code, status: d.status, title: d.title };
+  const d = data as { code?: string; status: "approved" | "pending"; title: string; pay?: boolean; registration?: string; amount?: number };
+  if (d.pay && d.registration) {
+    // Paid programme: no code yet. It is made only after Paystack confirms the payment.
+    const started = await startProgrammePayment(d.registration, Number(d.amount), d.title);
+    return started.ok ? { ok: true, payUrl: started.url } : { ok: false, message: started.message };
+  }
+  return { ok: true, code: d.code ?? "", status: d.status, title: d.title };
 }
 
 export type AccessResult =
@@ -82,4 +91,14 @@ export async function checkProgrammeCode(code: string): Promise<AccessResult> {
     joinInstructions: String(d.join_instructions ?? ""),
     singleUse: d.single_use === true,
   };
+}
+
+export type PaidResult =
+  | { state: "paid"; code?: string; title: string; slug: string; approved: boolean }
+  | { state: "pending" | "failed" | "unknown" | "refunded" | "cancelled" };
+
+/** Called once by the page Paystack sends the visitor back to. */
+export async function collectProgrammeCode(reference: string): Promise<PaidResult> {
+  const { confirmProgrammePayment } = await import("@/server/programmePayments");
+  return confirmProgrammePayment(typeof reference === "string" ? reference.trim().slice(0, 20) : "", true);
 }
