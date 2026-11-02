@@ -1,6 +1,7 @@
 import "server-only";
 import { createPublicClient, mediaPublicUrl } from "@/lib/supabase/public";
 import type { BranchId } from "@/config/branches";
+import type { AdContactAction } from "@/features/ads/adContact";
 
 export interface LiveAd {
   id: string;
@@ -13,6 +14,10 @@ export interface LiveAd {
   seconds: number;
   /** Top banner: "roll" fills the strip and moves through the image; "fit" shows it whole and still. */
   bannerStyle: "roll" | "fit";
+  /** The advertiser's number to show on the website ("" = none). */
+  phone: string;
+  /** What a tap on the advert does. */
+  action: AdContactAction;
 }
 
 interface LiveAdRow {
@@ -26,7 +31,11 @@ interface LiveAdRow {
   label: string;
   display_seconds: number;
   banner_style: string;
+  public_phone?: string | null;
+  contact_action?: string | null;
 }
+
+const ACTIONS: AdContactAction[] = ["whatsapp", "call", "link", "none"];
 
 /**
  * Adverts that are approved and inside their start/end time, via the
@@ -40,7 +49,9 @@ async function getLiveAds(): Promise<LiveAd[]> {
   } catch {
     return [];
   }
-  const { data, error } = await client.rpc("live_ads_v3");
+  let { data, error } = await client.rpc("live_ads_v4");
+  // Older database without phone/tap settings: fall back to the previous function.
+  if (error) ({ data, error } = await client.rpc("live_ads_v3"));
   if (error) {
     console.error("[ads] live_ads failed", error.message);
     return [];
@@ -56,6 +67,8 @@ async function getLiveAds(): Promise<LiveAd[]> {
     linkUrl: row.link_url,
     seconds: row.display_seconds,
     bannerStyle: row.banner_style === "fit" ? "fit" : "roll",
+    phone: row.public_phone ?? "",
+    action: ACTIONS.includes(row.contact_action as AdContactAction) ? (row.contact_action as AdContactAction) : row.link_url ? "link" : "none",
   }));
 }
 

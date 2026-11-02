@@ -26,3 +26,20 @@ export async function GET(request: Request, context: { params: Promise<{ id: str
 
   return NextResponse.redirect(link, { status: 302, headers: { "Cache-Control": "no-store" } });
 }
+
+/**
+ * POST /ad-click/<advert id>: counts a click only. Sent as a beacon when a
+ * visitor taps an advert's WhatsApp or Call button (those go straight to the
+ * advertiser, so they don't pass through the GET redirect above).
+ */
+export async function POST(_request: Request, context: { params: Promise<{ id: string }> }) {
+  const { id } = await context.params;
+  if (!/^[0-9a-f-]{36}$/.test(id)) return new Response(null, { status: 204 });
+  try {
+    const { error } = await createPublicClient().rpc("record_ad_event", { ad: id, kind: "click" });
+    if (error) console.error("[ads] click count failed", error.message);
+  } catch {
+    // ignore
+  }
+  return new Response(null, { status: 204 });
+}

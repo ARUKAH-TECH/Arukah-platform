@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { countAdView } from "@/features/ads/adViews";
+import { countAdClick, type AdTarget } from "@/features/ads/adContact";
 
 export interface RotatingAd {
   id: string;
@@ -11,8 +12,8 @@ export interface RotatingAd {
   height: number | null;
   /** "roll": fill the strip and glide through the image; "fit": whole image, still. */
   style: "roll" | "fit";
-  /** True when the advert has a link; clicks go through /ad-click/<id> so they're counted. */
-  hasLink: boolean;
+  /** Where a tap goes (WhatsApp, call or website) and the number to show. */
+  target: AdTarget;
   seconds: number;
 }
 
@@ -72,21 +73,34 @@ export function AdRotator({ ads }: { ads: RotatingAd[] }) {
             const layer = `absolute inset-0 block transition-opacity duration-700 motion-reduce:transition-none ${
               visible ? "opacity-100" : "pointer-events-none opacity-0"
             }`;
-            return ad.hasLink ? (
+            const t = ad.target;
+            const contact = t.phone ? (
+              <span className="pointer-events-none absolute bottom-1 left-1 flex max-w-[45%] items-center gap-1 truncate rounded-full bg-black/70 px-2 py-0.5 text-[10px] font-semibold text-white sm:text-xs">
+                <span aria-hidden="true">{t.action === "call" ? "📞" : t.action === "whatsapp" ? "💬" : "☎️"}</span>
+                {t.phone}
+              </span>
+            ) : null;
+            const tapLabel =
+              t.action === "whatsapp" ? `Chat with ${ad.label} on WhatsApp` : t.action === "call" ? `Call ${ad.label}` : `Visit ${ad.label}`;
+            return t.href ? (
               <a
                 key={ad.id}
-                href={`/ad-click/${ad.id}`}
-                target="_blank"
+                href={t.href}
+                target={t.action === "call" ? undefined : "_blank"}
                 rel="sponsored noopener noreferrer"
+                onClick={t.viaClickRoute ? undefined : () => countAdClick(ad.id)}
                 className={layer}
                 aria-hidden={!visible}
+                aria-label={tapLabel}
                 tabIndex={visible ? 0 : -1}
               >
                 {picture}
+                {contact}
               </a>
             ) : (
               <div key={ad.id} className={layer} aria-hidden={!visible}>
                 {picture}
+                {contact}
               </div>
             );
           })}

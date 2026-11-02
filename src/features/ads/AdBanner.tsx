@@ -4,6 +4,7 @@ import { AdRotator } from "@/features/ads/AdRotator";
 import type { BranchId } from "@/config/branches";
 import { HouseRotator } from "@/features/ads/HouseRotator";
 import { getHouseAds, HOUSE_SECONDS } from "@/features/ads/houseAds";
+import { adTarget } from "@/features/ads/adContact";
 
 /**
  * Slim image advert that stays just under the site header while the visitor
@@ -28,7 +29,7 @@ export async function AdBanner({ branch }: { branch: BranchId }) {
         width: ad.image!.width,
         height: ad.image!.height,
         style: ad.bannerStyle,
-        hasLink: Boolean(ad.linkUrl),
+        target: adTarget({ id: ad.id, label: ad.label, linkUrl: ad.linkUrl, phone: ad.phone, action: ad.action }),
         seconds: ad.seconds,
       }))}
     />

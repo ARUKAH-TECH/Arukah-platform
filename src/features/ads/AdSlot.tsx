@@ -3,6 +3,7 @@ import { getLiveVideoAd } from "@/db/ads";
 import { parseVideoLink } from "@/lib/video";
 import type { BranchId } from "@/config/branches";
 import { AdViewPing } from "@/features/ads/AdViewPing";
+import { AdContactButtons } from "@/features/ads/AdContactButtons";
 
 /** A live video advert (YouTube embed or TikTok link). Renders nothing unless one is live. */
 export async function AdSlot({ branch }: { branch: BranchId }) {
@@ -48,6 +49,9 @@ export async function AdSlot({ branch }: { branch: BranchId }) {
             >
               Watch on TikTok ↗
             </a>
+          )}
+          {ad.phone && ad.action !== "none" && (
+            <AdContactButtons id={ad.id} label={ad.label} phone={ad.phone} primary={ad.action === "call" ? "call" : "whatsapp"} />
           )}
           {ad.linkUrl && (
             <a

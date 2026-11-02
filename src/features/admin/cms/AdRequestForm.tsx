@@ -22,6 +22,9 @@ export interface AdRequestFormValues {
   hasRequesterPhoto: boolean;
   videoUrl: string;
   linkUrl: string;
+  /** Number shown on the website (starts as the one the advertiser gave). */
+  publicPhone: string;
+  contactAction: "whatsapp" | "call" | "link" | "none";
   adminNote: string;
   displaySeconds: number;
   bannerStyle: "roll" | "fit";
@@ -75,6 +78,7 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
   const fileInput = useRef<HTMLInputElement>(null);
   const [bannerStyle, setBannerStyle] = useState(values.bannerStyle);
   const [textAd, setTextAd] = useState(values.isTextAd);
+  const [contactAction, setContactAction] = useState(values.contactAction);
   const cropSources: CropSource[] = [
     uploaded && { label: "The image you just uploaded", url: publicImageUrl(uploaded.path) },
     values.displayImagePath && { label: "The current advert image", url: publicImageUrl(values.displayImagePath) },
@@ -297,10 +301,36 @@ export function AdRequestForm({ values }: { values: AdRequestFormValues }) {
         />
       </label>
 
-      <label className="text-sm">
-        Link when clicked <span className="text-foreground/60">(optional: their website, Facebook or WhatsApp link)</span>
-        <input name="linkUrl" defaultValue={values.linkUrl} placeholder="https://…" className={fieldClasses} />
-      </label>
+      <fieldset className="flex flex-col gap-3 rounded-2xl bg-black/[0.03] p-4 dark:bg-white/5">
+        <legend className="text-sm font-semibold">Advertiser&apos;s contact on the website</legend>
+        <label className="text-sm">
+          Phone number shown on the advert
+          <input name="publicPhone" type="tel" inputMode="tel" maxLength={40} defaultValue={values.publicPhone} placeholder="e.g. 024 123 4567" className={fieldClasses} />
+          <span className="mt-1 block text-xs text-foreground/60">Everyone visiting the website will see this number. Leave it empty to hide it.</span>
+        </label>
+        <div>
+          <p className="text-sm">When someone taps the advert</p>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <Choice name="contactAction" value="whatsapp" checked={contactAction === "whatsapp"} onChange={() => setContactAction("whatsapp")}>
+              💬 Open WhatsApp chat
+            </Choice>
+            <Choice name="contactAction" value="call" checked={contactAction === "call"} onChange={() => setContactAction("call")}>
+              📞 Call them
+            </Choice>
+            <Choice name="contactAction" value="link" checked={contactAction === "link"} onChange={() => setContactAction("link")}>
+              🌐 Open their website
+            </Choice>
+            <Choice name="contactAction" value="none" checked={contactAction === "none"} onChange={() => setContactAction("none")}>
+              Nothing
+            </Choice>
+          </div>
+        </div>
+        <label className="text-sm">
+          Website link{" "}
+          <span className="text-foreground/60">{contactAction === "link" ? "(needed: their website or Facebook page)" : "(optional)"}</span>
+          <input name="linkUrl" defaultValue={values.linkUrl} placeholder="https://…" required={contactAction === "link"} className={fieldClasses} />
+        </label>
+      </fieldset>
 
       <label className="text-sm">
         Private note
