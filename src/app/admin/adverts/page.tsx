@@ -44,13 +44,18 @@ export default async function AdvertsPage() {
 
   return (
     <AdminShell email={admin.email}>
-      <h1 className="text-2xl font-semibold tracking-tight">Adverts</h1>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="text-2xl font-semibold tracking-tight">Adverts</h1>
+        <Link href="/admin/adverts/new" className="rounded-full bg-[var(--admin-gold,#e3a82a)] px-4 py-2 text-sm font-bold text-[#14110c]">
+          ➕ Add advert (in person)
+        </Link>
+      </div>
       <p className="mt-1 text-sm text-foreground/60">
         Requests from the{" "}
         <Link href="/advertise" target="_blank" className="underline">
           Advertise With Us
         </Link>{" "}
-        page. Open one to approve or reject it, set its dates, and record payment.
+        page, and adverts you add yourself. Open one to approve or reject it, set its dates, and record payment.
       </p>
 
       {rows.length === 0 ? (
