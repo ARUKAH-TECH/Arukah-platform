@@ -14,6 +14,7 @@ import { getPageText, textReader } from "@/db/pageContent";
 import { SharePage } from "@/components/ui/SharePage";
 import { whatsappLink } from "@/config/forms";
 import { NursingClass } from "@/features/ziva/NursingClass";
+import { getPublicProgrammes, registrationState } from "@/db/programmes";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -28,6 +29,11 @@ export const metadata: Metadata = {
 export default async function ZivaPage() {
   // Admin-edited text over the original wording (Admin → Page text).
   const t = textReader(await getPageText(zivaPage));
+  // Once a nursing programme is published under Online programmes, this page
+  // sends students there (names, codes and messages are handled there).
+  const nursingProgramme = (await getPublicProgrammes()).find(
+    (p) => /nurs|midwi/i.test(`${p.category} ${p.title}`) && registrationState(p).open,
+  );
 
   return (
     <div data-brand="ziva">
@@ -117,7 +123,19 @@ export default async function ZivaPage() {
             <p className="mt-4 text-sm leading-6 text-foreground/80">
               The Zoom link and any time changes are shared in our WhatsApp group. Tell us your school, course and the subject you need help with, then join the group.
             </p>
-            <NursingClass />
+            {nursingProgramme ? (
+              <div className="mt-6">
+                <a
+                  href={`/programmes/${nursingProgramme.slug}`}
+                  className="flex items-center justify-center gap-2 rounded-full bg-[#0b3d91] px-6 py-3.5 text-base font-bold text-white"
+                >
+                  🩺 Register for the free nursing class
+                </a>
+                <p className="mt-2 text-center text-xs text-foreground/60">You get a secret code that opens the Zoom details.</p>
+              </div>
+            ) : (
+              <NursingClass />
+            )}
           </div>
         </Container>
       </section>
