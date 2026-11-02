@@ -161,7 +161,7 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
             <input name="startsAt" type="datetime-local" required defaultValue={local(values.startsAt)} className={fieldClasses} />
           </label>
           <label className="text-sm">
-            Ends *
+            Ends * <span className="text-foreground/60">(repeating: end of the last session)</span>
             <input name="endsAt" type="datetime-local" required defaultValue={local(values.endsAt)} className={fieldClasses} />
           </label>
         </div>

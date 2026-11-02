@@ -17,6 +17,7 @@ function text(formData: FormData, key: string, max: number) {
 function revalidateProgrammePages(slug?: string) {
   revalidatePath("/admin/programmes");
   revalidatePath("/programmes");
+  revalidatePath("/sitemap.xml");
   if (slug) revalidatePath(`/programmes/${slug}`);
 }
 
@@ -165,4 +166,64 @@ export async function deleteProgramme(formData: FormData) {
   await audit("programme.delete", { id });
   revalidateProgrammePages(current?.slug);
   redirect("/admin/programmes");
+}
+
+// Participants ------------------------------------------------------------------
+
+const REG_STATUSES = ["pending", "approved", "rejected", "cancelled"] as const;
+
+export async function setRegistrationStatus(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  const programmeId = String(formData.get("programmeId") ?? "");
+  const status = String(formData.get("status") ?? "");
+  if (!UUID.test(id) || !UUID.test(programmeId) || !REG_STATUSES.includes(status as (typeof REG_STATUSES)[number])) return;
+  const supabase = await createClient();
+  const { error } = await supabase.from("programme_registrations").update({ status, updated_at: new Date().toISOString() }).eq("id", id);
+  if (error) console.error("[admin] registration status failed", error.message);
+  // A rejected or cancelled place can't keep a working code.
+  if (status === "rejected" || status === "cancelled") await supabase.rpc("programme_admin_revoke", { p_registration: id });
+  await audit("programme.registration_status", { id, status });
+  revalidatePath(`/admin/programmes/${programmeId}`);
+  revalidatePath("/programmes");
+}
+
+export async function revokeRegistrationCode(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  const programmeId = String(formData.get("programmeId") ?? "");
+  if (!UUID.test(id) || !UUID.test(programmeId)) return;
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("programme_admin_revoke", { p_registration: id });
+  if (error) console.error("[admin] revoke failed", error.message);
+  await audit("programme.code_revoke", { id });
+  revalidatePath(`/admin/programmes/${programmeId}`);
+}
+
+/** Issues a new code (the old one stops). The code is returned once, to show the admin. */
+export async function reissueRegistrationCode(id: string, programmeId: string): Promise<{ ok: true; code: string } | { ok: false; message: string }> {
+  await requireAdmin();
+  if (!UUID.test(id) || !UUID.test(programmeId)) return { ok: false, message: "Unknown registration." };
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("programme_admin_reissue", { p_registration: id });
+  if (error || typeof data !== "string") {
+    console.error("[admin] reissue failed", error?.message);
+    return { ok: false, message: "Couldn't make a new code. Please try again." };
+  }
+  await audit("programme.code_reissue", { id });
+  revalidatePath(`/admin/programmes/${programmeId}`);
+  return { ok: true, code: data };
+}
+
+export async function deleteRegistration(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("id") ?? "");
+  const programmeId = String(formData.get("programmeId") ?? "");
+  if (!UUID.test(id) || !UUID.test(programmeId)) return;
+  const supabase = await createClient();
+  const { error } = await supabase.from("programme_registrations").delete().eq("id", id);
+  if (error) console.error("[admin] registration delete failed", error.message);
+  await audit("programme.registration_delete", { id });
+  revalidatePath(`/admin/programmes/${programmeId}`);
+  revalidatePath("/programmes");
 }

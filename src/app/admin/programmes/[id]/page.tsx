@@ -6,13 +6,14 @@ import { createClient } from "@/lib/supabase/server";
 import { AdminShell } from "@/features/admin/AdminShell";
 import { ProgrammeForm } from "@/features/admin/cms/ProgrammeForm";
 import { deleteProgramme } from "@/features/admin/cms/programmeActions";
+import { ProgrammeParticipants } from "@/features/admin/cms/ProgrammeParticipants";
 
 export const metadata: Metadata = { title: "Edit programme" };
 
 export default async function EditProgrammePage({ params, searchParams }: PageProps<"/admin/programmes/[id]">) {
   const admin = await requireAdmin();
   const { id } = await params;
-  const { saved } = await searchParams;
+  const { saved, q } = await searchParams;
   if (!/^[0-9a-f-]{36}$/.test(id)) notFound();
   const supabase = await createClient();
   const [{ data: p }, { data: priv }] = await Promise.all([
@@ -29,7 +30,14 @@ export default async function EditProgrammePage({ params, searchParams }: PagePr
       <h1 className="mt-2 text-2xl font-semibold tracking-tight">{p.title}</h1>
       {p.status !== "draft" && (
         <p className="mt-1 text-sm text-foreground/60">
-          Public page: <span className="font-mono">zivarukah.com/programmes/{p.slug}</span> (opens in the next step)
+          Public page:{" "}
+          <a href={`/programmes/${p.slug}`} target="_blank" className="font-mono underline">
+            zivarukah.com/programmes/{p.slug}
+          </a>{" "}
+          ·{" "}
+          <a href="#participants" className="underline">
+            Participants ↓
+          </a>
         </p>
       )}
       <div className="mt-6 max-w-2xl">
@@ -64,6 +72,7 @@ export default async function EditProgrammePage({ params, searchParams }: PagePr
           }}
         />
       </div>
+      <ProgrammeParticipants programmeId={p.id} title={p.title} capacity={p.capacity} q={typeof q === "string" ? q : ""} />
       <section className="mt-12 max-w-2xl border-t border-black/10 pt-8 dark:border-white/10">
         <details className="text-sm">
           <summary className="cursor-pointer text-red-700 dark:text-red-400">Delete this programme…</summary>
