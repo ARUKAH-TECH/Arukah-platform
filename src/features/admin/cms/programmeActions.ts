@@ -5,7 +5,8 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { audit, requireAdmin } from "@/server/auth";
 import { slugify, type CmsFormState } from "@/features/admin/cms/shared";
-import { LINK_RELEASES, PLATFORMS, PROGRAMME_STATUSES, isTimeZone, zonedInputToIso, type LinkRelease, type Platform, type ProgrammeStatus } from "@/features/programmes/shared";
+import { BRANCHES, BRANCH_IDS } from "@/config/branches";
+import { branchForCategory, LINK_RELEASES, PLATFORMS, PROGRAMME_STATUSES, isTimeZone, zonedInputToIso, type LinkRelease, type Platform, type ProgrammeStatus } from "@/features/programmes/shared";
 
 const UUID = /^[0-9a-f-]{36}$/;
 const IMAGE = /^programmes\/[0-9a-f-]{36}\.webp$/;
@@ -18,7 +19,7 @@ function revalidateProgrammePages(slug?: string) {
   revalidatePath("/admin/programmes");
   revalidatePath("/programmes");
   revalidatePath("/sitemap.xml");
-  revalidatePath("/ziva");
+  for (const b of BRANCHES) revalidatePath(b.path);
   if (slug) revalidatePath(`/programmes/${slug}`);
 }
 
@@ -85,7 +86,15 @@ export async function saveProgramme(_prev: CmsFormState, formData: FormData): Pr
     }
   }
 
+  // Pages to show it on; if none ticked, the homepage plus the page its category belongs to.
+  let branches = formData.getAll("branches").map(String).filter((b) => BRANCH_IDS.includes(b));
+  if (branches.length === 0) {
+    const matched = branchForCategory(`${text(formData, "category", 60)} ${title}`);
+    branches = matched ? ["home", matched] : ["home"];
+  }
+
   const row = {
+    branches,
     slug,
     title,
     summary: text(formData, "summary", 300),

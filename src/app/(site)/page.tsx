@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ProgrammesSection } from "@/features/programmes/ProgrammesSection";
 import Image from "next/image";
 import Link from "next/link";
 import { Hero } from "@/components/ui/Hero";
@@ -93,6 +94,7 @@ export default async function Home() {
         primaryCta={{ label: "Explore ZIVARUKAH", href: "#businesses" }}
         secondaryCta={{ label: "Contact Us", href: "/contact" }}
       />
+      <ProgrammesSection branch="home" />
 
       <WhatsNew />
       <QuoteOfTheDay />

@@ -68,6 +68,7 @@ export default async function EditProgrammePage({ params, searchParams }: PagePr
             codeValidHours: p.code_valid_hours,
             codeSingleUse: p.code_single_use,
             linkRelease: p.link_release ?? "always",
+            branches: p.branches ?? ["home"],
             joinLink: priv?.join_link ?? "",
             joinInstructions: priv?.join_instructions ?? "",
           }}

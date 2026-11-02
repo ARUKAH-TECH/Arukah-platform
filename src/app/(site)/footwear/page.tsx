@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ProgrammesSection } from "@/features/programmes/ProgrammesSection";
 import { Hero } from "@/components/ui/Hero";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
@@ -37,6 +38,7 @@ export default async function FootwearPage() {
         primaryCta={{ label: "Enquire about wholesale", href: "/contact" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
+      <ProgrammesSection branch="wear" />
 
       <section className="py-16">
         <Container>

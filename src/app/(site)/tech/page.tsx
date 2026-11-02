@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ProgrammesSection } from "@/features/programmes/ProgrammesSection";
 import Link from "next/link";
 import { Hero } from "@/components/ui/Hero";
 import { Container } from "@/components/ui/Container";
@@ -43,6 +44,7 @@ export default async function TechPage() {
         primaryCta={{ label: "Discuss a project", href: "/contact" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
+      <ProgrammesSection branch="tech" />
 
       <section className="py-16">
         <Container>

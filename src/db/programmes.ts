@@ -26,10 +26,11 @@ export interface PublicProgramme {
   platform: string;
   platformName: string;
   linkRelease: string;
+  branches: string[];
 }
 
 const COLUMNS =
-  "id, slug, title, summary, description, category, image_path, image_width, image_height, starts_at, ends_at, time_zone, schedule_note, reg_opens_at, reg_closes_at, capacity, price_ghs, approval, status, platform, platform_name, link_release";
+  "id, slug, title, summary, description, category, image_path, image_width, image_height, starts_at, ends_at, time_zone, schedule_note, reg_opens_at, reg_closes_at, capacity, price_ghs, approval, status, platform, platform_name, link_release, branches";
 
 interface Row {
   id: string;
@@ -54,6 +55,7 @@ interface Row {
   platform: string;
   platform_name: string;
   link_release?: string;
+  branches?: string[] | null;
 }
 
 function toProgramme(r: Row, taken: number): PublicProgramme {
@@ -79,6 +81,7 @@ function toProgramme(r: Row, taken: number): PublicProgramme {
     platform: r.platform,
     platformName: r.platform_name,
     linkRelease: r.link_release ?? "always",
+    branches: r.branches ?? ["home"],
   };
 }
 
@@ -124,4 +127,12 @@ export function registrationState(p: PublicProgramme, now = Date.now()): { open:
   if (now >= Date.parse(p.regClosesAt ?? p.endsAt)) return { open: false, label: "Registration closed" };
   if (p.capacity != null && p.taken >= p.capacity) return { open: false, label: "Full" };
   return { open: true, label: "Registration open" };
+}
+
+/** Upcoming programmes chosen to show on a page (homepage, Ministry, ZIVA…). */
+export async function getProgrammesFor(branch: string): Promise<PublicProgramme[]> {
+  const now = Date.now();
+  return (await getPublicProgrammes()).filter(
+    (p) => p.branches.includes(branch) && (p.status === "published" || p.status === "closed") && Date.parse(p.endsAt) > now,
+  );
 }
