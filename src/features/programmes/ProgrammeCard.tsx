@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { formatGhs } from "@/config/books";
 import { registrationState, type PublicProgramme } from "@/db/programmes";
-import { formatTime, formatWhen, platformName } from "@/features/programmes/shared";
+import { platformName, scheduleText } from "@/features/programmes/shared";
 
 export function ProgrammeCard({ p }: { p: PublicProgramme }) {
   const reg = registrationState(p);
@@ -28,7 +28,7 @@ export function ProgrammeCard({ p }: { p: PublicProgramme }) {
         <h3 className="text-lg font-bold leading-snug">{p.title}</h3>
         {p.summary && <p className="text-sm leading-6 text-foreground/75">{p.summary}</p>}
         <p className="mt-auto pt-2 text-sm font-medium">
-          📅 {p.scheduleNote || `${formatWhen(p.startsAt, p.timeZone)} to ${formatTime(p.endsAt, p.timeZone)}`}
+          📅 {scheduleText(p.scheduleNote, p.startsAt, p.endsAt, p.timeZone)}
         </p>
         <p className="text-sm text-foreground/70">
           💻 {platformName(p.platform, p.platformName)}

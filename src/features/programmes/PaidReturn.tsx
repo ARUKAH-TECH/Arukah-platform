@@ -43,11 +43,18 @@ export function PaidReturn({ reference }: { reference: string }) {
         </div>
       );
     }
-    const shareText = `My code for "${result.title}" on zivarukah.com: ${result.code}\nOpen: https://zivarukah.com/programmes/access`;
+    const shareText = `My code for "${result.title}" on zivarukah.com: ${result.code}${result.when ? `\nWhen: ${result.when}` : ""}\nOpen: https://zivarukah.com/programmes/access`;
     return (
       <div className="rounded-3xl border-2 border-emerald-500 bg-emerald-50 p-5 text-[#14110c] dark:bg-emerald-950 dark:text-white">
         <p className="text-lg font-extrabold">✅ Payment confirmed. You are registered{result.approved ? "" : " (waiting for approval)"}!</p>
         <p className="mt-1 text-sm">{result.title}</p>
+        {result.when && (
+          <div className="mt-3 rounded-2xl bg-white p-4 shadow-sm dark:bg-zinc-900">
+            <p className="text-xs font-semibold uppercase text-foreground/60">Programme time</p>
+            <p className="mt-1 text-lg font-bold">📅 {result.when}</p>
+            {result.where && <p className="text-sm">💻 Online on {result.where}</p>}
+          </div>
+        )}
         <p className="mt-3 text-sm font-semibold">Your secret code:</p>
         <p className="mt-1 select-all rounded-2xl bg-white p-4 text-center font-mono text-3xl font-black tracking-widest text-[#0b3d91] shadow-inner dark:bg-zinc-900 dark:text-sky-300">
           {result.code}

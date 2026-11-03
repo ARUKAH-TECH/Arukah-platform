@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { formatGhs } from "@/config/books";
 import { getProgrammesFor, registrationState } from "@/db/programmes";
-import { formatTime, formatWhen, platformName } from "@/features/programmes/shared";
+import { platformName, scheduleText } from "@/features/programmes/shared";
 
 /**
  * Upcoming online programmes chosen for this page (Admin → Programmes →
@@ -45,7 +45,7 @@ export async function ProgrammesSection({ branch, dark = false }: { branch: stri
                   <h2 className="mt-1 text-2xl font-bold tracking-tight sm:text-3xl">{p.title}</h2>
                   {p.summary && <p className={`mt-3 leading-7 ${dark ? "text-white/80" : "text-foreground/80"}`}>{p.summary}</p>}
                   <ul className="mt-4 flex flex-col gap-1.5 text-sm font-medium">
-                    <li>📅 {p.scheduleNote || `${formatWhen(p.startsAt, p.timeZone)} to ${formatTime(p.endsAt, p.timeZone)}`}</li>
+                    <li>📅 {scheduleText(p.scheduleNote, p.startsAt, p.endsAt, p.timeZone)}</li>
                     <li>💻 Online on {platformName(p.platform, p.platformName)}</li>
                     <li>🎟️ {p.priceGhs > 0 ? formatGhs(p.priceGhs) : "Free"}{left != null && reg.open ? ` · ${left} place${left === 1 ? "" : "s"} left` : ""}</li>
                   </ul>

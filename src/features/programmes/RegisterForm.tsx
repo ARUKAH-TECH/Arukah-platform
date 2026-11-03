@@ -6,7 +6,7 @@ import { registerForProgramme, type RegisterResult } from "@/features/programmes
 
 const field = "mt-1 w-full rounded-xl border border-black/15 bg-white px-4 py-3 text-base text-[#14110c] dark:border-white/20";
 
-export function RegisterForm({ slug, title, manual, price }: { slug: string; title: string; manual: boolean; price?: string }) {
+export function RegisterForm({ slug, title, manual, price, when, where }: { slug: string; title: string; manual: boolean; price?: string; when?: string; where?: string }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+233 ");
   const [consent, setConsent] = useState(false);
@@ -42,10 +42,17 @@ export function RegisterForm({ slug, title, manual, price }: { slug: string; tit
   }
 
   if (result?.ok && "code" in result) {
-    const shareText = `My code for "${result.title}" on zivarukah.com: ${result.code}\nOpen: https://zivarukah.com/programmes/access`;
+    const shareText = `My code for "${result.title}" on zivarukah.com: ${result.code}${when ? `\nWhen: ${when}${where ? ` on ${where}` : ""}` : ""}\nOpen: https://zivarukah.com/programmes/access`;
     return (
       <div className="rounded-3xl border-2 border-emerald-500 bg-emerald-50 p-5 text-[#14110c] dark:bg-emerald-950 dark:text-white">
         <p className="text-lg font-extrabold">✅ You are registered{result.status === "pending" ? " (waiting for approval)" : ""}!</p>
+        {when && (
+          <div className="mt-3 rounded-2xl bg-white p-4 shadow-sm dark:bg-zinc-900">
+            <p className="text-xs font-semibold uppercase text-foreground/60">Programme time</p>
+            <p className="mt-1 text-lg font-bold">📅 {when}</p>
+            {where && <p className="text-sm">💻 Online on {where}</p>}
+          </div>
+        )}
         <p className="mt-3 text-sm font-semibold">Your secret code:</p>
         <p className="mt-1 select-all rounded-2xl bg-white p-4 text-center font-mono text-3xl font-black tracking-widest text-[#0b3d91] shadow-inner dark:bg-zinc-900 dark:text-sky-300">
           {result.code}

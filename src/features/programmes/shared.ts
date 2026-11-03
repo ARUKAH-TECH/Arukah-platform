@@ -122,3 +122,14 @@ export function branchForCategory(text: string): string | null {
   if (/book|author|writing|reading club/.test(t)) return "books";
   return null;
 }
+
+/**
+ * The "when" line shown to people. A repeat note without a time of day
+ * ("27th to 29th November 2026, every evening") gets the times added,
+ * so registrants always see when it starts and ends.
+ */
+export function scheduleText(note: string, startsAt: string, endsAt: string, tz: string) {
+  if (!note) return `${formatWhen(startsAt, tz)} to ${formatTime(endsAt, tz)}`;
+  if (/\d\s*(:\d{2})?\s*(am|pm)\b/i.test(note)) return note;
+  return `${note}, ${formatTime(startsAt, tz)} to ${formatTime(endsAt, tz)} (Ghana time)`.replace(" (Ghana time)", tz === "Africa/Accra" ? " (Ghana time)" : "");
+}
