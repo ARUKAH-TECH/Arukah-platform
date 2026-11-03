@@ -4,6 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { formatGhs } from "@/config/books";
 import { getProgrammesFor, registrationState } from "@/db/programmes";
 import { platformName, scheduleText } from "@/features/programmes/shared";
+import { ShareProgramme } from "@/features/programmes/ShareProgramme";
 
 /**
  * Upcoming online programmes chosen for this page (Admin → Programmes →
@@ -60,6 +61,18 @@ export async function ProgrammesSection({ branch, dark = false }: { branch: stri
                     <Link href="/programmes/access" className={`rounded-full border px-5 py-3 text-sm font-semibold ${dark ? "border-white/30" : "border-black/15"}`}>
                       🔑 I have a code
                     </Link>
+                  </div>
+                  <div className="mt-4">
+                    <ShareProgramme
+                      slug={p.slug}
+                      title={p.title}
+                      when={scheduleText(p.scheduleNote, p.startsAt, p.endsAt, p.timeZone)}
+                      where={platformName(p.platform, p.platformName)}
+                      price={p.priceGhs > 0 ? formatGhs(p.priceGhs) : "Free"}
+                      flyerUrl={p.image?.jpegUrl}
+                      dark={dark}
+                      compact
+                    />
                   </div>
                 </div>
               </article>

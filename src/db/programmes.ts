@@ -11,7 +11,7 @@ export interface PublicProgramme {
   summary: string;
   description: string;
   category: string;
-  image: { url: string; width: number | null; height: number | null } | null;
+  image: { url: string; width: number | null; height: number | null; jpegUrl: string } | null;
   startsAt: string;
   endsAt: string;
   timeZone: string;
@@ -66,7 +66,9 @@ function toProgramme(r: Row, taken: number): PublicProgramme {
     summary: r.summary,
     description: r.description,
     category: r.category,
-    image: r.image_path ? { url: mediaPublicUrl(r.image_path), width: r.image_width, height: r.image_height } : null,
+    image: r.image_path
+      ? { url: mediaPublicUrl(r.image_path), width: r.image_width, height: r.image_height, jpegUrl: mediaPublicUrl(r.image_path.replace(/\.webp$/, ".jpg")) }
+      : null,
     startsAt: r.starts_at,
     endsAt: r.ends_at,
     timeZone: r.time_zone,

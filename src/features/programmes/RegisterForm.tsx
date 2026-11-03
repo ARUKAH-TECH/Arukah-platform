@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Link from "next/link";
 import { registerForProgramme, type RegisterResult } from "@/features/programmes/actions";
+import { ShareProgramme } from "@/features/programmes/ShareProgramme";
 
 const field = "mt-1 w-full rounded-xl border border-black/15 bg-white px-4 py-3 text-base text-[#14110c] dark:border-white/20";
 
-export function RegisterForm({ slug, title, manual, price, when, where }: { slug: string; title: string; manual: boolean; price?: string; when?: string; where?: string }) {
+export function RegisterForm({ slug, title, manual, price, when, where, flyerUrl }: { slug: string; title: string; manual: boolean; price?: string; when?: string; where?: string; flyerUrl?: string | null }) {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("+233 ");
   const [consent, setConsent] = useState(false);
@@ -81,6 +82,12 @@ export function RegisterForm({ slug, title, manual, price, when, where }: { slug
         <Link href="/programmes/access" className="mt-3 inline-block rounded-full border border-black/20 px-5 py-2.5 text-sm font-bold dark:border-white/30">
           🔑 Open the access page
         </Link>
+        <div className="mt-5 border-t border-black/10 pt-4 dark:border-white/10">
+          <p className="text-sm font-semibold">🙌 Invite your friends to register too</p>
+          <div className="mt-2">
+            <ShareProgramme slug={slug} title={title} when={when ?? ""} where={where ?? "online"} price={price ?? "Free"} flyerUrl={flyerUrl} compact />
+          </div>
+        </div>
       </div>
     );
   }

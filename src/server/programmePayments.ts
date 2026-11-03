@@ -2,6 +2,8 @@ import "server-only";
 import { randomBytes } from "node:crypto";
 import { revalidatePath } from "next/cache";
 import { createServiceClient } from "@/lib/supabase/service";
+import { mediaPublicUrl } from "@/lib/supabase/public";
+import { formatGhs } from "@/config/books";
 import { initializeTransaction, verifyTransaction } from "@/server/paystack";
 import { quickPaymentsEnabled } from "@/server/quickPayments";
 import { platformName, scheduleText } from "@/features/programmes/shared";
@@ -53,7 +55,7 @@ export async function startProgrammePayment(registrationId: string, amountGhs: n
 }
 
 export type ProgrammePayConfirm =
-  | { state: "paid"; code?: string; title: string; slug: string; approved: boolean; when: string; where: string }
+  | { state: "paid"; code?: string; title: string; slug: string; approved: boolean; when: string; where: string; flyerUrl: string | null; price: string }
   | { state: "pending" | "failed" | "unknown" | "refunded" | "cancelled" };
 
 /**
@@ -107,12 +109,12 @@ export async function confirmProgrammePayment(reference: string, deliver: boolea
   if (result.state !== "paid") return { state: "unknown" };
 
   const [{ data: prog }, { data: reg }] = await Promise.all([
-    supabase.from("programmes").select("title, slug, starts_at, ends_at, time_zone, schedule_note, platform, platform_name").eq("id", pay.programme_id).maybeSingle(),
+    supabase.from("programmes").select("title, slug, starts_at, ends_at, time_zone, schedule_note, platform, platform_name, image_path, price_ghs").eq("id", pay.programme_id).maybeSingle(),
     supabase.from("programme_registrations").select("status").eq("id", pay.registration_id).maybeSingle(),
   ]);
   revalidatePath("/admin/payments");
   revalidatePath(`/admin/programmes/${pay.programme_id}`);
   const when = prog ? scheduleText(prog.schedule_note, prog.starts_at, prog.ends_at, prog.time_zone) : "";
   const where = prog ? platformName(prog.platform, prog.platform_name) : "";
-  return { state: "paid", code: result.code, title: prog?.title ?? "", slug: prog?.slug ?? "", approved: reg?.status === "approved", when, where };
+  return { state: "paid", code: result.code, title: prog?.title ?? "", slug: prog?.slug ?? "", approved: reg?.status === "approved", when, where, price: prog ? formatGhs(Number(prog.price_ghs)) : "", flyerUrl: prog?.image_path ? mediaPublicUrl(prog.image_path.replace(/\.webp$/, ".jpg")) : null };
 }

@@ -47,7 +47,7 @@ async function decode(file: File): Promise<{ source: CanvasImageSource; width: n
 
 /** Shrinks large photos and re-encodes them, which also strips camera
  *  metadata such as GPS location before anything leaves the device. */
-export async function resize(file: File, maxEdge = MAX_EDGE, quality = 0.85): Promise<Resized> {
+export async function resize(file: File, maxEdge = MAX_EDGE, quality = 0.85, type: "image/webp" | "image/jpeg" = "image/webp"): Promise<Resized> {
   const problem = imageProblem(file);
   if (problem) throw new Error(problem);
   const image = await decode(file);
@@ -60,10 +60,15 @@ export async function resize(file: File, maxEdge = MAX_EDGE, quality = 0.85): Pr
   canvas.height = height;
   const context = canvas.getContext("2d");
   if (!context) throw new Error("This browser couldn't process the image.");
+  // JPEG has no transparency: paint white behind it.
+  if (type === "image/jpeg") {
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, width, height);
+  }
   context.drawImage(image.source, 0, 0, width, height);
   image.done();
 
-  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/webp", quality));
+  const blob = await new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, type, quality));
   if (!blob) throw new Error("This browser couldn't process the image.");
   return { blob, width, height };
 }
