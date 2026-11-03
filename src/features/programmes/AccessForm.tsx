@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { checkProgrammeCode, type AccessResult } from "@/features/programmes/actions";
-import { formatTime, formatWhen, platformName } from "@/features/programmes/shared";
+import { formatWhen, platformName, scheduleText } from "@/features/programmes/shared";
 
 const REASONS: Record<string, string> = {
   invalid: "That code was not found. Check each letter and try again (codes look like K7QM2-XH9TA).",
@@ -42,7 +42,7 @@ export function AccessForm() {
         <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">✅ Code accepted{result.name ? `. Welcome, ${result.name}!` : ""}</p>
         <h2 className="mt-2 text-2xl font-bold tracking-tight">{result.title}</h2>
         <p className="mt-2 text-sm text-foreground/80">
-          {result.scheduleNote || `${formatWhen(result.startsAt, result.timeZone)} to ${formatTime(result.endsAt, result.timeZone)}`} · on {platform}
+          {scheduleText(result.scheduleNote, result.startsAt, result.endsAt, result.timeZone)} · on {platform}
         </p>
         {result.joinLink ? (
           <a
@@ -71,7 +71,7 @@ export function AccessForm() {
         <p className="text-sm font-semibold text-emerald-700 dark:text-emerald-300">✅ Your code is valid{n.name ? `, ${n.name}` : ""}! You are registered.</p>
         <h2 className="mt-2 text-2xl font-bold tracking-tight">{result.title}</h2>
         <p className="mt-2 text-sm text-foreground/80">
-          {n.scheduleNote || `${formatWhen(n.startsAt, n.timeZone)} to ${formatTime(n.endsAt, n.timeZone)}`} · on {platform}
+          {scheduleText(n.scheduleNote, n.startsAt, n.endsAt, n.timeZone)} · on {platform}
         </p>
         <p className="mt-4 rounded-2xl bg-sky-50 p-4 text-center text-sky-950 dark:bg-white/10 dark:text-white">
           ⏳ The {platform} joining link will appear here from

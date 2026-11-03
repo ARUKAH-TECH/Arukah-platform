@@ -115,7 +115,7 @@ export async function checkProgrammeCode(code: string): Promise<AccessResult> {
 }
 
 export type PaidResult =
-  | { state: "paid"; code?: string; title: string; slug: string; approved: boolean }
+  | { state: "paid"; code?: string; title: string; slug: string; approved: boolean; when: string; where: string }
   | { state: "pending" | "failed" | "unknown" | "refunded" | "cancelled" };
 
 /** Called once by the page Paystack sends the visitor back to. */

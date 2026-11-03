@@ -1,7 +1,7 @@
 // Ready-made WhatsApp messages for programme participants. The admin's own
 // WhatsApp opens with the text typed in; they can change it before sending.
 
-import { formatTime, formatWhen, platformName } from "@/features/programmes/shared";
+import { formatWhen, platformName, scheduleText } from "@/features/programmes/shared";
 
 export const MESSAGE_KINDS = ["confirmation", "approved", "reminder", "change", "cancellation"] as const;
 export type MessageKind = (typeof MESSAGE_KINDS)[number];
@@ -30,7 +30,7 @@ const ACCESS = "https://zivarukah.com/programmes/access";
 const FOOTER = "\n\nZIVARUKAH · Reply STOP to stop these messages.";
 
 export function whenText(p: MessageProgramme) {
-  return p.scheduleNote || `${formatWhen(p.startsAt, p.timeZone)} to ${formatTime(p.endsAt, p.timeZone)}`;
+  return scheduleText(p.scheduleNote, p.startsAt, p.endsAt, p.timeZone);
 }
 
 export function messageText(kind: MessageKind, p: MessageProgramme, name: string, paid: boolean) {
@@ -43,7 +43,7 @@ export function messageText(kind: MessageKind, p: MessageProgramme, name: string
     case "approved":
       return `Good news, ${first}! Your place in "${p.title}" is approved.\n\nEnter your secret code at ${ACCESS} to see the joining details. ${when}, on ${where}.${FOOTER}`;
     case "reminder":
-      return `Reminder, ${first}: "${p.title}" ${p.scheduleNote ? `(${p.scheduleNote}) is coming up` : `starts ${formatWhen(p.startsAt, p.timeZone)}`} on ${where}.\n\nOpen ${ACCESS} and enter your secret code to join. See you there!${FOOTER}`;
+      return `Reminder, ${first}: "${p.title}" ${p.scheduleNote ? `(${when}) is coming up` : `starts ${formatWhen(p.startsAt, p.timeZone)}`} on ${where}.\n\nOpen ${ACCESS} and enter your secret code to join. See you there!${FOOTER}`;
     case "change":
       return `Hello ${first}, an update for "${p.title}": it is now ${when}, online on ${where}.\n\nYour secret code stays the same: ${ACCESS}${FOOTER}`;
     case "cancellation":

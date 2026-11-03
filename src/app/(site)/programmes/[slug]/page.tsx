@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { formatGhs } from "@/config/books";
 import { getPublicProgramme, registrationState } from "@/db/programmes";
 import { RegisterForm } from "@/features/programmes/RegisterForm";
-import { formatTime, formatWhen, linkReleaseAt, platformName } from "@/features/programmes/shared";
+import { formatTime, formatWhen, linkReleaseAt, platformName, scheduleText } from "@/features/programmes/shared";
 import { SharePage } from "@/components/ui/SharePage";
 import { programmePaymentsEnabled } from "@/server/programmePayments";
 
@@ -32,7 +32,7 @@ export default async function ProgrammePage({ params }: PageProps<"/programmes/[
   const left = p.capacity != null ? Math.max(0, p.capacity - p.taken) : null;
   const platform = platformName(p.platform, p.platformName);
   const facts = [
-    { k: "When", v: p.scheduleNote || `${formatWhen(p.startsAt, p.timeZone)} to ${formatTime(p.endsAt, p.timeZone)}` },
+    { k: "When", v: scheduleText(p.scheduleNote, p.startsAt, p.endsAt, p.timeZone) },
     ...(p.scheduleNote ? [{ k: "First session", v: formatWhen(p.startsAt, p.timeZone) }] : []),
     { k: "Where", v: `Online on ${platform}` },
     { k: "Cost", v: p.priceGhs > 0 ? formatGhs(p.priceGhs) : "Free" },
@@ -80,7 +80,10 @@ export default async function ProgrammePage({ params }: PageProps<"/programmes/[
                         ? "Places are confirmed by our team. You get your secret code now; it opens the joining details once approved."
                         : "You get your secret code straight away. It opens the joining details."}
                   </p>
-                  <RegisterForm slug={p.slug} title={p.title} manual={p.approval === "manual"} price={p.priceGhs > 0 ? formatGhs(p.priceGhs) : undefined} />
+                  <RegisterForm slug={p.slug} title={p.title} manual={p.approval === "manual"} price={p.priceGhs > 0 ? formatGhs(p.priceGhs) : undefined}
+                    when={facts[0].v}
+                    where={platform}
+                  />
                 </>
               ) : (
                 <p className="mt-3 text-sm text-foreground/75">
