@@ -16,6 +16,12 @@ export async function generateMetadata({ params }: PageProps<"/programmes/[slug]
   const { slug } = await params;
   const p = await getPublicProgramme(slug);
   if (!p) return { title: "Programme not found" };
+  // Flyers uploaded before JPEG copies existed have only the WebP: use whichever is there.
+  let preview = p.image?.jpegUrl ?? null;
+  if (p.image && preview) {
+    const head = await fetch(preview, { method: "HEAD", next: { revalidate: 3600 } }).catch(() => null);
+    if (!head?.ok) preview = p.image.url;
+  }
   return {
     title: p.title,
     description: p.summary || `${p.title}: an online programme by ZIVARUKAH. Register on zivarukah.com.`,
@@ -26,9 +32,9 @@ export async function generateMetadata({ params }: PageProps<"/programmes/[slug]
       url: `/programmes/${p.slug}`,
       siteName: "ZIVARUKAH",
       // The flyer (JPEG copy, which WhatsApp and Facebook previews handle best), never the logo.
-      images: p.image ? [{ url: p.image.jpegUrl, alt: `Flyer: ${p.title}` }] : undefined,
+      images: preview ? [{ url: preview, alt: `Flyer: ${p.title}` }] : undefined,
     },
-    twitter: p.image ? { card: "summary_large_image", images: [p.image.jpegUrl] } : undefined,
+    twitter: preview ? { card: "summary_large_image", images: [preview] } : undefined,
   };
 }
 

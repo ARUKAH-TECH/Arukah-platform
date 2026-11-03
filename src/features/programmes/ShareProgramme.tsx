@@ -7,6 +7,25 @@ import { useState } from "react";
 // Facebook…). Phones that can't share pictures get a WhatsApp message with the
 // link instead, whose preview shows the flyer.
 
+/** The flyer as a JPEG (WhatsApp may turn WebP into a sticker). Falls back to converting the WebP. */
+async function fetchJpeg(jpegUrl: string): Promise<Blob | null> {
+  const res = await fetch(jpegUrl).catch(() => null);
+  if (res?.ok) return res.blob();
+  const webp = await fetch(jpegUrl.replace(/\.jpg$/, ".webp")).catch(() => null);
+  if (!webp?.ok) return null;
+  const bitmap = await createImageBitmap(await webp.blob());
+  const canvas = document.createElement("canvas");
+  canvas.width = bitmap.width;
+  canvas.height = bitmap.height;
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return null;
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+  ctx.drawImage(bitmap, 0, 0);
+  bitmap.close();
+  return new Promise((resolve) => canvas.toBlob(resolve, "image/jpeg", 0.88));
+}
+
 export function ShareProgramme({
   slug,
   title,
@@ -37,10 +56,9 @@ export function ShareProgramme({
     try {
       if (flyerUrl && typeof navigator.share === "function") {
         try {
-          const res = await fetch(flyerUrl);
-          if (res.ok) {
-            const blob = await res.blob();
-            const file = new File([blob], `${slug}-flyer.jpg`, { type: blob.type || "image/jpeg" });
+          const blob = await fetchJpeg(flyerUrl);
+          if (blob) {
+            const file = new File([blob], `${slug}-flyer.jpg`, { type: "image/jpeg" });
             if (navigator.canShare?.({ files: [file] })) {
               await navigator.share({ files: [file], text, title });
               return;
