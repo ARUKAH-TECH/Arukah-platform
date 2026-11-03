@@ -87,9 +87,15 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
     setUploadError("");
     try {
       const { blob, width, height } = await resize(file, 1600, 0.82);
-      const path = `programmes/${crypto.randomUUID()}.webp`;
-      const { error } = await createClient().storage.from("media").upload(path, blob, { contentType: "image/webp", cacheControl: "31536000" });
+      const id = crypto.randomUUID();
+      const path = `programmes/${id}.webp`;
+      const storage = createClient().storage.from("media");
+      const { error } = await storage.upload(path, blob, { contentType: "image/webp", cacheControl: "31536000" });
       if (error) throw new Error(error.message);
+      // A JPEG copy next to it, for WhatsApp/Facebook link previews and for sharing the flyer itself.
+      const jpeg = await resize(file, 1200, 0.85, "image/jpeg");
+      const { error: jpegError } = await storage.upload(`programmes/${id}.jpg`, jpeg.blob, { contentType: "image/jpeg", cacheControl: "31536000" });
+      if (jpegError) throw new Error(jpegError.message);
       setImage({ path, width, height });
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");

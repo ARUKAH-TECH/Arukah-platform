@@ -155,7 +155,7 @@ export async function saveProgramme(_prev: CmsFormState, formData: FormData): Pr
     return { status: "error", message: "The programme was saved, but the joining details weren't. Please save again." };
   }
 
-  if (oldImage && oldImage !== row.image_path) await supabase.storage.from("media").remove([oldImage]);
+  if (oldImage && oldImage !== row.image_path) await supabase.storage.from("media").remove([oldImage, oldImage.replace(/\.webp$/, ".jpg")]);
   await audit(id ? "programme.update" : "programme.create", { id: savedId, status });
   revalidateProgrammePages(slug);
   if (!id) redirect(`/admin/programmes/${savedId}?saved=1`);
@@ -173,7 +173,7 @@ export async function deleteProgramme(formData: FormData) {
     console.error("[admin] programme delete failed", error.message);
     return;
   }
-  if (current?.image_path) await supabase.storage.from("media").remove([current.image_path]);
+  if (current?.image_path) await supabase.storage.from("media").remove([current.image_path, current.image_path.replace(/\.webp$/, ".jpg")]);
   await audit("programme.delete", { id });
   revalidateProgrammePages(current?.slug);
   redirect("/admin/programmes");

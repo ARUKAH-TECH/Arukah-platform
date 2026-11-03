@@ -7,7 +7,7 @@ import { formatGhs } from "@/config/books";
 import { getPublicProgramme, registrationState } from "@/db/programmes";
 import { RegisterForm } from "@/features/programmes/RegisterForm";
 import { formatTime, formatWhen, linkReleaseAt, platformName, scheduleText } from "@/features/programmes/shared";
-import { SharePage } from "@/components/ui/SharePage";
+import { ShareProgramme } from "@/features/programmes/ShareProgramme";
 import { programmePaymentsEnabled } from "@/server/programmePayments";
 
 export const revalidate = 60;
@@ -20,7 +20,15 @@ export async function generateMetadata({ params }: PageProps<"/programmes/[slug]
     title: p.title,
     description: p.summary || `${p.title}: an online programme by ZIVARUKAH. Register on zivarukah.com.`,
     alternates: { canonical: `/programmes/${p.slug}` },
-    openGraph: { title: p.title, description: p.summary, images: p.image ? [{ url: p.image.url }] : undefined },
+    openGraph: {
+      title: p.title,
+      description: p.summary || `Register on zivarukah.com to get your special code.`,
+      url: `/programmes/${p.slug}`,
+      siteName: "ZIVARUKAH",
+      // The flyer (JPEG copy, which WhatsApp and Facebook previews handle best), never the logo.
+      images: p.image ? [{ url: p.image.jpegUrl, alt: `Flyer: ${p.title}` }] : undefined,
+    },
+    twitter: p.image ? { card: "summary_large_image", images: [p.image.jpegUrl] } : undefined,
   };
 }
 
@@ -55,6 +63,9 @@ export default async function ProgrammePage({ params }: PageProps<"/programmes/[
             {p.category && <p className="mt-5 text-xs font-semibold uppercase tracking-wide text-brand-primary-text">{p.category}</p>}
             <h1 className="mt-1 text-3xl font-bold tracking-tight">{p.title}</h1>
             {p.summary && <p className="mt-3 text-lg leading-8 text-foreground/80">{p.summary}</p>}
+            <div className="mt-4">
+              <ShareProgramme slug={p.slug} title={p.title} when={facts[0].v} where={platform} price={p.priceGhs > 0 ? formatGhs(p.priceGhs) : "Free"} flyerUrl={p.image?.jpegUrl} />
+            </div>
             <dl className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
               {facts.map((f) => (
                 <div key={f.k} className="rounded-xl bg-black/[0.04] p-4 dark:bg-white/10">
@@ -83,6 +94,7 @@ export default async function ProgrammePage({ params }: PageProps<"/programmes/[
                   <RegisterForm slug={p.slug} title={p.title} manual={p.approval === "manual"} price={p.priceGhs > 0 ? formatGhs(p.priceGhs) : undefined}
                     when={facts[0].v}
                     where={platform}
+                    flyerUrl={p.image?.jpegUrl}
                   />
                 </>
               ) : (
@@ -104,13 +116,6 @@ export default async function ProgrammePage({ params }: PageProps<"/programmes/[
           </aside>
         </div>
       </Container>
-      <SharePage
-        path={`/programmes/${p.slug}`}
-        title={p.title}
-        message={`🎓 *${p.title}*\n\n${p.scheduleNote || formatWhen(p.startsAt, p.timeZone)} · online on ${platform} · ${p.priceGhs > 0 ? formatGhs(p.priceGhs) : "Free"}\n\nRegister here 👇`}
-        heading="📣 Share this programme"
-        note="Know someone who would like to join?"
-      />
     </section>
   );
 }
