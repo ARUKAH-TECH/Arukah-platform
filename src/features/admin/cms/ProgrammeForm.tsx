@@ -3,7 +3,7 @@
 import { useActionState, useRef, useState } from "react";
 import { saveProgramme } from "@/features/admin/cms/programmeActions";
 import { initialCmsFormState } from "@/features/admin/cms/shared";
-import { BRANCHES } from "@/config/branches";
+import { ACTIVE_BRANCHES } from "@/config/branches";
 import { fieldClasses, primaryButtonClasses } from "@/features/admin/ui";
 import { createClient } from "@/lib/supabase/browser";
 import { IMAGE_PICKER_ACCEPT, resize } from "@/lib/resizeImage";
@@ -287,7 +287,7 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
 
       <Section title="Show it on these pages">
         <div className="flex flex-wrap gap-2">
-          {BRANCHES.map((b) => {
+          {ACTIVE_BRANCHES.map((b) => {
             const on = branches.includes(b.id);
             return (
               <label

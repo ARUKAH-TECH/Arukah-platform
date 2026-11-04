@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description:
     "Free reading, phonics, spelling and handwriting practice app for Kindergarten, Primary 1 to 6 and JHS 1 to 3 learners in Ghana. Installable and works offline.",
   alternates: { canonical: "/literacy" },
+  openGraph: { title: "Literacy & Handwriting Coach: ZIVA | ZIVARUKAH", description: "Free reading, phonics, spelling and handwriting practice app for Kindergarten, Primary 1 to 6 and JHS 1 to 3 learners in Ghana. Installable and works offline." },
 };
 
 const LEVELS = [

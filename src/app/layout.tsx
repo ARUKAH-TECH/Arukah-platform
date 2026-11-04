@@ -22,11 +22,11 @@ const siteUrl = process.env.SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "ZIVARUKAH: Technology, Education, Footwear, Media & Books in Ghana",
+    default: "ZIVARUKAH: Technology, Education, Footwear, Books & Ministry in Ghana",
     template: "%s · ZIVARUKAH",
   },
   description:
-    "ZIVARUKAH (Hebrew: ZIVA, the light of God + ARUKAH, total restoration), founded by Shepherd Justice Sarpong Oduro in Ghana: ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, ARUKAH MEDIA, ZIVARUKAH BOOKS and Repent Online Ministries.",
+    "ZIVARUKAH (Hebrew: ZIVA, the light of God + ARUKAH, total restoration), founded by Shepherd Justice Sarpong Oduro in Ghana: ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Literacy app, ZIVARUKAH BOOKS and Repent Online Ministries.",
   applicationName: "ZIVARUKAH",
   // Search engine ownership codes, if the meta-tag method is used (set in Vercel).
   verification: {
@@ -34,17 +34,14 @@ export const metadata: Metadata = {
     other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
   },
   openGraph: {
-    title: "ZIVARUKAH",
-    description: "Creating Solutions. Building Skills. Serving Communities.",
+    title: "ZIVARUKAH: Technology, Education, Footwear, Books & Ministry",
+    description: "Creating Solutions. Building Skills. Serving Communities. Founded by Shepherd Justice Sarpong Oduro in Ghana.",
     siteName: "ZIVARUKAH",
     type: "website",
     locale: "en_GH",
   },
-  twitter: {
-    card: "summary_large_image",
-    title: "ZIVARUKAH",
-    description: "Creating Solutions. Building Skills. Serving Communities.",
-  },
+  // Title and description come from each page's Open Graph tags.
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {

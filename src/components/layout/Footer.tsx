@@ -3,6 +3,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { mainNav, businessNav } from "@/config/nav";
 import { brands } from "@/config/brands";
+import { CONTACT_DISPLAY, WHATSAPP_URL } from "@/config/forms";
 
 export function Footer() {
   const logo = brands.arukah.logo;
@@ -76,9 +77,25 @@ export function Footer() {
           </div>
         </div>
 
-        <p className="mt-10 border-t border-black/10 pt-6 text-xs text-foreground/60 dark:border-white/10">
-          &copy; {year} ZIVARUKAH VENTURES.
-        </p>
+        <div className="mt-10 flex flex-col gap-3 border-t border-black/10 pt-6 text-xs text-foreground/60 sm:flex-row sm:items-center sm:justify-between dark:border-white/10">
+          <p>
+            &copy; {year} ZIVARUKAH VENTURES · Ashanti Region, Ghana ·{" "}
+            <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="font-semibold underline hover:text-brand-primary-text">
+              {CONTACT_DISPLAY}
+            </a>
+          </p>
+          <p className="flex gap-4">
+            <Link href="/terms" className="underline hover:text-brand-primary-text">
+              Terms
+            </Link>
+            <Link href="/refunds" className="underline hover:text-brand-primary-text">
+              Refunds
+            </Link>
+            <Link href="/contact" className="underline hover:text-brand-primary-text">
+              Contact
+            </Link>
+          </p>
+        </div>
       </Container>
     </footer>
   );

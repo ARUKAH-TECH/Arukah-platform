@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   title: "Outreach · Repent Online Ministries",
   description: "Hospital, prison, street, community and crusade outreach by Repent Online Ministries.",
   alternates: { canonical: "/ministry/outreach" },
+  openGraph: { title: "Outreach · Repent Online Ministries | ZIVARUKAH", description: "Hospital, prison, street, community and crusade outreach by Repent Online Ministries." },
 };
 
 // Refreshed at most every minute, and immediately after an admin edit.

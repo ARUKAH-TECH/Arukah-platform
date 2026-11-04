@@ -13,7 +13,7 @@ export const ABOUT_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What does ARUKAH mean?",
-    a: "ARUKAH (אֲרוּכָה) is the Hebrew word for healing and restoration, used in Jeremiah 30:17: “I will restore health unto thee.” In ZIVARUKAH it stands for total restoration. ARUKAH is also the name of ZIVARUKAH's branches ARUKAH TECH, ARUKAH WEAR and ARUKAH MEDIA, founded by Shepherd Justice Sarpong Oduro.",
+    a: "ARUKAH (אֲרוּכָה) is the Hebrew word for healing and restoration, used in Jeremiah 30:17: “I will restore health unto thee.” In ZIVARUKAH it stands for total restoration. ARUKAH is also the name of ZIVARUKAH's branches ARUKAH TECH and ARUKAH WEAR, founded by Shepherd Justice Sarpong Oduro.",
   },
   {
     q: "Is ZIVARUKAH a real word?",
@@ -25,6 +25,6 @@ export const ABOUT_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What does ZIVARUKAH do?",
-    a: "ZIVARUKAH is a Ghanaian brand with several branches: ARUKAH TECH (software and management systems), ARUKAH WEAR (handcrafted footwear), ZIVA Special Classes and the free ZIVA Literacy app, ARUKAH MEDIA (video production), ZIVARUKAH BOOKS and Repent Online Ministries.",
+    a: "ZIVARUKAH is a Ghanaian brand with several branches: ARUKAH TECH (software and management systems), ARUKAH WEAR (handcrafted footwear), ZIVA Special Classes and the free ZIVA Literacy app, ZIVARUKAH BOOKS, online programmes and Repent Online Ministries.",
   },
 ];

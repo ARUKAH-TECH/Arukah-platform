@@ -11,9 +11,10 @@ import { ShareProgramme } from "@/features/programmes/ShareProgramme";
  * "Show it on these pages"). The whole flyer is shown, never cropped, with a
  * Register button. Shows nothing when there is no upcoming programme.
  */
-export async function ProgrammesSection({ branch, dark = false }: { branch: string; dark?: boolean }) {
+export async function ProgrammesSection({ branch, dark = false, compact = false }: { branch: string; dark?: boolean; compact?: boolean }) {
   const programmes = await getProgrammesFor(branch);
   if (programmes.length === 0) return null;
+  if (compact) return <CompactProgrammes programmes={programmes} />;
 
   return (
     <section aria-label="Upcoming programmes" className={`py-12 ${dark ? "bg-black text-white" : "bg-gradient-to-b from-[#0b3d91]/[0.06] to-transparent"}`}>
@@ -72,6 +73,69 @@ export async function ProgrammesSection({ branch, dark = false }: { branch: stri
                       flyerUrl={p.image?.jpegUrl}
                       dark={dark}
                       compact
+                    />
+                  </div>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      </Container>
+    </section>
+  );
+}
+
+/** Homepage: short cards side by side (flyer thumbnail, when, Register, Invite). */
+function CompactProgrammes({ programmes }: { programmes: Awaited<ReturnType<typeof getProgrammesFor>> }) {
+  return (
+    <section aria-label="Upcoming programmes" className="bg-gradient-to-b from-[#0b3d91]/[0.06] to-transparent py-10">
+      <Container>
+        <div className="flex items-end justify-between gap-3">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">🎓 Upcoming programme{programmes.length > 1 ? "s" : ""}</p>
+          <Link href="/programmes" className="text-sm font-semibold text-brand-primary-text underline">
+            See all
+          </Link>
+        </div>
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
+          {programmes.slice(0, 4).map((p) => {
+            const reg = registrationState(p);
+            return (
+              <article key={p.id} className="flex gap-4 rounded-2xl border border-black/10 bg-white p-3 shadow-sm dark:border-white/10 dark:bg-zinc-900">
+                <Link href={`/programmes/${p.slug}`} className="shrink-0">
+                  {p.image ? (
+                    <Image src={p.image.url} alt={`Flyer: ${p.title}`} width={224} height={320} sizes="112px" className="h-40 w-28 rounded-xl object-cover object-top" />
+                  ) : (
+                    <div aria-hidden="true" className="flex h-40 w-28 items-center justify-center rounded-xl bg-gradient-to-br from-[#0b3d91] to-[#e3a82a] text-4xl">
+                      🎓
+                    </div>
+                  )}
+                </Link>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  {p.category && <p className="text-[11px] font-semibold uppercase tracking-wide text-foreground/60">{p.category}</p>}
+                  <Link href={`/programmes/${p.slug}`} className="mt-0.5 line-clamp-2 font-bold leading-snug hover:text-brand-primary-text">
+                    {p.title}
+                  </Link>
+                  <p className="mt-1 text-xs leading-5 text-foreground/75">📅 {scheduleText(p.scheduleNote, p.startsAt, p.endsAt, p.timeZone)}</p>
+                  <p className="text-xs text-foreground/75">
+                    💻 {platformName(p.platform, p.platformName)} · {p.priceGhs > 0 ? formatGhs(p.priceGhs) : "Free"}
+                  </p>
+                  <div className="mt-auto flex flex-wrap gap-2 pt-2">
+                    {reg.open ? (
+                      <Link href={`/programmes/${p.slug}#register`} className="rounded-full bg-[#e3a82a] px-4 py-2 text-xs font-bold text-[#14110c]">
+                        Register
+                      </Link>
+                    ) : (
+                      <span className="rounded-full bg-black/5 px-3 py-2 text-xs font-semibold dark:bg-white/10">{reg.label}</span>
+                    )}
+                    <ShareProgramme
+                      slug={p.slug}
+                      title={p.title}
+                      when={scheduleText(p.scheduleNote, p.startsAt, p.endsAt, p.timeZone)}
+                      where={platformName(p.platform, p.platformName)}
+                      price={p.priceGhs > 0 ? formatGhs(p.priceGhs) : "Free"}
+                      flyerUrl={p.image?.jpegUrl}
+                      compact
+                      minimal
                     />
                   </div>
                 </div>

@@ -21,10 +21,11 @@ import { getPublicProgrammes, registrationState } from "@/db/programmes";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "ZIVA Online and Special Classes: Admissions Open, Primary 1 to JHS",
+  title: "ZIVA Online and Special Classes: Admissions Open, Primary 1 to SHS 3",
   description:
-    "Admissions open at ZIVA Online and Special Classes by ZIVARUKAH: special teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to JHS, by home service or online. Plus a free Saturday Zoom class for nursing students.",
+    "Admissions open at ZIVA Online and Special Classes by ZIVARUKAH: special teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to SHS 3, by home service or online. Plus a free Saturday Zoom class for nursing students.",
   alternates: { canonical: "/ziva" },
+  openGraph: { title: "ZIVA Online and Special Classes: Admissions Open, Primary 1 to SHS 3 | ZIVARUKAH", description: "Admissions open at ZIVA Online and Special Classes by ZIVARUKAH: special teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to SHS 3, by home service or online. Plus a free Saturday Zoom class for nursing students." },
 };
 
 export default async function ZivaPage() {
@@ -45,7 +46,7 @@ export default async function ZivaPage() {
         title="ZIVA Special Classes"
         tagline={t.text("heroTagline")}
         primaryCta={{ label: "Apply for admission", href: "#admissions" }}
-        secondaryCta={{ label: "🩺 Free nursing class", href: "#nursing" }}
+        secondaryCta={{ label: "🩺 Free nursing class", href: nursingProgramme ? `/programmes/${nursingProgramme.slug}` : "#nursing" }}
       />
       <ProgrammesSection branch="ziva" />
 
@@ -79,13 +80,13 @@ export default async function ZivaPage() {
                 <p className="mt-1 text-sm leading-6 text-foreground/80">{t.text("onlineText")}</p>
               </div>
             </div>
-            <p className="mt-3 text-sm text-foreground/70">Primary 1 to JHS 3 · home or online, depending on your location.</p>
+            <p className="mt-3 text-sm text-foreground/70">Primary 1 to SHS 3 · home or online, depending on your location.</p>
 
             <div className="mt-8 rounded-2xl bg-amber-50 p-5 dark:bg-white/10">
               <p className="text-sm leading-6 text-foreground/80">{t.text("applyText")}</p>
               <a
                 href={whatsappLink(
-                  "Hello ZIVA Online and Special Classes, I would like to apply for admission.\n\nLearner's class (P1 to JHS 3): \nSubjects: \nHome or online: \nTown / area: ",
+                  "Hello ZIVA Online and Special Classes, I would like to apply for admission.\n\nLearner's class (P1 to SHS 3): \nSubjects: \nHome or online: \nTown / area: ",
                 )}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -98,6 +99,7 @@ export default async function ZivaPage() {
         </Container>
       </section>
 
+      {!nursingProgramme && (
       <section id="nursing" className="scroll-mt-20 pb-16">
         <Container>
           <div className="mx-auto max-w-4xl rounded-3xl bg-gradient-to-br from-sky-50 to-emerald-50 p-6 shadow-md sm:p-10 dark:from-white/5 dark:to-white/5">
@@ -125,43 +127,12 @@ export default async function ZivaPage() {
             <p className="mt-4 text-sm leading-6 text-foreground/80">
               The Zoom link and any time changes are shared in our WhatsApp group. Tell us your school, course and the subject you need help with, then join the group.
             </p>
-            {nursingProgramme ? (
-              <div className="mt-6">
-                <a
-                  href={`/programmes/${nursingProgramme.slug}`}
-                  className="flex items-center justify-center gap-2 rounded-full bg-[#0b3d91] px-6 py-3.5 text-base font-bold text-white"
-                >
-                  🩺 Register for the free nursing class
-                </a>
-                <p className="mt-2 text-center text-xs text-foreground/60">You get a secret code that opens the Zoom details.</p>
-              </div>
-            ) : (
-              <NursingClass />
-            )}
+            <NursingClass />
           </div>
         </Container>
       </section>
+      )}
 
-      <section className="py-16">
-        <Container>
-          <SectionHeading
-            eyebrow="On the way"
-            title={t.text("upcomingTitle")}
-            align="center"
-            description={t.text("upcomingText")}
-          />
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {t.list("upcomingItems").map((item) => (
-              <div
-                key={item}
-                className="rounded-xl border border-dashed border-black/15 p-4 text-center text-sm font-medium text-foreground/70 dark:border-white/15"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
 
       <AdSlot branch="ziva" />
 
@@ -172,7 +143,7 @@ export default async function ZivaPage() {
       <SharePage
         path="/ziva"
         title="ZIVA Special Classes"
-        message={"🎓 *ZIVA Online and Special Classes: admissions open!*\n\nSpecial teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to JHS. Home service or online, depending on your location. Apply here 👇"}
+        message={"🎓 *ZIVA Online and Special Classes: admissions open!*\n\nSpecial teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to SHS 3. Home service or online, depending on your location. Apply here 👇"}
         heading="📣 Share ZIVA Special Classes"
         note="Know a parent or teacher who would like this?"
       />

@@ -50,7 +50,7 @@ export const aboutPage: PageDef = {
           max: 700,
           maxItems: 8,
           default: [
-            "Shepherd Justice Sarpong Oduro (legal name: Sarpong Oduro Justice) is the founder and leader of ZIVARUKAH and Repent Online Ministries. Every branch, ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Literacy app, ARUKAH MEDIA, ZIVARUKAH BOOKS and the ministry, is founded and led by him.",
+            "Shepherd Justice Sarpong Oduro (legal name: Sarpong Oduro Justice) is the founder and leader of ZIVARUKAH and Repent Online Ministries. Every branch, ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Literacy app, ZIVARUKAH BOOKS and the ministry, is founded and led by him.",
             "He loved the Bible and Bible teaching from infancy. In primary school he taught his friends so often that they nicknamed him “Roman Father”. At 13 he began preaching as a young evangelist, and when he completed JHS the nickname became “Pastor”.",
             "He carried the name Pastor until he completed his national service as a teacher. Then he chose a name he loves more: Shepherd. A shepherd feeds and cares for the flock instead of feeding on it. His conviction is that a minister should not be a burden to the church, but, like Christ, the Good Shepherd, should feed God's people and lead them into eternity, instead of draining them.",
             "That conviction is why he builds businesses alongside the ministry: so that the work of God is supported, not burdened. He chose the name ZIVARUKAH because its meaning, the light of God and total restoration, describes who he wants to be and what he wants every branch to do.",

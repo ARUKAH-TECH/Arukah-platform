@@ -13,6 +13,7 @@ export const metadata: Metadata = {
   title: "Support the outreach · Repent Online Ministries",
   description: "Give towards hospital, prison, street and community outreach by Repent Online Ministries, by Mobile Money or card.",
   alternates: { canonical: "/ministry/support" },
+  openGraph: { title: "Support the outreach · Repent Online Ministries | ZIVARUKAH", description: "Give towards hospital, prison, street and community outreach by Repent Online Ministries, by Mobile Money or card." },
 };
 
 export const revalidate = 60;

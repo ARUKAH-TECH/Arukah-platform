@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { brands } from "@/config/brands";
 import { Container } from "@/components/ui/Container";
@@ -19,6 +20,8 @@ const swatches = [
 ] as const;
 
 export default function StyleGuidePage() {
+  // A developer page: not shown on the live website.
+  if (process.env.VERCEL_ENV === "production") notFound();
   return (
     <div className="py-16">
       <Container>

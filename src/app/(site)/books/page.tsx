@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   description:
     "ZIVARUKAH BOOKS: buy books to read online, download, or order as printed copies in Ghana. 10% off when you buy more than three.",
   alternates: { canonical: "/books" },
+  openGraph: { title: "ZIVARUKAH BOOKS | ZIVARUKAH", description: "ZIVARUKAH BOOKS: buy books to read online, download, or order as printed copies in Ghana. 10% off when you buy more than three." },
 };
 
 export default async function BooksPage() {
@@ -63,26 +64,6 @@ export default async function BooksPage() {
         </section>
       )}
 
-      <section className="py-16">
-        <Container>
-          <SectionHeading
-            eyebrow="On the way"
-            title={t.text("upcomingTitle")}
-            align="center"
-            description={t.text("upcomingText")}
-          />
-          <div className="mt-10 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            {t.list("upcomingItems").map((item) => (
-              <div
-                key={item}
-                className="rounded-xl border border-dashed border-black/15 p-4 text-center text-sm font-medium text-foreground/70 dark:border-white/15"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
 
       <AdSlot branch="books" />
 

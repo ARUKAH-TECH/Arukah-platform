@@ -90,7 +90,7 @@ export const getHouseAds = cache(async (): Promise<HouseAd[]> => {
       key: `photo-${photo.id}`,
       kicker: "From our work",
       title: photo.caption || "Moments from ZIVARUKAH",
-      text: "Software, footwear, classes, media, books and outreach.",
+      text: "Software, footwear, classes, books and outreach.",
       cta: "See more",
       href: "/projects",
       image: { url: photo.url, width: photo.width, height: photo.height, fit: "cover" },

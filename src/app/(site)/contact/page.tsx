@@ -10,8 +10,9 @@ import { getPageText, textReader } from "@/db/pageContent";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Contact ZIVARUKAH about software, websites, footwear, special classes, video production, books or the ministry.",
+  description: "Contact ZIVARUKAH about software, websites, footwear, special classes, books, programmes or the ministry.",
   alternates: { canonical: "/contact" },
+  openGraph: { title: "Contact | ZIVARUKAH", description: "Contact ZIVARUKAH about software, websites, footwear, special classes, books, programmes or the ministry." },
 };
 
 // Refreshed at most every minute, and immediately after an admin edit.
@@ -36,7 +37,7 @@ export default async function ContactPage() {
           ) : (
             <WhatsAppContact
               message="Hello ZIVARUKAH, I would like to ask about "
-              note="Tell us what you need (software, websites, footwear, ZIVA classes, video production or books) and we'll reply on WhatsApp."
+              note="Tell us what you need (software, websites, footwear, ZIVA classes, books or programmes) and we'll reply on WhatsApp."
             />
           )}
         </div>
