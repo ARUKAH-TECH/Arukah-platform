@@ -23,9 +23,9 @@ export const revalidate = 60;
 export const metadata: Metadata = {
   title: "ZIVA Online and Special Classes: Admissions Open, Primary 1 to SHS 3",
   description:
-    "Admissions open at ZIVA Online and Special Classes by ZIVARUKAH: special teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to SHS 3, by home service or online. Plus a free Saturday Zoom class for nursing students.",
+    "Admissions open at ZIVA Online and Special Classes by ZIVARUKAH: special teaching for Primary 1 to SHS 3, by home service or online: Maths, Science, English and more for Primary and JHS, and SHS subjects from Core Maths and Integrated Science to Economics, Literature, Geography, GKA and Leatherwork. Plus a free Saturday Zoom class for nursing students.",
   alternates: { canonical: "/ziva" },
-  openGraph: { title: "ZIVA Online and Special Classes: Admissions Open, Primary 1 to SHS 3 | ZIVARUKAH", description: "Admissions open at ZIVA Online and Special Classes by ZIVARUKAH: special teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to SHS 3, by home service or online. Plus a free Saturday Zoom class for nursing students." },
+  openGraph: { title: "ZIVA Online and Special Classes: Admissions Open, Primary 1 to SHS 3 | ZIVARUKAH", description: "Admissions open at ZIVA Online and Special Classes by ZIVARUKAH: special teaching for Primary 1 to SHS 3, by home service or online: Maths, Science, English and more for Primary and JHS, and SHS subjects from Core Maths and Integrated Science to Economics, Literature, Geography, GKA and Leatherwork. Plus a free Saturday Zoom class for nursing students." },
 };
 
 export default async function ZivaPage() {
@@ -59,15 +59,33 @@ export default async function ZivaPage() {
             <h2 className="mt-4 text-2xl font-bold tracking-tight sm:text-3xl">{t.text("admissionsTitle")}</h2>
             <p className="mt-3 leading-7 text-foreground/80">{t.text("admissionsText")}</p>
 
-            <h3 className="mt-8 text-sm font-semibold uppercase tracking-wide text-brand-primary-text">Subjects</h3>
-            <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
-              {t.list("subjects").map((subject) => (
-                <li key={subject} className="flex items-center gap-2 rounded-xl border border-black/10 px-4 py-3 text-sm font-semibold dark:border-white/10">
-                  <span aria-hidden="true" className="text-brand-primary-text">✓</span>
-                  {subject}
-                </li>
-              ))}
-            </ul>
+            {[
+              { title: "Subjects: Primary 1 to JHS 3", list: t.list("subjects") },
+              { title: "Subjects: SHS 1 to SHS 3", list: t.list("shsSubjects") },
+            ].map((group) => (
+              <div key={group.title}>
+                <h3 className="mt-8 text-sm font-semibold uppercase tracking-wide text-brand-primary-text">{group.title}</h3>
+                <ul className="mt-3 grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                  {group.list.map((subject) => (
+                    <li key={subject} className="flex items-center gap-2 rounded-xl border border-black/10 px-4 py-3 text-sm font-semibold dark:border-white/10">
+                      <span aria-hidden="true" className="text-brand-primary-text">✓</span>
+                      {subject}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+            <p className="mt-4 text-sm text-foreground/70">
+              {t.text("subjectsNote")}{" "}
+              <a
+                href={whatsappLink("Hello ZIVA Online and Special Classes, do you teach this subject?\n\nLearner's class: \nSubject: ")}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold underline"
+              >
+                Ask on WhatsApp
+              </a>
+            </p>
 
             <h3 className="mt-8 text-sm font-semibold uppercase tracking-wide text-brand-primary-text">How we teach</h3>
             <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -143,7 +161,7 @@ export default async function ZivaPage() {
       <SharePage
         path="/ziva"
         title="ZIVA Special Classes"
-        message={"🎓 *ZIVA Online and Special Classes: admissions open!*\n\nSpecial teaching in Maths, Science, English, Creative Arts, Career Technology and R.M.E for Primary 1 to SHS 3. Home service or online, depending on your location. Apply here 👇"}
+        message={"🎓 *ZIVA Online and Special Classes: admissions open!*\n\nSpecial teaching from Primary 1 to SHS 3: Maths, Science, English and more, plus SHS subjects like Core Maths, Economics, Literature, Geography, GKA and Leatherwork. Home service or online, depending on your location. Apply here 👇"}
         heading="📣 Share ZIVA Special Classes"
         note="Know a parent or teacher who would like this?"
       />

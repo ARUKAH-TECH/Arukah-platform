@@ -107,7 +107,7 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
                   href={`/books/${book.slug}/read`}
                   className="inline-flex items-center justify-center rounded-full border border-brand-primary-text px-5 py-2 text-sm font-semibold text-brand-primary-text"
                 >
-                  📖 Read online now, with read-aloud 🔊
+                  📖 Read Chapter 1 free, with read-aloud 🔊
                 </Link>
               </div>
             )}
@@ -141,7 +141,7 @@ export default async function BookPage({ params }: PageProps<"/books/[slug]">) {
               label="Tell a friend"
               url={`${SITE}/books/${book.slug}`}
               title={book.title}
-              message={`📘 *${book.title}*${book.author ? ` by ${book.author}` : ""}${book.highlights[0] ? `\n\n“${book.highlights[0]}”` : ""}\n\nRead a sample on ZIVARUKAH BOOKS 👇`}
+              message={`📘 *${book.title}*${book.author ? ` by ${book.author}` : ""}${book.highlights[0] ? `\n\n“${book.highlights[0]}”` : ""}\n\nRead Chapter 1 free on ZIVARUKAH BOOKS 👇`}
             />
 
             {paragraphs.length > 0 && (

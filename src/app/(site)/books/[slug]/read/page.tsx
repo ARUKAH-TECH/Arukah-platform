@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { getPublishedBook } from "@/db/books";
 import { Reader } from "@/features/books/Reader";
 import { PayToRead, RememberReading } from "@/features/books/ReaderBits";
-import { loadReader } from "@/server/bookReader";
+import { loadPreview, loadReader } from "@/server/bookReader";
 import { quickPaymentsEnabled } from "@/server/quickPayments";
 import { whatsappLink } from "@/config/forms";
 
@@ -58,23 +58,49 @@ export default async function ReadBookPage({ params, searchParams }: PageProps<"
     );
   }
 
-  // Not paid (or no text yet): offer to pay.
+  // Not paid (or no text yet): the free part (chapter 1 and half of chapter 2), then pay.
   const book = await getPublishedBook(slug);
   if (!book) notFound();
   const readPrice = book.prices.find((p) => p.format === "read");
+  const preview = access.reason === "no-text" ? null : await loadPreview(slug);
   return (
-    <div className="py-16">
+    <div className="py-8">
+      {preview && (
+        <Container>
+          <div className="mx-auto max-w-3xl">
+            <Link href={`/books/${book.slug}`} className="text-sm text-foreground/60 hover:text-brand-primary-text">
+              ← About this book
+            </Link>
+            <h1 className="mt-4 text-center text-3xl font-bold tracking-tight">{book.title}</h1>
+            {book.author && <p className="mt-1 text-center text-sm text-foreground/60">{book.author}</p>}
+            <p className="mt-4 rounded-xl bg-emerald-50 p-3 text-center text-sm text-emerald-950 dark:bg-emerald-950 dark:text-emerald-100">
+              📖 <strong>Free to read:</strong> Chapter 1 and the first half of Chapter 2. Pay once to read the whole book.
+            </p>
+            <div className="mt-8">
+              <Reader
+                title={preview.book.title}
+                author={preview.book.author}
+                pages={preview.book.pages}
+                highlights={preview.book.highlights}
+                storageKey={`zivarukah-reader-free:${preview.book.slug}`}
+              />
+            </div>
+          </div>
+        </Container>
+      )}
       <Container>
-        <div className="mx-auto max-w-xl text-center">
-          <h1 className="text-3xl font-bold tracking-tight">{book.title}</h1>
+        <div id="continue" className="mx-auto mt-10 max-w-xl rounded-3xl text-center border border-black/10 p-6 text-center dark:border-white/10">
+          <h2 className="text-2xl font-bold tracking-tight">{preview ? "Enjoying it? Continue reading" : book.title}</h2>
           {access.reason === "expired" ? (
             <p className="mt-4 text-sm text-foreground/70">
-              {reference.startsWith("ZF-") ? "Your free 7-day reading time has ended. Earn another key in ZIVA Literacy, or buy below." : "Your online reading time for this book has ended."}
+              {reference.startsWith("ZF-") ? "Your free reading time has ended. You can buy the book below." : "Your online reading time for this book has ended."}
             </p>
           ) : access.reason === "no-text" ? (
             <p className="mt-4 text-sm text-foreground/70">The online edition is being prepared. Please check back soon.</p>
           ) : (
-            <p className="mt-4 text-sm text-foreground/70">Read the whole book here on your phone, with read-aloud, straight after paying.</p>
+            <p className="mt-4 text-sm text-foreground/70">
+              {preview ? "The rest of the story opens straight after paying, with read-aloud." : "Read the whole book here on your phone, with read-aloud, straight after paying."}
+            </p>
           )}
           {readPrice && access.reason !== "no-text" && (
             <div className="mt-6 flex justify-center">
