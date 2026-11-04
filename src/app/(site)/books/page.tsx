@@ -19,11 +19,10 @@ import { SharePage } from "@/components/ui/SharePage";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "ZIVARUKAH BOOKS",
-  description:
-    "ZIVARUKAH BOOKS: buy books to read online, download, or order as printed copies in Ghana. 10% off when you buy more than three.",
+  title: { absolute: "Read Chapter 1 Free: Books by Shepherd Justice Sarpong Oduro" },
+  description: "Read The Wicked and Unforgiving Student online with read-aloud. Chapter 1 is free. Buy to read, download or order a printed copy in Ghana.",
   alternates: { canonical: "/books" },
-  openGraph: { title: "ZIVARUKAH BOOKS | ZIVARUKAH", description: "ZIVARUKAH BOOKS: buy books to read online, download, or order as printed copies in Ghana. 10% off when you buy more than three." },
+  openGraph: { title: "Read Chapter 1 Free: Books by Shepherd Justice Sarpong Oduro", description: "Read The Wicked and Unforgiving Student online with read-aloud. Chapter 1 is free. Buy to read, download or order a printed copy in Ghana." },
 };
 
 export default async function BooksPage() {
