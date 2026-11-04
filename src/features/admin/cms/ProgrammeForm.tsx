@@ -2,6 +2,7 @@
 
 import { useActionState, useRef, useState } from "react";
 import { saveProgramme } from "@/features/admin/cms/programmeActions";
+import { readFlyer, type FlyerDetails } from "@/features/admin/cms/flyerActions";
 import { initialCmsFormState } from "@/features/admin/cms/shared";
 import { ACTIVE_BRANCHES } from "@/config/branches";
 import { fieldClasses, primaryButtonClasses } from "@/features/admin/ui";
@@ -77,6 +78,81 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
   const [uploading, setUploading] = useState(false);
   const [uploadError, setUploadError] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
+  const formRef = useRef<HTMLFormElement>(null);
+  const [reading, setReading] = useState(false);
+  const [readNote, setReadNote] = useState<{ ok: boolean; lines: string[] } | null>(null);
+
+  // Put the flyer's details into the form fields. Everything stays editable.
+  function fill(d: FlyerDetails) {
+    const form = formRef.current;
+    if (!form) return;
+    const set = (name: string, value: string) => {
+      const el = form.elements.namedItem(name) as HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement | null;
+      if (el && value) el.value = value;
+    };
+    const check: string[] = [];
+    set("title", d.title);
+    if (d.category) {
+      set("category", d.category);
+      onCategory(d.category);
+    }
+    set("summary", d.summary);
+    set("description", d.description);
+    set("scheduleNote", d.scheduleNote);
+
+    let ends: Date | null = null;
+    if (d.startDate && d.startTime) {
+      const start = `${d.startDate}T${d.startTime}`;
+      let endDay = d.endDate || d.startDate;
+      let endTime = d.endTime;
+      if (!endTime) {
+        const [h, m] = d.startTime.split(":").map(Number);
+        endTime = `${String(Math.min(23, h + 2)).padStart(2, "0")}:${String(m).padStart(2, "0")}`;
+        check.push("The end time wasn't on the flyer: it is set 2 hours after the start.");
+      } else if (endDay === d.startDate && endTime <= d.startTime) {
+        // Ends after midnight.
+        const next = new Date(`${d.startDate}T00:00:00Z`);
+        next.setUTCDate(next.getUTCDate() + 1);
+        endDay = next.toISOString().slice(0, 10);
+      }
+      set("startsAt", start);
+      set("endsAt", `${endDay}T${endTime}`);
+      ends = new Date(`${endDay}T${endTime}:00Z`);
+    } else {
+      check.push(d.startDate ? "The time wasn't clear on the flyer: please enter the start and end time." : "The date wasn't clear on the flyer: please enter the dates and times.");
+    }
+    if (d.startDate && !d.yearShown) check.push("The year isn't on the flyer: please check the year in the dates.");
+
+    if (d.platform) {
+      setPlatform(d.platform);
+      if (d.platform === "other" && d.platformName) setTimeout(() => set("platformName", d.platformName), 0);
+    } else check.push("The meeting platform wasn't on the flyer: please choose it.");
+    if (d.priceGhs > 0) {
+      setPaid(true);
+      setTimeout(() => set("price", String(d.priceGhs)), 0);
+      check.push(`It looks like a paid programme (GHS ${d.priceGhs}): please confirm the price.`);
+    } else setPaid(false);
+
+    const past = ends ? ends.getTime() < Date.now() : false;
+    set("status", past ? "completed" : "published");
+    if (past) check.push("It has already happened, so it is marked Completed and will show under Past programmes.");
+    else check.push("Add the joining link (Zoom / Google Meet) before people register.");
+    setReadNote({ ok: true, lines: check });
+  }
+
+  async function readTheFlyer(path: string) {
+    setReading(true);
+    setReadNote(null);
+    try {
+      const result = await readFlyer(path);
+      if (result.ok) fill(result.details);
+      else setReadNote({ ok: false, lines: [result.message] });
+    } catch {
+      setReadNote({ ok: false, lines: ["The flyer couldn't be read just now. Please try again."] });
+    } finally {
+      setReading(false);
+    }
+  }
   const shown = state.status !== "idle" ? state : justSaved ? { status: "saved", message: "Saved." } : null;
   const local = (iso: string | null) => isoToZonedInput(iso, values.timeZone);
 
@@ -97,6 +173,9 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
       const { error: jpegError } = await storage.upload(`programmes/${id}.jpg`, jpeg.blob, { contentType: "image/jpeg", cacheControl: "31536000" });
       if (jpegError) throw new Error(jpegError.message);
       setImage({ path, width, height });
+      // A new programme: read the details straight from the flyer.
+      const title = formRef.current?.elements.namedItem("title") as HTMLInputElement | null;
+      if (!values.id && title && !title.value.trim()) void readTheFlyer(path);
     } catch (error) {
       setUploadError(error instanceof Error ? error.message : "Upload failed.");
     } finally {
@@ -106,7 +185,7 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
   }
 
   return (
-    <form action={formAction} className="flex flex-col gap-5">
+    <form ref={formRef} action={formAction} className="flex flex-col gap-5">
       {values.id && <input type="hidden" name="id" value={values.id} />}
       <input type="hidden" name="imagePath" value={image?.path ?? ""} />
       <input type="hidden" name="imageWidth" value={image?.width ?? ""} />
@@ -130,7 +209,7 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
           <textarea name="description" rows={6} maxLength={6000} defaultValue={values.description} className={fieldClasses} />
         </label>
         <div className="text-sm">
-          Banner picture
+          Flyer <span className="text-foreground/60">(add it first: the details are then filled in from it)</span>
           {image && (
             // eslint-disable-next-line @next/next/no-img-element -- admin preview of an uploaded image
             <img
@@ -151,6 +230,29 @@ export function ProgrammeForm({ values, justSaved }: { values: ProgrammeFormValu
             )}
           </div>
           {uploadError && <p className="mt-1 text-xs text-red-700">{uploadError}</p>}
+          {image && (
+            <button
+              type="button"
+              onClick={() => void readTheFlyer(image.path)}
+              disabled={reading || uploading}
+              className="mt-2 rounded-full bg-[var(--admin-gold,#e3a82a)] px-4 py-2 text-sm font-semibold text-[#14110c] disabled:opacity-50"
+            >
+              {reading ? "✨ Reading the flyer…" : "✨ Fill in the details from the flyer"}
+            </button>
+          )}
+          {readNote && (
+            <div
+              role="status"
+              className={`mt-2 rounded-xl p-3 text-xs leading-5 ${readNote.ok ? "bg-emerald-50 text-emerald-950 dark:bg-emerald-950 dark:text-emerald-100" : "bg-red-50 text-red-900 dark:bg-red-950 dark:text-red-100"}`}
+            >
+              {readNote.ok && <p className="font-semibold">✅ Filled in from the flyer. Check the details, then tap Save programme.</p>}
+              <ul className={readNote.ok ? "mt-1 list-disc pl-4" : ""}>
+                {readNote.lines.map((line) => (
+                  <li key={line}>{line}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
         <label className="text-sm">
           Web address <span className="text-foreground/60">(zivarukah.com/programmes/…; leave empty to make one from the title)</span>
