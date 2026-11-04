@@ -41,11 +41,13 @@ export function AdminAppSetup() {
 export function InstallAdminApp() {
   const [canInstall, setCanInstall] = useState(false);
   const [installed, setInstalled] = useState(false);
+  const [computer, setComputer] = useState(false);
 
   useEffect(() => {
     const update = () => setCanInstall(Boolean(deferred));
     update();
     setInstalled(window.matchMedia("(display-mode: standalone)").matches);
+    setComputer(!/Android|iPhone|iPad|iPod/i.test(navigator.userAgent) && navigator.maxTouchPoints < 2);
     listeners.add(update);
     return () => {
       listeners.delete(update);
@@ -60,8 +62,10 @@ export function InstallAdminApp() {
         <p className="font-semibold">Install the admin as an app</p>
         <p className="text-foreground/60">
           {canInstall
-            ? "Opens straight to your dashboard from your home screen, full-screen."
-            : "In Chrome: tap ⋮ (top right) → “Install app” or “Add to Home screen”."}
+            ? computer ? "Opens straight to your dashboard from your desktop or Start menu." : "Opens straight to your dashboard from your home screen, full-screen."
+            : computer
+              ? "On a computer, use Chrome or Edge. Chrome: click the install icon at the right end of the address bar, or ⋮ → Cast, save and share → Install page as app. Edge: ⋯ → Apps → Install this site as an app."
+              : "In Chrome: tap ⋮ (top right) → “Install app” or “Add to Home screen”."}
         </p>
       </div>
       {canInstall && (
