@@ -94,18 +94,22 @@ export function Header() {
             <Link href="/ministry/support" className="rounded-lg px-2 py-2 font-semibold text-brand-primary-text hover:bg-black/5 dark:hover:bg-white/10">
               🙏 Support the outreach
             </Link>
-            <p className="mt-2 px-2 text-xs font-semibold uppercase tracking-wider text-foreground/60">
-              Businesses
-            </p>
-            {businessNav.map((biz) => (
-              <Link
-                key={biz.href}
-                href={biz.href}
-                className="rounded-lg px-2 py-2 hover:bg-black/5 dark:hover:bg-white/10"
-              >
-                {biz.label}
-              </Link>
-            ))}
+            {/* All the businesses tucked into one dropdown, so the menu stays short. */}
+            <details className="group/biz mt-1 rounded-lg">
+              <summary className="flex cursor-pointer list-none items-center justify-between rounded-lg px-2 py-2 font-semibold hover:bg-black/5 dark:hover:bg-white/10 [&::-webkit-details-marker]:hidden">
+                <span>Our businesses</span>
+                <span aria-hidden="true" className="text-xs text-foreground/60 transition-transform group-open/biz:rotate-180">
+                  ▼
+                </span>
+              </summary>
+              <div className="ml-2 flex flex-col gap-1 border-l-2 border-brand-primary/40 pl-2">
+                {businessNav.map((biz) => (
+                  <Link key={biz.href} href={biz.href} className="rounded-lg px-2 py-2 hover:bg-black/5 dark:hover:bg-white/10">
+                    {biz.label}
+                  </Link>
+                ))}
+              </div>
+            </details>
           </nav>
         </details>
         </div>
