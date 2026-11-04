@@ -2,6 +2,7 @@ import "server-only";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { quickPaymentsEnabled } from "@/server/quickPayments";
+import { getPublishedBook } from "@/db/books";
 
 export interface ReaderBook {
   id: string;
@@ -185,9 +186,12 @@ export function previewPages(pages: string[]): string[] {
 /** The free preview of a published book, for anyone. */
 export async function loadPreview(slug: string): Promise<{ book: ReaderBook; totalPages: number } | null> {
   if (!/^[a-z0-9-]{1,120}$/.test(slug)) return null;
+  // Only published books (checked with the public, read-only client).
+  const published = await getPublishedBook(slug);
+  if (!published) return null;
   const supabase = createServiceClient();
-  const { data: book } = await supabase.from("books").select("id, slug, title, author, highlights, status").eq("slug", slug).maybeSingle();
-  if (!book || book.status !== "published") return null;
+  const { data: book } = await supabase.from("books").select("id, slug, title, author, highlights").eq("id", published.id).maybeSingle();
+  if (!book) return null;
   const { data: pages } = await supabase.from("book_pages").select("page_no, content").eq("book_id", book.id).order("page_no", { ascending: true });
   if (!pages?.length) return null;
   const all = pages.map((p) => p.content as string);
