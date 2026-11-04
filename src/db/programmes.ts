@@ -1,4 +1,5 @@
 import "server-only";
+import { branchForCategory } from "@/features/programmes/shared";
 import { createPublicClient, mediaPublicUrl } from "@/lib/supabase/public";
 
 // Public programme data. Row Level Security hides drafts; joining links live
@@ -137,4 +138,18 @@ export async function getProgrammesFor(branch: string): Promise<PublicProgramme[
   return (await getPublicProgrammes()).filter(
     (p) => p.branches.includes(branch) && (p.status === "published" || p.status === "closed") && Date.parse(p.endsAt) > now,
   );
+}
+
+/**
+ * Programmes that have already happened, for a page's "Past programmes"
+ * section: chosen for that page, or with a matching category (a "Ministry"
+ * programme shows on the Ministry page). Newest first.
+ */
+export async function getPastProgrammesFor(branch: string, limit = 12): Promise<PublicProgramme[]> {
+  const now = Date.now();
+  return (await getPublicProgrammes())
+    .filter((p) => p.status !== "cancelled" && (p.status === "completed" || Date.parse(p.endsAt) <= now))
+    .filter((p) => p.branches.includes(branch) || branchForCategory(p.category) === branch)
+    .sort((a, b) => Date.parse(b.startsAt) - Date.parse(a.startsAt))
+    .slice(0, limit);
 }

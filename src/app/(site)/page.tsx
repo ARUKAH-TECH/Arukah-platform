@@ -21,6 +21,8 @@ import { WHATSAPP_URL, whatsappLink } from "@/config/forms";
 import { homePage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 import { CompletedWork } from "@/features/portfolio/CompletedWork";
+import { listArticles } from "@/db/articles";
+import { ArticleCard } from "@/features/articles/ArticleCard";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
@@ -33,7 +35,7 @@ export const revalidate = 60;
 
 export default async function Home() {
   // Admin-edited text over the original wording (Admin → Page text).
-  const t = textReader(await getPageText(homePage));
+  const [t, { articles }] = await Promise.all([getPageText(homePage).then(textReader), listArticles({ limit: 3 })]);
 
   return (
     <>
@@ -123,6 +125,24 @@ export default async function Home() {
           </div>
         </Container>
       </section>
+
+      {articles.length > 0 && (
+        <section id="articles" className="py-14">
+          <Container>
+            <div className="flex flex-wrap items-end justify-between gap-3">
+              <SectionHeading eyebrow="Articles" title="Latest articles" />
+              <Button href="/articles" variant="outline">
+                All articles
+              </Button>
+            </div>
+            <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+              {articles.map((article) => (
+                <ArticleCard key={article.id} article={article} />
+              ))}
+            </div>
+          </Container>
+        </section>
+      )}
 
       <AdSlot branch="home" />
 
