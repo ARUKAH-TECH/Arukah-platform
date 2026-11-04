@@ -70,10 +70,10 @@ export default function LiteracyPage() {
 
         <h2 className="mt-14 text-2xl font-bold tracking-tight">Good to know</h2>
         <ul className="mt-4 flex max-w-2xl list-disc flex-col gap-2 pl-6 text-foreground/80">
-          <li>Free, with no sign-up. Progress is saved only on the learner’s own device; no names or scores are collected.</li>
+          <li>Completely free, with no registration and nothing to pay. Every stage and the Word bank are open.</li>
           <li>Works offline after the first visit, so it saves data.</li>
           <li>Read-aloud uses the phone’s own voice.</li>
-          <li>Teachers and parents: class and progress accounts are coming next.</li>
+          <li>Parents far away can follow a child’s stars with a free parent code made on the child’s phone (first name only, with a parent’s permission).</li>
         </ul>
       </Container>
     </div>
