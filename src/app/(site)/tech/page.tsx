@@ -19,11 +19,10 @@ import { CompletedWork } from "@/features/portfolio/CompletedWork";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "ARUKAH TECH: Software, Websites & Management Systems in Ghana",
-  description:
-    "ARUKAH TECH builds websites, custom software and school, church, hospital and fuel station management systems in Ghana, with deployment, maintenance and technical support.",
+  title: { absolute: "Websites & Church Management Systems in Ghana | ARUKAH TECH" },
+  description: "We build websites and management systems for churches, schools and businesses in Ghana. See our completed work, then chat with us on WhatsApp for a quote.",
   alternates: { canonical: "/tech" },
-  openGraph: { title: "ARUKAH TECH: Software, Websites & Management Systems in Ghana | ZIVARUKAH", description: "ARUKAH TECH builds websites, custom software and school, church, hospital and fuel station management systems in Ghana, with deployment, maintenance and technical support." },
+  openGraph: { title: "Websites & Church Management Systems in Ghana | ARUKAH TECH", description: "We build websites and management systems for churches, schools and businesses in Ghana. See our completed work, then chat with us on WhatsApp for a quote." },
 };
 
 export default async function TechPage() {
