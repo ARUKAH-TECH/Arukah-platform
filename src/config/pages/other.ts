@@ -72,27 +72,6 @@ export const booksPage: PageDef = {
         },
       ],
     },
-    {
-      title: "Coming soon section",
-      fields: [
-        { key: "upcomingTitle", label: "Heading", kind: "text", max: 100, default: "What the bookstore will offer" },
-        {
-          key: "upcomingText",
-          label: "Text",
-          kind: "textarea",
-          max: 400,
-          default: "A future phase of this platform adds the bookstore itself. Until then, nothing here can be purchased.",
-        },
-        {
-          key: "upcomingItems",
-          label: "Features (one per line)",
-          kind: "list",
-          max: 60,
-          maxItems: 12,
-          default: ["Read online", "Digital downloads", "Printed copies", "Read-aloud support"],
-        },
-      ],
-    },
   ],
 };
 
@@ -111,21 +90,7 @@ export const ministryPage: PageDef = {
           kind: "textarea",
           max: 400,
           default:
-            "Kept visually and editorially separate from the commercial ZIVARUKAH businesses. Follow along as content is published across:",
-        },
-      ],
-    },
-    {
-      title: "Coming soon section",
-      fields: [
-        { key: "upcomingTitle", label: "Heading", kind: "text", max: 100, default: "What this ministry will share" },
-        {
-          key: "upcomingItems",
-          label: "Items (one per line)",
-          kind: "list",
-          max: 60,
-          maxItems: 12,
-          default: ["Sermons", "Teachings", "Videos", "Prayer programs", "Announcements", "Events", "Testimonies"],
+            "The ministry arm of ZIVARUKAH: preaching, teaching, prayer and outreach. Follow the message on:",
         },
       ],
     },
@@ -166,7 +131,7 @@ export const projectsPage: PageDef = {
           kind: "textarea",
           max: 500,
           default:
-            "The management systems ARUKAH TECH builds. Our church management system is complete and in use by Bethel Inspiration Overcommers Ministry Int; school, hospital and fuel station systems are next.",
+            "Websites and management systems for churches, schools and businesses. Our church management system is complete and in use; school, hospital and fuel station systems are being built.",
         },
         { key: "card1Name", label: "Card 1: name", kind: "text", max: 80, default: "School Management System" },
         { key: "card1Text", label: "Card 1: text", kind: "textarea", max: 250, default: "Enrollment, attendance, grading, and communication tools for schools." },
@@ -199,7 +164,7 @@ export const contactPage: PageDef = {
           kind: "textarea",
           max: 400,
           default:
-            "This is a separate form for the ministry side of ZIVARUKAH, for new and returning converts, or anyone wanting prayer or spiritual follow-up.",
+            "For new and returning believers, or anyone wanting prayer or spiritual follow-up. Message the ministry on WhatsApp.",
         },
       ],
     },
@@ -221,7 +186,7 @@ export const advertisePage: PageDef = {
           kind: "textarea",
           max: 600,
           default:
-            "Reach people who visit ZIVARUKAH's technology, education, footwear, media and books pages. Tell us what your advert is about. We review every request before anything goes live.",
+            "Reach people who visit ZIVARUKAH's technology, education, footwear, books and ministry pages. Tell us what your advert is about. We review every request before anything goes live.",
         },
       ],
     },

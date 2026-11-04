@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   description:
     "ARUKAH TECH builds websites, custom software and school, church, hospital and fuel station management systems in Ghana, with deployment, maintenance and technical support.",
   alternates: { canonical: "/tech" },
+  openGraph: { title: "ARUKAH TECH: Software, Websites & Management Systems in Ghana | ZIVARUKAH", description: "ARUKAH TECH builds websites, custom software and school, church, hospital and fuel station management systems in Ghana, with deployment, maintenance and technical support." },
 };
 
 export default async function TechPage() {

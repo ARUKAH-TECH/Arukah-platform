@@ -113,7 +113,7 @@ export const wearPage: PageDef = {
             "Wholesale orders",
           ],
         },
-        { key: "productsNote", label: "Small note", kind: "text", max: 200, default: "Product photos and pricing are added once real inventory is ready." },
+        { key: "productsNote", label: "Small note", kind: "text", max: 200, default: "Prices depend on style, size and quantity. Message us on WhatsApp for a quote." },
       ],
     },
     {
@@ -147,7 +147,7 @@ export const zivaPage: PageDef = {
           kind: "textarea",
           max: 300,
           default:
-            "Excellence our hallmark. Admissions are open for special teaching from Primary 1 to JHS, by home service or online.",
+            "Excellence our hallmark. Admissions are open for special teaching from Primary 1 to SHS 3, by home service or online.",
         },
       ],
     },
@@ -155,14 +155,14 @@ export const zivaPage: PageDef = {
       title: "Admissions",
       fields: [
         { key: "admissionsBadge", label: "Badge", kind: "text", max: 40, default: "Admissions open" },
-        { key: "admissionsTitle", label: "Heading", kind: "text", max: 120, default: "Admissions are open: special teaching from Primary 1 to JHS" },
+        { key: "admissionsTitle", label: "Heading", kind: "text", max: 120, default: "Admissions are open: special teaching from Primary 1 to SHS 3" },
         {
           key: "admissionsText",
           label: "Text",
           kind: "textarea",
           max: 400,
           default:
-            "ZIVA Online and Special Classes is now admitting learners from Primary 1 to JHS 3 who want extra, focused teaching. Choose one subject or several.",
+            "ZIVA Online and Special Classes is now admitting learners from Primary 1 to SHS 3 who want extra, focused teaching. Choose one subject or several.",
         },
         {
           key: "subjects",
@@ -195,36 +195,6 @@ export const zivaPage: PageDef = {
           max: 300,
           default:
             "Tap Apply now and send us the learner's class, the subjects you want and your town. We'll tell you whether home or online service suits your location, and the next steps.",
-        },
-      ],
-    },
-    {
-      title: "Coming soon section",
-      fields: [
-        { key: "upcomingTitle", label: "Heading", kind: "text", max: 100, default: "A dedicated ZIVA platform is coming" },
-        {
-          key: "upcomingText",
-          label: "Text",
-          kind: "textarea",
-          max: 400,
-          default:
-            "A future phase of this platform will add online tools for enrollment, teachers, attendance, fees, and parent communication. For now, get in touch to enquire about classes.",
-        },
-        {
-          key: "upcomingItems",
-          label: "Features (one per line)",
-          kind: "list",
-          max: 60,
-          maxItems: 12,
-          default: [
-            "Student enrollment",
-            "Teacher management",
-            "Attendance tracking",
-            "Subjects & timetables",
-            "Fees",
-            "Performance reports",
-            "Parent communication",
-          ],
         },
       ],
     },

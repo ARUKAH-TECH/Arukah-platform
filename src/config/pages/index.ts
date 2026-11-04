@@ -13,7 +13,6 @@ export const EDITABLE_PAGES: PageDef[] = [
   techPage,
   wearPage,
   zivaPage,
-  mediaPage,
   booksPage,
   ministryPage,
   projectsPage,

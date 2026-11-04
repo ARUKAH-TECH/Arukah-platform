@@ -9,7 +9,7 @@ import { getPublicProgrammes } from "@/db/programmes";
 // otherwise the sitemap ships localhost URLs. See docs/ENVIRONMENT.md.
 const baseUrl = process.env.SITE_URL || "http://localhost:3000";
 
-const routes = ["", "/about", "/tech", "/footwear", "/ziva", "/media", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles", "/literacy", "/programmes"];
+const routes = ["", "/about", "/tech", "/footwear", "/ziva", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles", "/literacy", "/programmes", "/terms", "/refunds"];
 
 // Refreshed at most every hour, and immediately after an admin edit
 // (the CMS actions revalidate /sitemap.xml).

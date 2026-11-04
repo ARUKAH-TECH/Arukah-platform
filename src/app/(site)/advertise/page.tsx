@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Advertise With Us",
   description: "Advertise your business on zivarukah.com, send a request with a photo, and we'll agree dates and price with you.",
   alternates: { canonical: "/advertise" },
+  openGraph: { title: "Advertise With Us | ZIVARUKAH", description: "Advertise your business on zivarukah.com, send a request with a photo, and we'll agree dates and price with you." },
 };
 
 // Refreshed at most every minute, and immediately after an admin edit.

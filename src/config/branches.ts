@@ -10,6 +10,10 @@ export const BRANCHES = [
   { id: "ministry", label: "Repent Online Ministries", path: "/ministry" },
 ] as const;
 
+// What the Admin forms offer. ARUKAH MEDIA is retired from the public site
+// (Nov 2026) but stays valid above so older items still load.
+export const ACTIVE_BRANCHES = BRANCHES.filter((branch) => branch.id !== "media");
+
 export type BranchId = (typeof BRANCHES)[number]["id"];
 
 export const BRANCH_IDS: readonly string[] = BRANCHES.map((branch) => branch.id);

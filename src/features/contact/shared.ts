@@ -7,7 +7,6 @@ export const SERVICE_OPTIONS = [
   "ARUKAH TECH",
   "ARUKAH WEAR",
   "ZIVA Special Classes",
-  "ARUKAH MEDIA",
   "Other",
 ] as const;
 

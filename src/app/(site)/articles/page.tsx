@@ -103,7 +103,7 @@ export default async function ArticlesPage({ searchParams }: PageProps<"/article
         )}
 
         {articles.length === 0 ? (
-          <p className="mt-12 text-foreground/60">{q || category ? "No articles found." : "Articles are coming soon."}</p>
+          <p className="mt-12 text-foreground/60">{q || category ? "No articles found." : "New articles are on the way. Check back this week."}</p>
         ) : (
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {articles.map((article) => (

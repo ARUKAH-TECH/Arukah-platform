@@ -21,6 +21,7 @@ export const metadata: Metadata = {
   description:
     "ARUKAH WEAR makes quality handcrafted slippers, sandals and men's, women's and children's footwear in Ghana. Custom and wholesale orders welcome.",
   alternates: { canonical: "/footwear" },
+  openGraph: { title: "ARUKAH WEAR: Handcrafted, Ghana-Made Footwear | ZIVARUKAH", description: "ARUKAH WEAR makes quality handcrafted slippers, sandals and men's, women's and children's footwear in Ghana. Custom and wholesale orders welcome." },
 };
 
 export default async function FootwearPage() {

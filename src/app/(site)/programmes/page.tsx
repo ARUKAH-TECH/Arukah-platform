@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   title: "Online Programmes: Classes and Events",
   description: "Online classes, trainings and events by ZIVARUKAH on Zoom, Google Meet and Teams. Register on the website and receive your secret access code.",
   alternates: { canonical: "/programmes" },
+  openGraph: { title: "Online Programmes: Classes and Events | ZIVARUKAH", description: "Online classes, trainings and events by ZIVARUKAH on Zoom, Google Meet and Teams. Register on the website and receive your secret access code." },
 };
 
 export default async function ProgrammesPage() {
@@ -26,6 +27,7 @@ export default async function ProgrammesPage() {
     <section className="py-14">
       <Container>
         <SectionHeading
+          as="h1"
           eyebrow="Online programmes"
           title="Learn with us online"
           description="Classes, trainings and events held online. Register here, keep your secret code, and use it to open the joining details."

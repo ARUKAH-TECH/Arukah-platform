@@ -6,7 +6,6 @@ export const GALLERY_BRANCHES: { id: BranchId; label: string; path: string }[] =
   { id: "wear", label: "ARUKAH WEAR (footwear)", path: "/footwear" },
   { id: "tech", label: "ARUKAH TECH", path: "/tech" },
   { id: "ziva", label: "ZIVA Special Classes", path: "/ziva" },
-  { id: "media", label: "ARUKAH MEDIA", path: "/media" },
   { id: "books", label: "ZIVARUKAH BOOKS", path: "/books" },
   { id: "home", label: "Homepage", path: "/" },
 ];

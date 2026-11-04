@@ -23,6 +23,7 @@ export const metadata: Metadata = {
   description:
     "Repent Online Ministries: Christian teaching, sermons, prayer and hospital, prison, street and community outreach. New here or growing in faith? Reach out.",
   alternates: { canonical: "/ministry" },
+  openGraph: { title: "Repent Online Ministries: Rescue the Perishing | ZIVARUKAH", description: "Repent Online Ministries: Christian teaching, sermons, prayer and hospital, prison, street and community outreach. New here or growing in faith? Reach out." },
 };
 
 export default async function MinistryPage() {
@@ -63,22 +64,6 @@ export default async function MinistryPage() {
           />
         </div>
 
-        <div className="border-t border-white/10 py-16">
-          <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
-            Coming soon
-          </p>
-          <h2 className="mt-2 text-2xl font-semibold tracking-tight">{t.text("upcomingTitle")}</h2>
-          <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {t.list("upcomingItems").map((item) => (
-              <div
-                key={item}
-                className="rounded-xl border border-dashed border-white/15 p-4 text-center text-sm text-white/70"
-              >
-                {item}
-              </div>
-            ))}
-          </div>
-        </div>
 
         <div id="respond" className="border-t border-white/10 py-16">
           <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">

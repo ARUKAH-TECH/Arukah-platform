@@ -38,7 +38,7 @@ const rules: FaqRule[] = [
   {
     keywords: ["website", "web development", "software", "app develop", "custom system", "management system"],
     answer:
-      "Yes: ARUKAH TECH builds websites, custom software, and management systems. Check out /tech or use the contact form to discuss your project.",
+      "Yes: ARUKAH TECH builds websites, custom software, and management systems. See /tech, or message us on WhatsApp to discuss your project.",
   },
   {
     keywords: ["shoe", "shoes", "footwear", "slipper", "sandal", "wear", "retail", "wholesale"],
@@ -48,31 +48,26 @@ const rules: FaqRule[] = [
   {
     keywords: ["ziva", "special classes", "tuition", "school", "learn", "study", "class for my child"],
     answer:
-      "Yes: ZIVA Special Classes covers Primary 1 to SHS 3. Visit /ziva to learn more, or use the contact form to enquire.",
+      "Yes: ZIVA Special Classes covers Primary 1 to SHS 3, at home or online. Visit /ziva and tap Apply now on WhatsApp.",
   },
   {
     keywords: ["book", "bookstore", "ebook", "e-book", "read online", "audiobook"],
     answer:
-      "ZIVARUKAH BOOKS is coming soon: online reading, digital downloads, and printed copies. Use the contact form if you'd like to hear when it opens.",
-  },
-  {
-    keywords: ["video", "media", "photography", "event coverage", "editing"],
-    answer:
-      "Yes: ARUKAH MEDIA offers video production, event coverage, and video editing. See /media for details.",
+      "ZIVARUKAH BOOKS is open: read online, download or order a printed copy at /books.",
   },
   {
     keywords: ["ministry", "church", "sermon", "prayer", "convert", "faith", "bible"],
     answer:
-      "You're welcome to visit /ministry: Repent Online Ministries has a dedicated form there for prayer requests and follow-up.",
+      "You're welcome to visit /ministry: Repent Online Ministries is there for prayer, counselling and follow-up on WhatsApp.",
   },
   {
     keywords: ["contact", "whatsapp", "phone number", "reach you", "reach out", "get in touch", "call you"],
-    answer: `You can reach us on WhatsApp: ${WHATSAPP_LINK}, or use our contact form at /contact.`,
+    answer: `You can reach us on WhatsApp: ${WHATSAPP_LINK}, or see /contact.`,
   },
 ];
 
 const FALLBACK_ANSWER =
-  "I don't have an answer for that one. Please use our contact form and a real person will get back to you.";
+  "I don't have an answer for that one. Please message us on WhatsApp (see /contact) and a real person will get back to you.";
 
 export function matchFaq(question: string): string {
   const q = question.toLowerCase();

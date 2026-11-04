@@ -9,7 +9,7 @@ import {
   slugify,
   toInputDateTime,
 } from "@/features/admin/cms/shared";
-import { BRANCHES } from "@/config/branches";
+import { ACTIVE_BRANCHES } from "@/config/branches";
 import { fieldClasses, primaryButtonClasses } from "@/features/admin/ui";
 
 export interface ProjectFormValues {
@@ -101,7 +101,7 @@ export function ProjectForm({ project, images, justSaved }: ProjectFormProps) {
       <fieldset>
         <legend className="text-sm font-medium">Show on</legend>
         <div className="mt-2 grid grid-cols-1 gap-2 sm:grid-cols-2">
-          {BRANCHES.map((branch) => (
+          {ACTIVE_BRANCHES.map((branch) => (
             <label key={branch.id} className="flex items-center gap-2 text-sm">
               <input
                 type="checkbox"

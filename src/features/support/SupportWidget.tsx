@@ -10,7 +10,7 @@ interface ChatMessage {
 
 const GREETING: ChatMessage = {
   role: "bot",
-  text: "Hi! Ask me about our services (website development, footwear, ZIVA classes, media, or ministry), or how to reach us.",
+  text: "Hi! Ask me about our services (website development, footwear, ZIVA classes, books, programmes or ministry), or how to reach us.",
 };
 
 export function SupportWidget() {

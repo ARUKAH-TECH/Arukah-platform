@@ -35,6 +35,7 @@ export function ShareProgramme({
   flyerUrl,
   dark = false,
   compact = false,
+  minimal = false,
 }: {
   slug: string;
   title: string;
@@ -44,6 +45,8 @@ export function ShareProgramme({
   flyerUrl?: string | null;
   dark?: boolean;
   compact?: boolean;
+  /** Only the "Invite friends" button (homepage cards). */
+  minimal?: boolean;
 }) {
   const [busy, setBusy] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -95,9 +98,16 @@ export function ShareProgramme({
   const outline = dark ? "border-white/30 text-white" : "border-black/15 dark:border-white/20";
   return (
     <div className={`flex flex-wrap items-center gap-2 ${compact ? "" : "mt-1"}`}>
-      <button type="button" onClick={share} disabled={busy} className="inline-flex items-center gap-2 rounded-full bg-[#25D366] px-5 py-2.5 text-sm font-bold text-black shadow-sm disabled:opacity-60">
+      <button
+        type="button"
+        onClick={share}
+        disabled={busy}
+        className={`inline-flex items-center gap-2 rounded-full bg-[#25D366] font-bold text-black shadow-sm disabled:opacity-60 ${minimal ? "px-4 py-2 text-xs" : "px-5 py-2.5 text-sm"}`}
+      >
         📣 {busy ? "Preparing the flyer…" : "Invite friends"}
       </button>
+      {!minimal && (
+        <>
       <a
         href={`https://wa.me/?text=${encodeURIComponent(waText)}`}
         target="_blank"
@@ -109,6 +119,8 @@ export function ShareProgramme({
       <button type="button" onClick={copy} className={`rounded-full border px-4 py-2.5 text-sm font-semibold ${outline}`}>
         {copied ? "✅ Copied" : "🔗 Copy link"}
       </button>
+        </>
+      )}
     </div>
   );
 }

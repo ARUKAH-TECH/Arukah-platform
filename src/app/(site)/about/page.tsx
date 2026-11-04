@@ -105,9 +105,8 @@ export default async function AboutPage() {
               <p className="mt-1 text-sm font-semibold uppercase tracking-wide text-brand-primary-text">Healing · total restoration</p>
               <p className="mt-3 leading-7 text-foreground/75">{t.text("arukahText")}</p>
               <p className="mt-3 text-sm text-foreground/75">
-                Our ARUKAH branches: <Link href="/tech" className="font-semibold underline">ARUKAH TECH</Link>,{" "}
-                <Link href="/footwear" className="font-semibold underline">ARUKAH WEAR</Link> and{" "}
-                <Link href="/media" className="font-semibold underline">ARUKAH MEDIA</Link>.
+                Our ARUKAH branches: <Link href="/tech" className="font-semibold underline">ARUKAH TECH</Link> and{" "}
+                <Link href="/footwear" className="font-semibold underline">ARUKAH WEAR</Link>.
               </p>
             </div>
           </div>
