@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ProgrammesSection } from "@/features/programmes/ProgrammesSection";
+import { PastProgrammes } from "@/features/programmes/PastProgrammes";
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
 import { SocialLinks } from "@/components/ui/SocialLinks";
@@ -88,6 +89,7 @@ export default async function MinistryPage() {
 
       <OutreachSection />
 
+      <PastProgrammes branch="ministry" dark />
       <ProjectsSection branch="ministry" eyebrow="Outreach" title="Recent outreach" dark />
       <SharePage
         path="/ministry"

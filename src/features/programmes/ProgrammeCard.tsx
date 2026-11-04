@@ -13,7 +13,7 @@ export function ProgrammeCard({ p }: { p: PublicProgramme }) {
       className="flex flex-col overflow-hidden rounded-2xl border border-black/10 bg-white shadow-sm transition hover:border-brand-primary-text dark:border-white/10 dark:bg-white/5"
     >
       {p.image ? (
-        <Image src={p.image.url} alt="" width={p.image.width ?? 1200} height={p.image.height ?? 675} sizes="(min-width: 768px) 50vw, 100vw" className="aspect-[16/9] w-full object-cover" />
+        <Image src={p.image.url} alt="" width={p.image.width ?? 1200} height={p.image.height ?? 675} sizes="(min-width: 768px) 50vw, 100vw" className="h-auto max-h-[36rem] w-full bg-black/5 object-contain" />
       ) : (
         <div aria-hidden="true" className="flex aspect-[16/9] w-full items-center justify-center bg-gradient-to-br from-[#0b3d91] to-[#e3a82a] text-5xl">
           🎓
