@@ -23,6 +23,13 @@ self.addEventListener("activate", (event) => {
   );
 });
 
+// Keep saved build files from growing for ever (each release adds new ones);
+// saved Bible pages and chapters are kept.
+async function trim(cache) {
+  const keys = (await cache.keys()).filter((k) => new URL(k.url).pathname.startsWith("/_next/static/"));
+  if (keys.length > 400) await Promise.all(keys.slice(0, keys.length - 300).map((k) => cache.delete(k)));
+}
+
 self.addEventListener("fetch", (event) => {
   const request = event.request;
   if (request.method !== "GET") return;
@@ -36,7 +43,10 @@ self.addEventListener("fetch", (event) => {
         (hit) =>
           hit ||
           fetch(request).then((res) => {
-            if (res.ok) caches.open(CACHE).then((c) => c.put(request, res.clone()));
+            if (res.ok) {
+              const copy = res.clone();
+              caches.open(CACHE).then((c) => c.put(request, copy).then(() => trim(c)));
+            }
             return res;
           }),
       ),
