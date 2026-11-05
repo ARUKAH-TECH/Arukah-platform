@@ -50,6 +50,7 @@ export const ADMIN_GROUPS: AdminGroup[] = [
     icon: "🙏",
     title: "Ministry & books",
     sections: [
+      { title: "Bible app", description: "Daily devotionals and Bible studies with quizzes for zivarukah.com/bible.", href: "/admin/bible" },
       { title: "Ministry outreach", description: "Hospital, prison, street, community and crusade outreach reports.", href: "/admin/outreach" },
       { title: "Books", description: "Add books with covers, prices per format and a free sample.", href: "/admin/books" },
     ],

@@ -10,6 +10,7 @@ export const mainNav: NavLink[] = [
   { label: "Articles", href: "/articles" },
   { label: "Programmes", href: "/programmes" },
   { label: "Ministry", href: "/ministry" },
+  { label: "Bible", href: "/bible" },
   { label: "Contact", href: "/contact" },
 ];
 

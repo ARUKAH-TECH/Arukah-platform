@@ -1,0 +1,210 @@
+"use client";
+
+import { useCallback, useEffect, useRef, useState } from "react";
+import { readAloud, speechSupported } from "@/features/bible/speech";
+
+const LAST = "zivarukah-bible:last";
+const MARKS = "zivarukah-bible:highlights";
+const SIZE = "zivarukah-bible:size";
+const SITE = "https://zivarukah.com";
+
+function readJson<T>(key: string, fallback: T): T {
+  try {
+    return (JSON.parse(localStorage.getItem(key) ?? "null") as T) ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+function writeJson(key: string, value: unknown) {
+  try {
+    localStorage.setItem(key, JSON.stringify(value));
+  } catch {
+    // private mode or full: fine
+  }
+}
+
+const SIZES = ["text-base leading-8", "text-lg leading-9", "text-xl leading-10", "text-2xl leading-[2.75rem]"];
+
+/** One chapter: tap verses to copy, share or highlight them; listen to the chapter. Everything is kept on this device. */
+export function ChapterReader({ slug, label, chapter, verses }: { slug: string; label: string; chapter: number; verses: string[] }) {
+  const key = `${slug}.${chapter}`;
+  const [selected, setSelected] = useState<number[]>([]);
+  const [marks, setMarks] = useState<number[]>([]);
+  const [size, setSize] = useState(1);
+  const [reading, setReading] = useState<number | null>(null);
+  const [canSpeak, setCanSpeak] = useState(false);
+  const [note, setNote] = useState("");
+  const stop = useRef<(() => void) | null>(null);
+
+  useEffect(() => {
+    setCanSpeak(speechSupported());
+    setMarks(readJson<Record<string, number[]>>(MARKS, {})[key] ?? []);
+    setSize(Math.min(3, Math.max(0, readJson<number>(SIZE, 1))));
+    writeJson(LAST, { slug, chapter, label, at: Date.now() });
+    return () => stop.current?.();
+  }, [key, slug, chapter, label]);
+
+  // Keep the verse being read on screen.
+  useEffect(() => {
+    if (reading !== null) document.getElementById(`v${reading + 1}`)?.scrollIntoView({ block: "center", behavior: "smooth" });
+  }, [reading]);
+
+  const toggle = (n: number) => setSelected((cur) => (cur.includes(n) ? cur.filter((x) => x !== n) : [...cur, n].sort((a, b) => a - b)));
+
+  const refText = useCallback(() => {
+    if (!selected.length) return label;
+    const ranges: string[] = [];
+    let start = selected[0];
+    let prev = start;
+    for (const n of [...selected.slice(1), -1]) {
+      if (n !== prev + 1) {
+        ranges.push(start === prev ? `${start}` : `${start}-${prev}`);
+        start = n;
+      }
+      prev = n;
+    }
+    return `${label}:${ranges.join(",")}`;
+  }, [selected, label]);
+
+  const selectedText = () => selected.map((n) => `${n} ${verses[n - 1]}`).join(" ");
+  const flash = (text: string) => {
+    setNote(text);
+    window.setTimeout(() => setNote(""), 1800);
+  };
+
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(`${selectedText()}\n— ${refText()} (KJV)`);
+      flash("Copied ✓");
+    } catch {
+      flash("Couldn't copy");
+    }
+  }
+  function share() {
+    const first = selected[0] ?? 1;
+    const message = `📖 *${refText()}* (KJV)\n\n${selected.map((n) => verses[n - 1]).join(" ")}\n\nRead more 👇\n${SITE}/bible/${slug}/${chapter}#v${first}`;
+    window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener");
+  }
+  function highlight() {
+    const all = readJson<Record<string, number[]>>(MARKS, {});
+    const current = all[key] ?? [];
+    const allMarked = selected.every((n) => current.includes(n));
+    const next = allMarked ? current.filter((n) => !selected.includes(n)) : [...new Set([...current, ...selected])].sort((a, b) => a - b);
+    if (next.length) all[key] = next;
+    else delete all[key];
+    writeJson(MARKS, all);
+    setMarks(next);
+    setSelected([]);
+  }
+  function listen(from = 0) {
+    stop.current?.();
+    setSelected([]);
+    stop.current = readAloud(
+      verses.slice(from),
+      (i) => setReading(from + i),
+      () => {
+        setReading(null);
+        stop.current = null;
+      },
+    );
+  }
+  function stopReading() {
+    stop.current?.();
+    stop.current = null;
+    setReading(null);
+  }
+  function resize(by: number) {
+    const next = Math.min(3, Math.max(0, size + by));
+    setSize(next);
+    writeJson(SIZE, next);
+  }
+
+  return (
+    <div>
+      <div className="sticky top-[61px] z-30 -mx-4 flex flex-wrap items-center gap-2 border-b border-black/10 bg-background/95 px-4 py-2 backdrop-blur dark:border-white/10">
+        {canSpeak &&
+          (reading === null ? (
+            <button type="button" onClick={() => listen(0)} className="rounded-full bg-brand-primary px-4 py-2 text-sm font-semibold text-brand-on-primary">
+              🔊 Listen
+            </button>
+          ) : (
+            <button type="button" onClick={stopReading} className="rounded-full bg-rose-600 px-4 py-2 text-sm font-semibold text-white">
+              ⏹ Stop
+            </button>
+          ))}
+        <span className="ml-auto flex items-center gap-1">
+          <button type="button" onClick={() => resize(-1)} aria-label="Smaller text" className="h-9 w-9 rounded-full border border-black/15 text-sm font-bold dark:border-white/15">
+            A−
+          </button>
+          <button type="button" onClick={() => resize(1)} aria-label="Bigger text" className="h-9 w-9 rounded-full border border-black/15 text-base font-bold dark:border-white/15">
+            A+
+          </button>
+        </span>
+      </div>
+
+      <p className="mt-4 text-xs text-foreground/60">Tap a verse to copy, share, highlight or listen from there.</p>
+      <div className={`mt-4 font-serif ${SIZES[size]}`}>
+        {verses.map((text, i) => {
+          const n = i + 1;
+          const isSel = selected.includes(n);
+          const isMark = marks.includes(n);
+          return (
+            <span
+              key={n}
+              id={`v${n}`}
+              role="button"
+              tabIndex={0}
+              onClick={() => toggle(n)}
+              onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && (e.preventDefault(), toggle(n))}
+              className={`scroll-mt-32 cursor-pointer rounded px-0.5 target:bg-amber-100 dark:target:bg-amber-900/40 ${reading === i ? "bg-sky-100 dark:bg-sky-900/40" : ""} ${isMark ? "bg-yellow-200/80 dark:bg-yellow-700/40" : ""} ${isSel ? "underline decoration-brand-primary decoration-2 underline-offset-4" : ""}`}
+            >
+              <sup className="mr-1 font-sans text-[0.65em] font-bold text-brand-primary-text">{n}</sup>
+              {text}{" "}
+            </span>
+          );
+        })}
+      </div>
+
+      {selected.length > 0 && (
+        <div className="fixed inset-x-0 bottom-0 z-40 border-t border-black/10 bg-white p-3 shadow-2xl dark:border-white/10 dark:bg-zinc-900">
+          <div className="mx-auto flex max-w-3xl flex-wrap items-center gap-2">
+            <p className="mr-auto text-sm font-semibold">{refText()}</p>
+            <button type="button" onClick={copy} className="rounded-full border border-black/15 px-3 py-2 text-sm dark:border-white/15">
+              📋 Copy
+            </button>
+            <button type="button" onClick={share} className="rounded-full bg-[#25D366] px-3 py-2 text-sm font-semibold text-black">
+              WhatsApp
+            </button>
+            <button type="button" onClick={highlight} className="rounded-full bg-yellow-200 px-3 py-2 text-sm font-semibold text-black">
+              🖍 Highlight
+            </button>
+            {canSpeak && (
+              <button type="button" onClick={() => listen(selected[0] - 1)} className="rounded-full border border-black/15 px-3 py-2 text-sm dark:border-white/15">
+                🔊 From here
+              </button>
+            )}
+            <button type="button" onClick={() => setSelected([])} aria-label="Close" className="h-9 w-9 rounded-full bg-black/5 dark:bg-white/10">
+              ✕
+            </button>
+          </div>
+          {note && <p className="mx-auto mt-1 max-w-3xl text-xs text-emerald-700">{note}</p>}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** "Continue reading John 3" — from this device. */
+export function ContinueReading() {
+  const [last, setLast] = useState<{ slug: string; chapter: number; label: string } | null>(null);
+  useEffect(() => setLast(readJson(LAST, null)), []);
+  if (!last) return null;
+  return (
+    <a
+      href={`/bible/${last.slug}/${last.chapter}`}
+      className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-[#14110c] shadow"
+    >
+      📖 Continue reading {last.label}
+    </a>
+  );
+}
