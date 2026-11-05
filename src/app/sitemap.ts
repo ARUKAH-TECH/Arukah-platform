@@ -4,12 +4,14 @@ import { getPublicOutreaches } from "@/db/outreaches";
 import { getPublishedBooks } from "@/db/books";
 import { allArticleSlugs } from "@/db/articles";
 import { getPublicProgrammes } from "@/db/programmes";
+import { BIBLE_BOOKS } from "@/config/bibleBooks";
+import { listDevotionals, listSeries } from "@/db/bible";
 
 // SITE_URL must be set to the real production domain before deploying —
 // otherwise the sitemap ships localhost URLs. See docs/ENVIRONMENT.md.
 const baseUrl = process.env.SITE_URL || "http://localhost:3000";
 
-const routes = ["", "/about", "/tech", "/footwear", "/ziva", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles", "/literacy", "/programmes", "/terms", "/refunds"];
+const routes = ["", "/about", "/tech", "/footwear", "/ziva", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles", "/literacy", "/programmes", "/terms", "/refunds", "/bible", "/bible/books", "/bible/devotionals", "/bible/studies"];
 
 // Refreshed at most every hour, and immediately after an admin edit
 // (the CMS actions revalidate /sitemap.xml).
@@ -62,5 +64,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((p) => p.status !== "cancelled")
     .map((p) => ({ url: `${baseUrl}/programmes/${p.slug}`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.6 }));
 
-  return [...pages, ...projectPages, ...outreachPages, ...bookPages, ...articlePages, ...programmePages];
+  // The Bible: every book and chapter, plus devotionals and studies.
+  const biblePages: MetadataRoute.Sitemap = BIBLE_BOOKS.flatMap((b) => [
+    { url: `${baseUrl}/bible/${b.slug}`, changeFrequency: "yearly" as const, priority: 0.4 },
+    ...Array.from({ length: b.chapters }, (_, i) => ({ url: `${baseUrl}/bible/${b.slug}/${i + 1}`, changeFrequency: "yearly" as const, priority: 0.4 })),
+  ]);
+  const [devotionals, series] = await Promise.all([listDevotionals(400), listSeries()]);
+  const devotionalPages: MetadataRoute.Sitemap = devotionals.map((d) => ({ url: `${baseUrl}/bible/devotionals/${d.day}`, lastModified: new Date(`${d.day}T00:00:00Z`), changeFrequency: "yearly", priority: 0.5 }));
+  const studyPages: MetadataRoute.Sitemap = series.flatMap((s) => [
+    { url: `${baseUrl}/bible/studies/${s.slug}`, changeFrequency: "monthly" as const, priority: 0.6 },
+    ...Array.from({ length: s.lessonCount }, (_, i) => ({ url: `${baseUrl}/bible/studies/${s.slug}/${i + 1}`, changeFrequency: "monthly" as const, priority: 0.5 })),
+  ]);
+
+  return [...pages, ...projectPages, ...outreachPages, ...bookPages, ...articlePages, ...programmePages, ...biblePages, ...devotionalPages, ...studyPages];
 }

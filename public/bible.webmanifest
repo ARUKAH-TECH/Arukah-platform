@@ -1,0 +1,23 @@
+{
+  "id": "/bible",
+  "name": "Holy Bible · Repent Online Ministries",
+  "short_name": "Bible",
+  "description": "King James Bible with read-aloud, daily devotional and Bible studies with quizzes, from Repent Online Ministries.",
+  "lang": "en-GH",
+  "start_url": "/bible",
+  "scope": "/bible",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#14110c",
+  "theme_color": "#14110c",
+  "categories": ["books", "education", "lifestyle"],
+  "icons": [
+    { "src": "/bible-icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/bible-icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/bible-icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ],
+  "shortcuts": [
+    { "name": "Today's devotional", "url": "/bible/devotionals", "icons": [{ "src": "/bible-icons/icon-192.png", "sizes": "192x192" }] },
+    { "name": "Bible studies", "url": "/bible/studies", "icons": [{ "src": "/bible-icons/icon-192.png", "sizes": "192x192" }] }
+  ]
+}
