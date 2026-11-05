@@ -216,3 +216,65 @@ export async function sendTestNotificationNow(_prev: CmsFormState): Promise<CmsF
   if (result.sent === 0 && result.failed === 0) return { status: "error", message: "No phone has turned on the daily devotional yet. Turn it on from zivarukah.com/bible first." };
   return { status: "saved", message: `Sent to ${result.sent} phone${result.sent === 1 ? "" : "s"}${result.failed ? ` (${result.failed} didn't receive it)` : ""}. Check your phone.` };
 }
+
+// ---- The founder's quotes and photos ----------------------------------------
+
+function refreshQuotes() {
+  revalidatePath("/admin/bible/quotes");
+  revalidatePath("/", "layout");
+}
+
+export async function addFounderQuote(_prev: CmsFormState, formData: FormData): Promise<CmsFormState> {
+  await requireAdmin();
+  const quote = text(formData, "text", 320).replace(/^["“”']+|["“”']+$/g, "").trim();
+  if (quote.length < 5) return { status: "error", message: "Write the quote (at least a few words)." };
+  const supabase = await createClient();
+  const { data, error } = await supabase.from("founder_quotes").insert({ text: quote, status: "published" }).select("id").single();
+  if (error) return { status: "error", message: "Couldn't save the quote. Please try again." };
+  await audit("founder_quote.add", { id: data.id });
+  refreshQuotes();
+  return { status: "saved", message: "Saved ✓ It now takes turns as the quote of the day." };
+}
+
+export async function setFounderQuoteStatus(formData: FormData) {
+  await requireAdmin();
+  const id = text(formData, "id", 36);
+  const status = text(formData, "status", 10) === "draft" ? "draft" : "published";
+  if (!UUID.test(id)) return;
+  const supabase = await createClient();
+  await supabase.from("founder_quotes").update({ status }).eq("id", id);
+  await audit("founder_quote.status", { id, status });
+  refreshQuotes();
+}
+
+export async function deleteFounderQuote(formData: FormData) {
+  await requireAdmin();
+  const id = text(formData, "id", 36);
+  if (!UUID.test(id)) return;
+  const supabase = await createClient();
+  await supabase.from("founder_quotes").delete().eq("id", id);
+  await audit("founder_quote.delete", { id });
+  refreshQuotes();
+}
+
+export async function registerFounderPhoto(input: { storagePath: string }): Promise<CmsFormState> {
+  await requireAdmin();
+  if (!/^[0-9a-f-]{36}\.(jpg|png|webp)$/.test(input.storagePath)) return { status: "error", message: "Unexpected file name." };
+  const supabase = await createClient();
+  const { error } = await supabase.from("founder_photos").insert({ storage_path: input.storagePath });
+  if (error) return { status: "error", message: "The photo uploaded but couldn't be saved. Please try again." };
+  await audit("founder_photo.add", { storagePath: input.storagePath });
+  refreshQuotes();
+  return { status: "saved", message: "Photo added ✓" };
+}
+
+export async function setFounderPhotoHidden(formData: FormData) {
+  await requireAdmin();
+  const id = text(formData, "id", 36);
+  if (!UUID.test(id)) return;
+  const hidden = text(formData, "hidden", 5) === "true";
+  const supabase = await createClient();
+  await supabase.from("founder_photos").update({ hidden }).eq("id", id);
+  await audit("founder_photo.hidden", { id, hidden });
+  refreshQuotes();
+}

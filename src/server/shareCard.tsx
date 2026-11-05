@@ -7,6 +7,8 @@ import { BIBLE_VERSIONS } from "@/config/bibleVersions";
 import { getChapter } from "@/server/bible";
 import { todaysQuote } from "@/features/quote/todaysQuote";
 import { backdropSvg, monthDesign } from "@/server/backdrop";
+import { getFounderQuote, listFounderPhotos } from "@/db/founderQuotes";
+import { FOUNDER } from "@/config/founder";
 
 // The share picture: a Bible verse (or today's quote) with the R.O.M Bible
 // Guide logo on the top right. The words always come from our own Bible files
@@ -16,7 +18,7 @@ import { backdropSvg, monthDesign } from "@/server/backdrop";
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 const MAX_CHARS = 620;
 
-export type CardRequest = { kind: "today" } | { kind: "verse"; b: string; c: string; v: string; t: string };
+export type CardRequest = { kind: "today" } | { kind: "founder"; id: string } | { kind: "verse"; b: string; c: string; v: string; t: string };
 
 /** Picture size: "tall" for WhatsApp Status / chats, "wide" for link previews. */
 export const CARD_SIZES = { tall: { width: 1080, height: 1350 }, wide: { width: 1200, height: 630 } } as const;
@@ -84,6 +86,8 @@ interface CardContent {
   text: string;
   source: string;
   ministry: boolean;
+  /** The founder's own words: shown with his photo and name. */
+  founder?: boolean;
 }
 
 /** The words for a card, or null if the address doesn't point to real verses. */
@@ -91,11 +95,19 @@ export async function cardContent(req: CardRequest): Promise<CardContent | null>
   let text = "";
   let source = "";
   let ministry = true;
+  let founder = false;
   if (req.kind === "today") {
     const quote = await todaysQuote();
     text = quote.text;
     source = quote.source;
-    ministry = quote.kind === "verse";
+    ministry = quote.kind !== "book";
+    founder = quote.kind === "founder";
+  } else if (req.kind === "founder") {
+    const quote = await getFounderQuote(req.id);
+    if (!quote) return null;
+    text = quote.text;
+    source = FOUNDER.name;
+    founder = true;
   } else {
     const book = bookBySlug(req.b);
     const chapter = Number(req.c);
@@ -114,7 +126,7 @@ export async function cardContent(req: CardRequest): Promise<CardContent | null>
   }
   text = text.replace(/\s+/g, " ").trim();
   if (text.length > MAX_CHARS) text = `${text.slice(0, MAX_CHARS).replace(/\s+\S*$/, "")}…`;
-  return { text, source, ministry };
+  return { text, source, ministry, founder };
 }
 
 /** Number from text, so the same verse always gets the same variation. */
@@ -151,15 +163,37 @@ async function asJpeg(png: Response, headers: Record<string, string>) {
   }
 }
 
+/** One of the founder's photos (uploaded ones take turns), square and ready to draw. */
+async function founderPhoto(seed: string) {
+  try {
+    const sharp = (await import("sharp")).default;
+    const photos = await listFounderPhotos();
+    let input: Buffer;
+    if (photos.length) {
+      const res = await fetch(photos[hash(seed) % photos.length], { cache: "force-cache" });
+      if (!res.ok) throw new Error("photo");
+      input = Buffer.from(await res.arrayBuffer());
+    } else {
+      input = await readFile(join(process.cwd(), "public/branding/founder/shepherd-justice-sarpong-oduro.webp"));
+    }
+    const jpeg = await sharp(input).resize(520, 520, { fit: "cover", position: "top" }).jpeg({ quality: 88 }).toBuffer();
+    return `data:image/jpeg;base64,${jpeg.toString("base64")}`;
+  } catch (error) {
+    console.error("[share-card] photo", error instanceof Error ? error.message : "error");
+    return null;
+  }
+}
+
 export async function renderCard(content: CardContent, shape: keyof typeof CARD_SIZES = "tall", headers: Record<string, string> = {}) {
   const wide = shape === "wide";
-  const { source, ministry } = content;
+  const { source, ministry, founder } = content;
   // The link preview is small: keep its text short.
   const text = wide && content.text.length > 280 ? `${content.text.slice(0, 280).replace(/\s+\S*$/, "")}…` : content.text;
   const W = CARD_SIZES[shape].width;
   const H = CARD_SIZES[shape].height;
-  const [logoSrc, bgSrc] = await Promise.all([logo(ministry), background(source + text.slice(0, 40), W, H)]);
-  const size = wide ? Math.round(fontSize(text.length) * 0.6) : fontSize(text.length);
+  const [logoSrc, bgSrc, photoSrc] = await Promise.all([logo(ministry), background(source + text.slice(0, 40), W, H), founder ? founderPhoto(text) : Promise.resolve(null)]);
+  const size = Math.round(fontSize(text.length) * (wide ? 0.6 : 1) * (founder ? 0.92 : 1));
+  const photoSize = wide ? 120 : 210;
   const shadow = "0 2px 12px rgba(0,0,0,0.85)";
   const png = new ImageResponse(
     (
@@ -185,7 +219,7 @@ export async function renderCard(content: CardContent, shape: keyof typeof CARD_
           <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "flex-start" }}>
             <div style={{ display: "flex", flexDirection: "column", marginTop: wide ? 8 : 20 }}>
               <div style={{ display: "flex", fontSize: wide ? 28 : 40, fontWeight: 700, letterSpacing: 2, color: "#f0c050", textShadow: shadow }}>{ministry ? "R.O.M BIBLE GUIDE" : "ZIVARUKAH BOOKS"}</div>
-              <div style={{ display: "flex", fontSize: wide ? 20 : 28, color: "rgba(255,255,255,0.9)", marginTop: 6, textShadow: shadow }}>{ministry ? "Repent Online Ministries" : "Quote of the day"}</div>
+              <div style={{ display: "flex", fontSize: wide ? 20 : 28, color: "rgba(255,255,255,0.9)", marginTop: 6, textShadow: shadow }}>{founder ? "Word of the day" : ministry ? "Repent Online Ministries" : "Quote of the day"}</div>
             </div>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={logoSrc} alt="" width={wide ? (ministry ? 150 : 120) : ministry ? 270 : 210} height={wide ? (ministry ? 106 : 80) : ministry ? 191 : 140} style={{ objectFit: "contain" }} />
@@ -205,7 +239,20 @@ export async function renderCard(content: CardContent, shape: keyof typeof CARD_
             >
               <div style={{ display: "flex", fontSize: wide ? 64 : 120, lineHeight: 1, color: "#f0c050", marginBottom: wide ? -8 : -16 }}>“</div>
               <div style={{ display: "flex", fontSize: size, lineHeight: 1.35, textAlign: "center", justifyContent: "center", textShadow: shadow }}>{text}</div>
-              <div style={{ display: "flex", marginTop: wide ? 12 : 32, fontSize: wide ? 26 : 38, fontWeight: 700, color: "#f0c050", textAlign: "center", textShadow: shadow }}>{source}</div>
+              {founder ? (
+                <div style={{ display: "flex", alignItems: "center", marginTop: wide ? 12 : 34 }}>
+                  {photoSrc && (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img src={photoSrc} alt="" width={photoSize} height={photoSize} style={{ width: photoSize, height: photoSize, borderRadius: photoSize, border: `${wide ? 4 : 6}px solid #f0c050`, objectFit: "cover" }} />
+                  )}
+                  <div style={{ display: "flex", flexDirection: "column", marginLeft: wide ? 16 : 28 }}>
+                    <div style={{ display: "flex", fontSize: wide ? 26 : 40, fontWeight: 700, color: "#f0c050", textShadow: shadow }}>{source}</div>
+                    <div style={{ display: "flex", fontSize: wide ? 18 : 26, color: "rgba(255,255,255,0.9)", marginTop: 4, textShadow: shadow }}>Founder, Repent Online Ministries &amp; ZIVARUKAH</div>
+                  </div>
+                </div>
+              ) : (
+                <div style={{ display: "flex", marginTop: wide ? 12 : 32, fontSize: wide ? 26 : 38, fontWeight: 700, color: "#f0c050", textAlign: "center", textShadow: shadow }}>{source}</div>
+              )}
             </div>
           </div>
           <div style={{ display: "flex", width: "100%", justifyContent: "center", alignItems: "center", fontSize: wide ? 22 : 32, fontWeight: 700, color: "#ffffff", textShadow: shadow }}>
