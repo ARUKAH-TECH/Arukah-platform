@@ -6,12 +6,13 @@ import { allArticleSlugs } from "@/db/articles";
 import { getPublicProgrammes } from "@/db/programmes";
 import { BIBLE_BOOKS } from "@/config/bibleBooks";
 import { listDevotionals, listSeries } from "@/db/bible";
+import { createPublicClient } from "@/lib/supabase/public";
 
 // SITE_URL must be set to the real production domain before deploying —
 // otherwise the sitemap ships localhost URLs. See docs/ENVIRONMENT.md.
 const baseUrl = process.env.SITE_URL || "http://localhost:3000";
 
-const routes = ["", "/about", "/tech", "/footwear", "/ziva", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles", "/literacy", "/programmes", "/terms", "/refunds", "/bible", "/bible/books", "/bible/devotionals", "/bible/studies"];
+const routes = ["", "/about", "/tech", "/footwear", "/ziva", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles", "/literacy", "/programmes", "/terms", "/refunds", "/bible", "/bible/books", "/bible/devotionals", "/bible/studies", "/bible/topics"];
 
 // Refreshed at most every hour, and immediately after an admin edit
 // (the CMS actions revalidate /sitemap.xml).
@@ -76,5 +77,22 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...Array.from({ length: s.lessonCount }, (_, i) => ({ url: `${baseUrl}/bible/studies/${s.slug}/${i + 1}`, changeFrequency: "monthly" as const, priority: 0.5 })),
   ]);
 
-  return [...pages, ...projectPages, ...outreachPages, ...bookPages, ...articlePages, ...programmePages, ...biblePages, ...devotionalPages, ...studyPages];
+  // Researched topics and answered questions ("What the Bible says about forgiveness").
+  let researched: MetadataRoute.Sitemap = [];
+  try {
+    const client = createPublicClient();
+    const [{ data: topics }, { data: questions }] = await Promise.all([
+      client.from("bible_topics").select("topic").limit(2000),
+      client.from("bible_questions").select("question").limit(2000),
+    ]);
+    researched = [...(topics ?? []).map((r) => r.topic as string), ...(questions ?? []).map((r) => r.question as string)].map((q) => ({
+      url: `${baseUrl}/bible/topics?q=${encodeURIComponent(q)}`,
+      changeFrequency: "yearly" as const,
+      priority: 0.5,
+    }));
+  } catch {
+    // the rest of the sitemap still works
+  }
+
+  return [...pages, ...projectPages, ...outreachPages, ...bookPages, ...articlePages, ...programmePages, ...biblePages, ...devotionalPages, ...studyPages, ...researched];
 }

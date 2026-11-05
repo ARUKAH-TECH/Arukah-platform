@@ -19,7 +19,7 @@ export const NAME_MEANING_SHORT = "ZIVARUKAH means “God's light brings total r
 
 export const ORG_DESCRIPTION =
   "ZIVARUKAH, from the Hebrew ZIVA (light of God) and ARUKAH (total restoration), is a Ghanaian brand founded and led by Shepherd Justice Sarpong Oduro. " +
-  "It brings God's light and restoration to people spiritually and physically through ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Literacy app, ZIVARUKAH BOOKS and Repent Online Ministries.";
+  "It brings God's light and restoration to people spiritually and physically through ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Literacy app, ZIVARUKAH BOOKS and Repent Online Ministries, with its free R.O.M Bible Guide.";
 
 /** The ZIVA… and ARUKAH… branches, each tied to ZIVARUKAH in search data. */
 export const BRANCHES = [
@@ -29,6 +29,7 @@ export const BRANCHES = [
   { name: "ZIVA Literacy & Handwriting Coach", alt: "ZIVA Literacy by ZIVARUKAH", path: "/literacy", type: "EducationalOrganization", description: "ZIVA Literacy, the free reading and handwriting app by ZIVARUKAH for KG to JHS learners in Ghana (learn.zivarukah.com)." },
   { name: "ZIVARUKAH BOOKS", alt: "Zivarukah Books", path: "/books", type: "Organization", description: "ZIVARUKAH BOOKS: books by Shepherd Justice Sarpong Oduro, to read online, download or order in print." },
   { name: "Repent Online Ministries", alt: "Repent Online Ministries by ZIVARUKAH", path: "/ministry", type: "Organization", description: "Repent Online Ministries, the ministry of ZIVARUKAH led by Shepherd Justice Sarpong Oduro." },
+  { name: "R.O.M Bible Guide", alt: "Repent Online Ministries Bible Guide", path: "/bible", type: "Organization", description: "R.O.M Bible Guide by Repent Online Ministries: the free online Bible (KJV and other versions) with daily devotionals, Bible studies with quizzes, and answers to Bible questions with scriptures. Led by Shepherd Justice Sarpong Oduro." },
 ] as const;
 
 /** schema.org Person for the founder. */
@@ -56,7 +57,7 @@ export function founderLd(site: string) {
         addressCountry: FOUNDER.location.country,
       },
     },
-    knowsAbout: ["Christian ministry", "Bible teaching", "Evangelism", "Teaching", "Literacy", "Software", "Footwear making", "Writing"],
+    knowsAbout: ["Christian ministry", "Bible teaching", "Bible study", "Daily devotionals", "Evangelism", "Teaching", "Literacy", "Software", "Footwear making", "Writing"],
     // Only real profile pages (search-result and chat links are left out).
     sameAs: socialLinks.map((link) => link.href).filter((href) => !href.includes("/search/") && !href.includes("wa.me")),
   };
