@@ -9,7 +9,7 @@ import { InstallBible } from "@/features/bible/BibleApp";
 import { BookGrid } from "@/features/bible/BookGrid";
 import { verseOfTheDay } from "@/server/bible";
 import { latestDevotional, listSeries } from "@/db/bible";
-import { chapterHref } from "@/lib/bible";
+import { chapterHref, shareCardHref } from "@/lib/bible";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
@@ -64,6 +64,7 @@ export default async function BibleHome() {
                   label="Share"
                   url={`${SITE}/bible`}
                   title="Verse of the day"
+                  image={shareCardHref(verse.ref)}
                   message={`📖 *Verse of the day*\n\n“${verseText}”\n— ${verse.label} (KJV)`}
                 />
               </div>

@@ -11,6 +11,7 @@ export function SharePage({
   heading = "📣 Share this page",
   note,
   dark = false,
+  image,
 }: {
   path: string;
   title: string;
@@ -18,6 +19,7 @@ export function SharePage({
   heading?: string;
   note?: string;
   dark?: boolean;
+  image?: string;
 }) {
   return (
     <section aria-label="Share this page" className="py-10">
@@ -31,7 +33,7 @@ export function SharePage({
             <p className="text-lg font-bold">{heading}</p>
             {note && <p className={`mt-1 text-sm ${dark ? "text-white/70" : "text-foreground/70"}`}>{note}</p>}
           </div>
-          <ShareButtons url={`${SITE}${path}`} title={title} message={message} label="Send" dark={dark} />
+          <ShareButtons url={`${SITE}${path}`} title={title} message={message} label="Send" dark={dark} image={image} />
         </div>
       </Container>
     </section>

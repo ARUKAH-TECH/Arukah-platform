@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { SharePicture } from "./SharePicture";
 
 // One-tap sharing. WhatsApp first (that's how things spread here), then the
 // phone's own share sheet (Status, Telegram, SMS…) and "Copy link".
@@ -15,9 +16,11 @@ interface ShareButtonsProps {
   label?: string;
   dark?: boolean;
   className?: string;
+  /** Optional picture to share (logo + verse/quote), e.g. /api/share-card?quote=today */
+  image?: string;
 }
 
-export function ShareButtons({ url, title, message, label = "Share", dark = false, className = "" }: ShareButtonsProps) {
+export function ShareButtons({ url, title, message, label = "Share", dark = false, className = "", image }: ShareButtonsProps) {
   const [canShare, setCanShare] = useState(false);
   const [copied, setCopied] = useState(false);
 
@@ -71,6 +74,7 @@ export function ShareButtons({ url, title, message, label = "Share", dark = fals
       <button type="button" onClick={copy} className={`rounded-full border px-4 py-2 font-medium transition hover:scale-105 ${outline}`}>
         {copied ? "✅ Copied" : "🔗 Copy link"}
       </button>
+      {image && <SharePicture image={image} text={`${message}\n\n${tagged("picture")}`} dark={dark} />}
     </div>
   );
 }

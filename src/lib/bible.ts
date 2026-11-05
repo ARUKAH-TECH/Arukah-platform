@@ -67,6 +67,12 @@ export function refLabel(ref: BibleRef) {
   return `${name} ${ref.chapter}${verses}`;
 }
 
+/** Address of the share picture (ministry logo + the verses) for a reference. */
+export function shareCardHref(ref: BibleRef, version = "kjv") {
+  const verses = ref.from === null ? "1-6" : ref.to !== null && ref.to !== ref.from ? `${ref.from}-${ref.to}` : `${ref.from}`;
+  return `/api/share-card?b=${ref.book.slug}&c=${ref.chapter}&v=${verses}&t=${version}`;
+}
+
 export function chapterHref(slug: string, chapter: number, verse?: number | null) {
   return `/bible/${slug}/${chapter}${verse ? `#v${verse}` : ""}`;
 }

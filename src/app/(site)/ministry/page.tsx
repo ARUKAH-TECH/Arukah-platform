@@ -15,6 +15,8 @@ import { OutreachSection } from "@/features/outreach/OutreachSection";
 import { ministryPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 import { SharePage } from "@/components/ui/SharePage";
+import { verseOfTheDay } from "@/server/bible";
+import { shareCardHref } from "@/lib/bible";
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -30,6 +32,7 @@ export const metadata: Metadata = {
 export default async function MinistryPage() {
   // Admin-edited text over the original wording (Admin → Page text).
   const t = textReader(await getPageText(ministryPage));
+  const verse = await verseOfTheDay();
 
   return (
     <div data-brand="ministry" className="bg-black text-white">
@@ -93,6 +96,7 @@ export default async function MinistryPage() {
       <PastProgrammes branch="ministry" dark />
       <ProjectsSection branch="ministry" eyebrow="Outreach" title="Recent outreach" dark />
       <SharePage
+        image={verse ? shareCardHref(verse.ref) : undefined}
         path="/ministry"
         title="Repent Online Ministries"
         message={"✝️ *Repent Online Ministries*\n\nHospital, prison, street and community outreach, and the Word online. Follow, pray with us and support the work 👇"}
