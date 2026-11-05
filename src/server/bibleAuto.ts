@@ -154,3 +154,76 @@ No links, no emojis. If the topic is not a Bible or Christian-life topic, return
   await client.from("bible_topics").upsert({ topic, data: study });
   return study;
 }
+
+// ---- Bible questions ("Who is a Christian?") --------------------------------
+
+const QUESTION_WORDS = /^(who|what|whats|why|how|when|where|which|is|are|was|were|can|could|should|does|do|did|will|would|must|may|shall|explain|tell)\b/;
+const STOP = new Set("who what whats why how when where which is are was were can could should does do did will would must may shall explain tell me us about the a an of to in on for and or be it its this that does say says bible scripture scriptures god's according i we you my our".split(" "));
+
+export const cleanQuestion = (q: string) =>
+  q
+    .toLowerCase()
+    .replace(/[’`]/g, "'")
+    .replace(/[^a-z0-9 '-]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim()
+    .slice(0, 140);
+
+/** "who is a christian?", "what does the bible say about tithing" → a question; "faith" → a topic. */
+export function isQuestion(raw: string) {
+  const q = cleanQuestion(raw);
+  return raw.includes("?") || QUESTION_WORDS.test(q) || q.split(" ").length >= 5;
+}
+
+/** The main words of a question, for a plain verse search ("who is a christian" → "christian"). */
+export function keyWords(raw: string) {
+  return cleanQuestion(raw)
+    .split(" ")
+    .filter((w) => w.length > 2 && !STOP.has(w));
+}
+
+/** An answer from Scripture to a Bible question, with KJV verses (checked), cached. */
+export async function questionStudy(raw: string): Promise<TopicStudy | null> {
+  const question = cleanQuestion(raw);
+  if (!/^[a-z0-9][a-z0-9 '-]{2,139}$/.test(question)) return null;
+  const client = createServiceClient();
+  const { data: cached } = await client.from("bible_questions").select("data").eq("question", question).maybeSingle();
+  if (cached) return cached.data as TopicStudy;
+
+  const { count } = await client.from("bible_questions").select("question", { count: "exact", head: true }).gte("created_at", new Date(Date.now() - 3600_000).toISOString());
+  if ((count ?? 0) >= 60) return null;
+
+  const system = `You are a careful Bible teacher helping pastors and believers in Ghana. Answer the question from the Bible. Return ONLY a JSON object:
+{"meaning": "...", "words": [{"word": "...", "language": "Hebrew" or "Greek", "sense": "..."}], "points": ["..."], "scriptures": [{"ref": "Book C:V" or "Book C:V-V", "note": "..."}]}
+- meaning: the answer, 100 to 180 words, in simple English, faithful to mainstream Christian teaching. Let Scripture speak; where Christians differ, say so gently without taking sides.
+- words: 0 to 3 key original-language words (transliterated) only if well known and accurate.
+- points: 3 to 6 short points (one sentence each) that a preacher could teach.
+- scriptures: 8 to 12 KJV references from both Testaments that back the answer, each with a one-sentence note on how it supports it. Only real references; prefer well-known passages; keep ranges short (max 5 verses).
+No links, no emojis. If the question is not about the Bible, God or the Christian life, return {"meaning": "", "words": [], "points": [], "scriptures": []}.`;
+  const out = await askJson(system, `Question: ${raw.trim().slice(0, 160)}`, 3200);
+  if (!out) return null;
+  const meaning = cleanText(out.meaning, 1800);
+  const scriptures: TopicStudy["scriptures"] = [];
+  for (const s of Array.isArray(out.scriptures) ? out.scriptures : []) {
+    const o = (s ?? {}) as Record<string, unknown>;
+    const [ref] = await validRefs([o.ref], 1);
+    if (ref && !scriptures.some((x) => x.ref === ref)) scriptures.push({ ref, note: cleanText(o.note, 240) });
+    if (scriptures.length >= 12) break;
+  }
+  if (!meaning || scriptures.length < 2) return null;
+  const study: TopicStudy = {
+    topic: question,
+    meaning,
+    words: (Array.isArray(out.words) ? out.words : [])
+      .slice(0, 3)
+      .map((w) => {
+        const o = (w ?? {}) as Record<string, unknown>;
+        return { word: cleanText(o.word, 40), language: cleanText(o.language, 20), sense: cleanText(o.sense, 200) };
+      })
+      .filter((w) => w.word && w.sense),
+    points: (Array.isArray(out.points) ? out.points : []).slice(0, 6).map((p) => cleanText(p, 240)).filter(Boolean),
+    scriptures,
+  };
+  await client.from("bible_questions").upsert({ question, data: study });
+  return study;
+}

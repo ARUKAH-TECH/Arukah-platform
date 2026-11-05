@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { BibleShell, SearchBox } from "@/features/bible/BibleShell";
 import { chapterHref, parseReference } from "@/lib/bible";
 import { searchBible } from "@/server/bible";
+import { isQuestion } from "@/server/bibleAuto";
 
 export const metadata: Metadata = { title: { absolute: "Search the Bible (KJV) | R.O.M Bible Guide" }, robots: { index: false } };
 
@@ -35,7 +36,12 @@ export default async function SearchPage({ searchParams }: PageProps<"/bible/sea
   const ref = q ? parseReference(q) : null;
   if (ref) redirect(chapterHref(ref.book.slug, ref.chapter, ref.from));
 
+  // Questions ("Who is a Christian?") get an answer with scriptures.
+  if (q && isQuestion(q)) redirect(`/bible/topics?q=${encodeURIComponent(q)}`);
+
   const { hits, total } = q ? await searchBible(q) : { hits: [], total: 0 };
+  // No verse has all those words: research it as a topic instead.
+  if (q && total === 0 && q.length >= 3) redirect(`/bible/topics?q=${encodeURIComponent(q)}`);
   const words = q.toLowerCase().split(/\s+/).filter((w) => w.length > 1);
 
   return (
@@ -43,7 +49,7 @@ export default async function SearchPage({ searchParams }: PageProps<"/bible/sea
       <Container>
         <div className="mx-auto max-w-3xl py-10">
           <h1 className="text-3xl font-bold tracking-tight">Search the Bible</h1>
-          <p className="mt-1 text-sm text-foreground/60">Type words (e.g. “faith hope love”) or a reference (e.g. “Psalm 23” or “John 3:16”).</p>
+          <p className="mt-1 text-sm text-foreground/60">Type words (e.g. “faith hope love”), a reference (e.g. “John 3:16”) or a question (e.g. “Who is a Christian?”).</p>
           <div className="mt-4">
             <SearchBox q={q} />
           </div>
