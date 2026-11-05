@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: PageProps<"/bible/devotionals
   if (!d) return { title: "Devotional" };
   const description = plain(d.body).slice(0, 155);
   return {
-    title: { absolute: `${d.title} | Daily Devotional, Repent Online Ministries` },
+    title: { absolute: `${d.title} | Daily Devotional, R.O.M Bible Guide` },
     description,
     alternates: { canonical: `/bible/devotionals/${d.day}` },
     openGraph: { title: d.title, description },
@@ -61,10 +61,10 @@ export default async function DevotionalPage({ params }: PageProps<"/bible/devot
           <ShareButtons
             className="mt-8"
             label="Share"
-            url={`${SITE}/bible/devotionals/${d.day}`}
+            url={`${SITE}/`}
             title={d.title}
             image={firstRef ? shareCardHref(firstRef) : undefined}
-            message={`🌅 *${d.title}*${d.verseRef ? ` (${d.verseRef})` : ""}\n\nToday's devotional from Repent Online Ministries 👇`}
+            message={`🌅 *${d.title}*${d.verseRef ? ` (${d.verseRef})` : ""}\n\nToday's devotional from Repent Online Ministries.\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇`}
           />
         </article>
       </Container>

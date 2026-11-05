@@ -14,9 +14,9 @@ export const maxDuration = 60;
 export async function generateMetadata({ searchParams }: PageProps<"/bible/topics">): Promise<Metadata> {
   const q = cleanTopic(String((await searchParams).q ?? ""));
   return q
-    ? { title: { absolute: `What the Bible says about ${q}: meaning & scriptures | Repent Online Ministries` }, alternates: { canonical: `/bible/topics?q=${encodeURIComponent(q)}` } }
+    ? { title: { absolute: `What the Bible says about ${q}: meaning & scriptures | R.O.M Bible Guide` }, alternates: { canonical: `/bible/topics?q=${encodeURIComponent(q)}` } }
     : {
-        title: { absolute: "Bible Topics: meaning and supporting scriptures | Repent Online Ministries" },
+        title: { absolute: "Bible Topics: meaning and supporting scriptures | R.O.M Bible Guide" },
         description: "Type a topic such as forgiveness, faith or prayer and see its meaning, key words and supporting KJV scriptures. For pastors and Bible students.",
         alternates: { canonical: "/bible/topics" },
       };
@@ -147,9 +147,9 @@ export default async function TopicsPage({ searchParams }: PageProps<"/bible/top
               </p>
               <ShareButtons
                 label="Share"
-                url={`${SITE}/bible/topics?q=${encodeURIComponent(q)}`}
+                url={`${SITE}/`}
                 title={`${title} in the Bible`}
-                message={`📖 *What the Bible says about ${q}*\n\nMeaning and ${study.scriptures.length} supporting scriptures 👇`}
+                message={`📖 *What the Bible says about ${q}*\n\nMeaning and ${study.scriptures.length} supporting scriptures.\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇`}
               />
             </div>
           )}

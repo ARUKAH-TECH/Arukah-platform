@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: PageProps<"/bible/[book]">): 
   const book = bookBySlug((await params).book);
   if (!book) return {};
   return {
-    title: { absolute: `${book.name}: All Chapters (KJV) | Repent Online Ministries` },
+    title: { absolute: `${book.name}: All Chapters (KJV) | R.O.M Bible Guide` },
     description: `Read the book of ${book.name} in the King James Bible: ${book.chapters} chapter${book.chapters === 1 ? "" : "s"}, with read-aloud.`,
     alternates: { canonical: `/bible/${book.slug}` },
   };

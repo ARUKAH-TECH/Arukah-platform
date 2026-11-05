@@ -35,7 +35,7 @@ export async function QuoteOfTheDay() {
             className="relative mt-5"
             dark={isVerse}
             label="Share today's line"
-            url={`${SITE}${quote.href}`}
+            url={`${SITE}/`}
             title={isVerse ? "Verse of the day" : "Quote of the day"}
             image={`/api/share-card?quote=today&d=${Math.floor(Date.now() / 86_400_000)}`}
             message={`${isVerse ? "✝️ *Verse of the day*" : "📘 *Quote of the day*"}\n\n“${quote.text}”\n(${quote.source})`}

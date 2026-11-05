@@ -13,7 +13,7 @@ export async function generateMetadata({ params }: PageProps<"/bible/studies/[se
   const s = await getSeries((await params).series);
   if (!s) return { title: "Bible study" };
   return {
-    title: { absolute: `${s.title} | Bible Study, Repent Online Ministries` },
+    title: { absolute: `${s.title} | Bible Study, R.O.M Bible Guide` },
     description: s.summary.slice(0, 155) || `A Bible study in ${s.lessonCount} lessons, with quizzes.`,
     alternates: { canonical: `/bible/studies/${s.slug}` },
   };

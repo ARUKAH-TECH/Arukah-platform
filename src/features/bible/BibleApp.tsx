@@ -49,7 +49,7 @@ export function InstallBible() {
       }}
       className="rounded-full bg-[#e3a82a] px-5 py-2.5 text-sm font-semibold text-[#14110c]"
     >
-      📲 Install the Bible app
+      📲 Install R.O.M Bible Guide
     </button>
   );
 }

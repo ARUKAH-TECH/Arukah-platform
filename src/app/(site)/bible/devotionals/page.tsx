@@ -5,7 +5,7 @@ import { BibleShell } from "@/features/bible/BibleShell";
 import { listDevotionals } from "@/db/bible";
 
 export const metadata: Metadata = {
-  title: { absolute: "Daily Devotionals | Repent Online Ministries" },
+  title: { absolute: "Daily Devotionals | R.O.M Bible Guide" },
   description: "A short Bible devotional with a prayer for each day, from Repent Online Ministries.",
   alternates: { canonical: "/bible/devotionals" },
 };

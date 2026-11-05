@@ -5,7 +5,7 @@ import { BibleShell } from "@/features/bible/BibleShell";
 import { listSeries } from "@/db/bible";
 
 export const metadata: Metadata = {
-  title: { absolute: "Bible Studies with Quizzes | Repent Online Ministries" },
+  title: { absolute: "Bible Studies with Quizzes | R.O.M Bible Guide" },
   description: "Step-by-step Bible studies from Repent Online Ministries, each lesson with scripture and a short quiz. Free.",
   alternates: { canonical: "/bible/studies" },
 };

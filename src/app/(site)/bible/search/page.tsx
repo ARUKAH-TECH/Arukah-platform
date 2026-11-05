@@ -6,7 +6,7 @@ import { BibleShell, SearchBox } from "@/features/bible/BibleShell";
 import { chapterHref, parseReference } from "@/lib/bible";
 import { searchBible } from "@/server/bible";
 
-export const metadata: Metadata = { title: { absolute: "Search the Bible (KJV) | Repent Online Ministries" }, robots: { index: false } };
+export const metadata: Metadata = { title: { absolute: "Search the Bible (KJV) | R.O.M Bible Guide" }, robots: { index: false } };
 
 function Marked({ text, words }: { text: string; words: string[] }) {
   if (!words.length) return <>{text}</>;
