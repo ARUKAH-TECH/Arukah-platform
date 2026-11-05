@@ -49,9 +49,9 @@ export default async function ChapterPage({ params }: PageProps<"/bible/[book]/[
           </Link>
           <h1 className="mt-2 text-3xl font-bold tracking-tight">{label}</h1>
           <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-foreground/60">
-            <span>King James Version</span>
+            <span>Choose the version (KJV, BSB, WEB…) in the bar below.</span>
             <span>
-              Compare:{" "}
+              Also on BibleGateway:{" "}
               {["NIV", "AMP", "NKJV"].map((v, i) => (
                 <span key={v}>
                   {i > 0 && " · "}
