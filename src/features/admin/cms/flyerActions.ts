@@ -2,6 +2,7 @@
 
 import { requireAdmin } from "@/server/auth";
 import { mediaPublicUrl } from "@/lib/supabase/public";
+import { askGemini } from "@/server/ai";
 
 // Reads an uploaded programme flyer with AI (fal.ai, the same service as the
 // literacy handwriting check, using FAL_KEY) and returns the details printed
@@ -45,7 +46,7 @@ const time = (v: unknown) => (typeof v === "string" && /^([01]\d|2[0-3]):[0-5]\d
 export async function readFlyer(imagePath: string): Promise<FlyerResult> {
   await requireAdmin();
   if (!PATH.test(imagePath)) return { ok: false, message: "Upload the flyer first." };
-  if (!process.env.FAL_KEY?.trim()) return { ok: false, message: "The AI reader is not switched on (FAL_KEY is missing in Vercel)." };
+  if (!process.env.FAL_KEY?.trim() && !process.env.GEMINI_API_KEY?.trim()) return { ok: false, message: "The AI reader is not switched on (add GEMINI_API_KEY or FAL_KEY in Vercel)." };
 
   const now = Date.now();
   while (hits.length && now - hits[0] > 10 * 60_000) hits.shift();
@@ -68,8 +69,22 @@ Fields:
 - priceGhs: the fee in Ghana cedis as a number, 0 if free or not shown.
 - yearShown: true only if the year is printed on the flyer.`;
 
+  // Free Google Gemini first (the flyer is public), then fal.ai.
+  let o: Record<string, unknown> | null = null;
+  if (process.env.GEMINI_API_KEY?.trim()) {
+    try {
+      const img = await fetch(mediaPublicUrl(imagePath.replace(/\.webp$/, ".jpg")), { signal: AbortSignal.timeout(15_000) });
+      if (img.ok) {
+        const base64 = Buffer.from(await img.arrayBuffer()).toString("base64");
+        o = await askGemini(system, "Read this flyer and return the JSON.", 900, [{ mime: "image/jpeg", base64 }]);
+      }
+    } catch {
+      o = null;
+    }
+  }
+
   let output = "";
-  try {
+  if (!o && process.env.FAL_KEY?.trim()) try {
     const res = await fetch(ENDPOINT, {
       method: "POST",
       headers: { Authorization: `Key ${process.env.FAL_KEY.trim()}`, "Content-Type": "application/json" },
@@ -93,11 +108,12 @@ Fields:
     return { ok: false, message: "The AI reader didn't answer. Please try again." };
   }
 
-  let o: Record<string, unknown>;
-  try {
-    o = JSON.parse(output.slice(output.indexOf("{"), output.lastIndexOf("}") + 1));
-  } catch {
-    return { ok: false, message: "The flyer couldn't be read clearly. Please fill in the details yourself." };
+  if (!o) {
+    try {
+      o = JSON.parse(output.slice(output.indexOf("{"), output.lastIndexOf("}") + 1)) as Record<string, unknown>;
+    } catch {
+      return { ok: false, message: "The flyer couldn't be read clearly. Please fill in the details yourself." };
+    }
   }
 
   const platform = ["zoom", "google_meet", "teams", "other"].includes(String(o.platform)) ? (String(o.platform) as FlyerDetails["platform"]) : "";

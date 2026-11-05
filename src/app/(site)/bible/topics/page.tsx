@@ -4,7 +4,7 @@ import { Container } from "@/components/ui/Container";
 import { ShareButtons } from "@/components/ui/ShareButtons";
 import { BibleShell } from "@/features/bible/BibleShell";
 import { chapterHref, parseReference } from "@/lib/bible";
-import { getPassage } from "@/server/bible";
+import { getPassage, searchBible, type SearchHit } from "@/server/bible";
 import { cleanTopic, topicStudy } from "@/server/bibleAuto";
 import { createPublicClient } from "@/lib/supabase/public";
 
@@ -33,6 +33,16 @@ async function knownTopics() {
   }
 }
 
+/** Without AI: verses that use the word (and its root, e.g. forgiveness → forgive). */
+async function keywordVerses(q: string): Promise<SearchHit[]> {
+  const tries = [q, q.replace(/(ness|ings?|ed|es|s)$/, ""), q.replace(/(ness|ings?|ed|es|s)$/, "").replace(/e$/, "")];
+  for (const t of [...new Set(tries)].filter((t) => t.length >= 3)) {
+    const { hits } = await searchBible(t, 25);
+    if (hits.length) return hits;
+  }
+  return [];
+}
+
 function TopicForm({ q }: { q: string }) {
   return (
     <form action="/bible/topics" className="flex w-full max-w-xl gap-2">
@@ -50,6 +60,7 @@ export default async function TopicsPage({ searchParams }: PageProps<"/bible/top
   const study = q.length >= 3 ? await topicStudy(q) : null;
   const passages = study ? await Promise.all(study.scriptures.map(async (s) => ({ ...s, passage: await getPassage(s.ref) }))) : [];
   const topics = study ? [] : await knownTopics();
+  const fallback = q.length >= 3 && !study ? await keywordVerses(q) : [];
   const title = q.replace(/\b\w/g, (c) => c.toUpperCase());
 
   return (
@@ -62,10 +73,26 @@ export default async function TopicsPage({ searchParams }: PageProps<"/bible/top
             <TopicForm q={q} />
           </div>
 
-          {q && !study && (
+          {q && !study && fallback.length === 0 && (
             <p className="mt-6 rounded-2xl bg-amber-50 p-4 text-amber-950 dark:bg-white/10 dark:text-white">
-              Couldn&apos;t research “{q}” just now. Check the spelling, try a Bible topic (for example forgiveness, grace, prayer), or try again in a minute.
+              Couldn&apos;t research “{q}” just now. Check the spelling, try a Bible topic (for example forgiveness, grace, prayer), or try again later.
             </p>
+          )}
+          {q && !study && fallback.length > 0 && (
+            <section className="mt-8">
+              <h2 className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">Verses about “{q}” (KJV)</h2>
+              <p className="mt-1 text-sm text-foreground/60">The full study with meaning and teaching points isn&apos;t available just now; here are the verses that speak of it.</p>
+              <ul className="mt-3 flex flex-col gap-3">
+                {fallback.map((h) => (
+                  <li key={`${h.slug}.${h.chapter}.${h.verse}`} className="rounded-2xl border-l-4 border-brand-primary bg-white p-4 shadow-sm dark:bg-white/5">
+                    <Link href={chapterHref(h.slug, h.chapter, h.verse)} className="font-bold text-brand-primary-text underline">
+                      {h.slug === "psalms" ? "Psalm" : h.book} {h.chapter}:{h.verse}
+                    </Link>
+                    <p className="mt-1 font-serif leading-7">“{h.text}”</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
           )}
 
           {study && (
