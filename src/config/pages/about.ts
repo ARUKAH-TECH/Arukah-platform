@@ -55,6 +55,7 @@ export const aboutPage: PageDef = {
             "He carried the name Pastor until he completed his national service as a teacher. Then he chose a name he loves more: Shepherd. A shepherd feeds and cares for the flock instead of feeding on it. His conviction is that a minister should not be a burden to the church, but, like Christ, the Good Shepherd, should feed God's people and lead them into eternity, instead of draining them.",
             "That conviction is why he builds businesses alongside the ministry: so that the work of God is supported, not burdened. He chose the name ZIVARUKAH because its meaning, the light of God and total restoration, describes who he wants to be and what he wants every branch to do.",
             "A trained teacher, he loves to teach and train others in whatever he learns. Some of the people he has trained now work in evangelism and in shoemaking.",
+            "Through Repent Online Ministries he leads the R.O.M Bible Guide (zivarukah.com/bible): a free Bible for everyone, with daily devotionals, Bible studies with quizzes, and answers to Bible questions backed by scripture, so that God's Word reaches people wherever they are.",
             "He is the author of The Wicked and Unforgiving Student, and has five more books written and coming soon. He is based in the Ashanti Region of Ghana.",
           ],
         },

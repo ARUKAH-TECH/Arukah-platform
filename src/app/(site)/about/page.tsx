@@ -149,6 +149,9 @@ export default async function AboutPage() {
                 <Button href="/ministry" variant="outline">
                   Repent Online Ministries
                 </Button>
+                <Button href="/bible" variant="outline">
+                  📖 R.O.M Bible Guide
+                </Button>
               </div>
             </div>
           </div>
@@ -175,7 +178,7 @@ export default async function AboutPage() {
         <Container>
           <SectionHeading eyebrow="One brand" title="Light and restoration, in every branch" align="center" />
           <ul className="mx-auto mt-8 grid max-w-4xl grid-cols-1 gap-3 sm:grid-cols-2">
-            {[...businessNav, { label: "Repent Online Ministries", href: "/ministry" }].map((link) => (
+            {[...businessNav, { label: "Repent Online Ministries", href: "/ministry" }, { label: "R.O.M Bible Guide", href: "/bible" }].map((link) => (
               <li key={link.href}>
                 <Link href={link.href} className="block rounded-xl border border-black/10 p-4 font-semibold hover:border-brand-primary dark:border-white/10">
                   {link.label} →

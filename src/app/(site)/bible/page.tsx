@@ -10,6 +10,7 @@ import { BookGrid } from "@/features/bible/BookGrid";
 import { verseOfTheDay } from "@/server/bible";
 import { latestDevotional, listSeries } from "@/db/bible";
 import { chapterHref, shareCardHref, shareLinkPath } from "@/lib/bible";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
@@ -31,6 +32,24 @@ export default async function BibleHome() {
 
   return (
     <BibleShell active="home">
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "WebApplication",
+          "@id": `${SITE}/bible#app`,
+          name: "R.O.M Bible Guide",
+          alternateName: "Repent Online Ministries Bible Guide",
+          url: `${SITE}/bible`,
+          applicationCategory: "ReferenceApplication",
+          operatingSystem: "Any (web browser; installable)",
+          inLanguage: "en",
+          isAccessibleForFree: true,
+          offers: { "@type": "Offer", price: "0", priceCurrency: "GHS" },
+          description: "Free online Bible (KJV, BSB, WEB and more) with read-aloud, daily devotionals with notifications, Bible studies with quizzes, and answers to Bible questions with scriptures.",
+          publisher: { "@type": "Organization", name: "Repent Online Ministries", url: `${SITE}/ministry` },
+          author: { "@id": `${SITE.replace(/\/$/, "")}/#founder` },
+        }}
+      />
       <section className="bg-[#14110c] py-12 text-white">
         <Container>
           <p className="text-xs font-semibold uppercase tracking-wider text-[#e3a82a]">Repent Online Ministries</p>
