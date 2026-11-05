@@ -100,6 +100,9 @@ export default async function Home() {
               <a href="/bible/devotionals" className="rounded-full border border-white/30 px-4 py-2">
                 🌅 Today&apos;s devotional
               </a>
+              <a href="/bible#daily" className="rounded-full border border-white/30 px-4 py-2">
+                🔔 Daily alerts
+              </a>
             </div>
           </div>
         </Container>

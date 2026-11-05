@@ -5,7 +5,7 @@ import { ShareButtons } from "@/components/ui/ShareButtons";
 import { ListenButton } from "@/features/quote/ListenButton";
 import { BibleShell, SearchBox } from "@/features/bible/BibleShell";
 import { ContinueReading } from "@/features/bible/ChapterReader";
-import { InstallBible } from "@/features/bible/BibleApp";
+import { DailyReminder, InstallBible } from "@/features/bible/BibleApp";
 import { BookGrid } from "@/features/bible/BookGrid";
 import { verseOfTheDay } from "@/server/bible";
 import { latestDevotional, listSeries } from "@/db/bible";
@@ -44,6 +44,9 @@ export default async function BibleHome() {
               <Link href="/bible/books" className="rounded-full border border-white/30 px-5 py-2.5 text-sm font-semibold">
                 Open the Bible
               </Link>
+            </div>
+            <div id="daily">
+              <DailyReminder dark />
             </div>
           </div>
         </Container>

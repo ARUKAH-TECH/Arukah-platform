@@ -7,6 +7,7 @@ import { ArticleBody } from "@/features/articles/ArticleBody";
 import { ListenButton } from "@/features/quote/ListenButton";
 import { BibleShell } from "@/features/bible/BibleShell";
 import { Passages } from "@/features/bible/Passages";
+import { DailyReminder } from "@/features/bible/BibleApp";
 import { getDevotional } from "@/db/bible";
 import { parseReference, shareCardHref, shareLinkPath } from "@/lib/bible";
 
@@ -58,8 +59,11 @@ export default async function DevotionalPage({ params }: PageProps<"/bible/devot
               <p className="mt-2 whitespace-pre-line font-serif text-lg leading-8">{d.prayer}</p>
             </section>
           )}
+          <div className="mt-8">
+            <DailyReminder />
+          </div>
           <ShareButtons
-            className="mt-8"
+            className="mt-6"
             label="Share"
             url={`${SITE}${firstRef ? shareLinkPath(firstRef) : "/"}`}
             title={d.title}
