@@ -8,7 +8,7 @@ import { ListenButton } from "@/features/quote/ListenButton";
 import { BibleShell } from "@/features/bible/BibleShell";
 import { Passages } from "@/features/bible/Passages";
 import { getDevotional } from "@/db/bible";
-import { parseReference, shareCardHref } from "@/lib/bible";
+import { parseReference, shareCardHref, shareLinkPath } from "@/lib/bible";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 export const revalidate = 600;
@@ -61,7 +61,7 @@ export default async function DevotionalPage({ params }: PageProps<"/bible/devot
           <ShareButtons
             className="mt-8"
             label="Share"
-            url={`${SITE}/`}
+            url={`${SITE}${firstRef ? shareLinkPath(firstRef) : "/"}`}
             title={d.title}
             image={firstRef ? shareCardHref(firstRef) : undefined}
             message={`🌅 *${d.title}*${d.verseRef ? ` (${d.verseRef})` : ""}\n\nToday's devotional from Repent Online Ministries.\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇`}

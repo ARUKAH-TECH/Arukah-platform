@@ -73,6 +73,12 @@ export function shareCardHref(ref: BibleRef, version = "kjv") {
   return `/api/share-card?b=${ref.book.slug}&c=${ref.chapter}&v=${verses}&t=${version}`;
 }
 
+/** Share link for a verse: the link preview shows the verse picture, and tapping it opens the homepage. */
+export function shareLinkPath(ref: BibleRef, version = "kjv") {
+  const verses = ref.from === null ? "1-6" : ref.to !== null && ref.to !== ref.from ? `${ref.from}-${ref.to}` : `${ref.from}`;
+  return `/q/v/${ref.book.slug}/${ref.chapter}/${verses}/${version}`;
+}
+
 export function chapterHref(slug: string, chapter: number, verse?: number | null) {
   return `/bible/${slug}/${chapter}${verse ? `#v${verse}` : ""}`;
 }
