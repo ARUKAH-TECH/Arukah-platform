@@ -157,3 +157,52 @@ export async function deleteLesson(formData: FormData) {
   refresh();
   redirect(UUID.test(seriesId) ? `/admin/bible/series/${seriesId}?deleted=1` : "/admin/bible");
 }
+
+// ── Themes, the automatic devotional, and "write one now" ──
+
+export async function saveBibleSettings(_prev: CmsFormState, formData: FormData): Promise<CmsFormState> {
+  await requireAdmin();
+  const supabase = await createClient();
+  const periods = formData.getAll("period").map(String);
+  for (const period of periods) {
+    if (!/^\d{4}(-(0[1-9]|1[0-2]))?$/.test(period)) continue;
+    const theme = text(formData, `theme:${period}`, 200);
+    const scripture = text(formData, `scripture:${period}`, 120);
+    if (scripture && badRefs(scripture).length) return { status: "error", message: `This Bible reference wasn't understood: “${scripture}”. Write it like Isaiah 43:19.` };
+    if (theme) {
+      const { error } = await supabase.from("bible_themes").upsert({ period, theme, scripture, updated_at: new Date().toISOString() });
+      if (error) return { status: "error", message: "Couldn't save the themes. Please try again." };
+    } else {
+      await supabase.from("bible_themes").delete().eq("period", period);
+    }
+  }
+  const mode = text(formData, "autoMode", 10);
+  if (["publish", "draft", "off"].includes(mode)) {
+    await supabase.from("bible_settings").upsert({ key: "auto_devotional", value: mode, updated_at: new Date().toISOString() });
+  }
+  await audit("bible.settings", { periods, mode });
+  revalidatePath("/admin/bible");
+  return { status: "saved", message: "Saved ✓" };
+}
+
+export async function writeDevotionalNow(_prev: CmsFormState, formData: FormData): Promise<CmsFormState> {
+  await requireAdmin();
+  const day = text(formData, "day", 10);
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(day)) return { status: "error", message: "Choose a day." };
+  const supabase = await createClient();
+  const { data: existing } = await supabase.from("bible_devotionals").select("id").eq("day", day).maybeSingle();
+  if (existing) return { status: "error", message: "There is already a devotional for that day. Open it from the list to edit it." };
+  const { themesFor, writeDevotional } = await import("@/server/bibleAuto");
+  const { data: recent } = await supabase.from("bible_devotionals").select("title").order("day", { ascending: false }).limit(14);
+  const draft = await writeDevotional(day, await themesFor(day), (recent ?? []).map((r) => r.title as string));
+  if (!draft) return { status: "error", message: "The devotional couldn't be written just now. Please try again in a minute." };
+  const { data, error } = await supabase
+    .from("bible_devotionals")
+    .insert({ day, title: draft.title, verse_ref: draft.verseRef, body: draft.body, prayer: draft.prayer, status: "draft", auto: true })
+    .select("id")
+    .single();
+  if (error) return { status: "error", message: "Couldn't save the draft. Please try again." };
+  await audit("devotional.ai_draft", { id: data.id, day });
+  refresh();
+  redirect(`/admin/bible/devotionals/${data.id}?saved=draft`);
+}

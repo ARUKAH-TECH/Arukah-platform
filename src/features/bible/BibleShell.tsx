@@ -3,12 +3,13 @@ import type { ReactNode } from "react";
 import { Container } from "@/components/ui/Container";
 
 // Ministry colours and the small menu shared by every Bible page.
-export function BibleShell({ children, active }: { children: ReactNode; active?: "home" | "read" | "devotionals" | "studies" | "search" }) {
+export function BibleShell({ children, active }: { children: ReactNode; active?: "home" | "read" | "devotionals" | "studies" | "topics" | "search" }) {
   const tabs = [
     { id: "home", href: "/bible", label: "Home" },
     { id: "read", href: "/bible/books", label: "📖 Bible" },
     { id: "devotionals", href: "/bible/devotionals", label: "🌅 Devotionals" },
     { id: "studies", href: "/bible/studies", label: "🎓 Studies" },
+    { id: "topics", href: "/bible/topics", label: "🧭 Topics" },
     { id: "search", href: "/bible/search", label: "🔎 Search" },
   ] as const;
   return (
