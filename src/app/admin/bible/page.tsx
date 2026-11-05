@@ -59,6 +59,16 @@ export default async function AdminBiblePage({ searchParams }: PageProps<"/admin
           />
         </div>
         <div className="mt-6 border-t border-black/10 pt-4 dark:border-white/10">
+          <p className="text-sm font-semibold">🖼 Share pictures follow the month&apos;s theme</p>
+          <p className="text-xs text-foreground/60">
+            Each month the AI reads the themes above and picks the background for shared verse pictures (scene, symbol and colours). Change a theme and the
+            pictures change with it.
+          </p>
+          <a href={`/api/share-card?b=john&c=3&v=16&t=kjv&preview=${Date.now()}`} target="_blank" rel="noopener noreferrer" className="mt-2 inline-block text-sm font-semibold underline">
+            See this month&apos;s picture →
+          </a>
+        </div>
+        <div className="mt-6 border-t border-black/10 pt-4 dark:border-white/10">
           <p className="text-sm font-semibold">Want a head start?</p>
           <p className="text-xs text-foreground/60">Writes a devotional on the themes as a draft. You read it, change anything, then publish.</p>
           <div className="mt-2">
