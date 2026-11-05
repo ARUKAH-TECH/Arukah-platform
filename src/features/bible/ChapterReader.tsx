@@ -29,7 +29,7 @@ function writeJson(key: string, value: unknown) {
 const SIZES = ["text-base leading-8", "text-lg leading-9", "text-xl leading-10", "text-2xl leading-[2.75rem]"];
 
 /** One chapter: tap verses to copy, share or highlight them; listen to the chapter. Everything is kept on this device. */
-export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: string; label: string; chapter: number; verses: string[] }) {
+export function ChapterReader({ slug, label, bookName, chapter, verses: kjv }: { slug: string; label: string; bookName: string; chapter: number; verses: string[] }) {
   const [version, setVersion] = useState<BibleVersionId>("kjv");
   const [other, setOther] = useState<string[] | null>(null);
   const [loadingVersion, setLoadingVersion] = useState(false);
@@ -165,20 +165,11 @@ export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: str
               ⏹ Stop
             </button>
           ))}
-        <label className="flex items-center gap-1 text-sm">
-          <span className="sr-only">Bible version</span>
-          <select
-            value={version}
-            onChange={(e) => chooseVersion(e.target.value as BibleVersionId)}
-            className="rounded-full border border-black/15 bg-white px-3 py-2 text-sm font-semibold dark:border-white/15 dark:bg-zinc-900"
-          >
-            {BIBLE_VERSIONS.map((v) => (
-              <option key={v.id} value={v.id}>
-                {v.short}
-              </option>
-            ))}
-          </select>
-        </label>
+        <VersionSelect
+          value={version}
+          onChange={chooseVersion}
+          external={(code) => window.open(`https://www.biblegateway.com/passage/?search=${encodeURIComponent(`${bookName} ${chapter}`)}&version=${code}`, "_blank", "noopener")}
+        />
         {loadingVersion && <span className="text-xs text-foreground/60">Loading…</span>}
         <span className="ml-auto flex items-center gap-1">
           <button type="button" onClick={() => resize(-1)} aria-label="Smaller text" className="h-9 w-9 rounded-full border border-black/15 text-sm font-bold dark:border-white/15">
@@ -261,5 +252,76 @@ export function ContinueReading() {
     >
       📖 Continue reading {last.label}
     </a>
+  );
+}
+
+// Licensed versions: not copied here, opened on BibleGateway instead.
+const EXTERNAL_VERSIONS = [
+  { code: "NIV", name: "New International Version" },
+  { code: "AMP", name: "Amplified Bible" },
+  { code: "NKJV", name: "New King James Version" },
+];
+
+/** The "Bible version" drop-down. */
+export function VersionSelect({ value, onChange, external }: { value: BibleVersionId; onChange: (id: BibleVersionId) => void; external?: (code: string) => void }) {
+  return (
+    <label className="flex w-full flex-col gap-1 text-sm sm:w-auto">
+      <span className="font-semibold">📖 Bible version</span>
+      <select
+        value={value}
+        onChange={(e) => {
+          const v = e.target.value;
+          if (v.startsWith("ext:")) {
+            external?.(v.slice(4));
+            e.target.value = value; // stay on the version being read here
+            return;
+          }
+          onChange(v as BibleVersionId);
+        }}
+        className="w-full rounded-xl border-2 border-[#e3a82a] bg-white px-3 py-2.5 text-base font-semibold sm:w-auto dark:bg-zinc-900"
+      >
+        <optgroup label="Read here (free)">
+          {BIBLE_VERSIONS.map((v) => (
+            <option key={v.id} value={v.id}>
+              {v.short}: {v.name}
+            </option>
+          ))}
+        </optgroup>
+        {external && (
+          <optgroup label="Open on BibleGateway">
+            {EXTERNAL_VERSIONS.map((v) => (
+              <option key={v.code} value={`ext:${v.code}`}>
+                {v.code}: {v.name} ↗
+              </option>
+            ))}
+          </optgroup>
+        )}
+      </select>
+    </label>
+  );
+}
+
+/** On the books page: choose the version you want chapters to open in. */
+export function VersionPreference() {
+  const [version, setVersion] = useState<BibleVersionId>("kjv");
+  const [saved, setSaved] = useState(false);
+  useEffect(() => {
+    const v = readJson<string>(VERSION, "kjv");
+    if (BIBLE_VERSIONS.some((x) => x.id === v)) setVersion(v as BibleVersionId);
+  }, []);
+  return (
+    <div className="flex flex-col gap-1">
+      <VersionSelect
+        value={version}
+        onChange={(id) => {
+          setVersion(id);
+          writeJson(VERSION, id);
+          setSaved(true);
+        }}
+      />
+      <span className="text-xs text-foreground/60">
+        {saved ? "Saved ✓ Chapters will open in this version. " : ""}NIV, AMP and NKJV can be opened from the same list inside any chapter.
+      </span>
+    </div>
   );
 }

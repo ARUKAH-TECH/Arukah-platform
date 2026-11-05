@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { BibleShell, SearchBox } from "@/features/bible/BibleShell";
 import { BookGrid } from "@/features/bible/BookGrid";
+import { VersionPreference } from "@/features/bible/ChapterReader";
 
 export const metadata: Metadata = {
   title: { absolute: "Books of the Bible (KJV) | R.O.M Bible Guide" },
@@ -14,7 +15,10 @@ export default function BooksPage() {
     <BibleShell active="read">
       <Container>
         <div className="py-10">
-          <h1 className="text-3xl font-bold tracking-tight">The Holy Bible (KJV)</h1>
+          <h1 className="text-3xl font-bold tracking-tight">The Holy Bible</h1>
+          <div className="mt-4">
+            <VersionPreference />
+          </div>
           <div className="mt-4">
             <SearchBox />
           </div>

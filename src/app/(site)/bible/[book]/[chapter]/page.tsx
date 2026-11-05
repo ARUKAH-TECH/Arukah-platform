@@ -48,27 +48,9 @@ export default async function ChapterPage({ params }: PageProps<"/bible/[book]/[
             ← {book.name}: all chapters
           </Link>
           <h1 className="mt-2 text-3xl font-bold tracking-tight">{label}</h1>
-          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-foreground/60">
-            <span>Choose the version (KJV, BSB, WEB…) in the bar below.</span>
-            <span>
-              Also on BibleGateway:{" "}
-              {["NIV", "AMP", "NKJV"].map((v, i) => (
-                <span key={v}>
-                  {i > 0 && " · "}
-                  <a
-                    href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(`${book.name} ${chapter}`)}&version=${v}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-semibold text-brand-primary-text underline"
-                  >
-                    {v}
-                  </a>
-                </span>
-              ))}
-            </span>
-          </p>
+          <p className="text-sm text-foreground/60">Choose the Bible version (KJV, BSB, WEB, NIV, AMP…) from the drop-down below.</p>
           <div className="mt-2">
-            <ChapterReader slug={slug} label={label} chapter={chapter} verses={verses} />
+            <ChapterReader slug={slug} label={label} bookName={book.name} chapter={chapter} verses={verses} />
           </div>
           <nav aria-label="Chapters" className="mt-10 flex items-center justify-between gap-3">
             {prev ? (
