@@ -36,11 +36,13 @@ async function knownTopics() {
 /** Without AI: verses that use the word (and its root, e.g. forgiveness → forgive). */
 async function keywordVerses(q: string): Promise<SearchHit[]> {
   const tries = [q, q.replace(/(ness|ings?|ed|es|s)$/, ""), q.replace(/(ness|ings?|ed|es|s)$/, "").replace(/e$/, "")];
+  const all: SearchHit[] = [];
   for (const t of [...new Set(tries)].filter((t) => t.length >= 3)) {
-    const { hits } = await searchBible(t, 25);
-    if (hits.length) return hits;
+    const { hits } = await searchBible(t, 30);
+    for (const h of hits) if (!all.some((x) => x.slug === h.slug && x.chapter === h.chapter && x.verse === h.verse)) all.push(h);
+    if (all.length >= 30) break;
   }
-  return [];
+  return all.slice(0, 30);
 }
 
 function TopicForm({ q }: { q: string }) {
