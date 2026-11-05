@@ -16,35 +16,49 @@ export const SYMBOLS = ["cross", "dove", "crown", "flame", "book", "none"] as co
 type Scene = (typeof SCENES)[number];
 type SymbolName = (typeof SYMBOLS)[number];
 
-export interface Design {
+interface Variant {
   scene: Scene;
   symbol: SymbolName;
+}
+
+/** One month's family of pictures: shared colours, 3–5 different scenes. */
+export interface Design {
   sky: [string, string, string]; // top, middle, horizon
   glow: string;
   land: string;
+  variants: Variant[];
 }
 
+type Palette = Omit<Design, "variants">;
+const family = (p: Palette, main: Variant, ...others: Variant[]): Design => ({ ...p, variants: [main, ...others] });
+
 const DEFAULTS: Design[] = [
-  { scene: "sunrise", symbol: "cross", sky: ["#121838", "#8a3c5a", "#ffb460"], glow: "#ffe2a0", land: "#1e1220" },
-  { scene: "rays", symbol: "none", sky: ["#2a1e12", "#1c1820", "#0c0b12"], glow: "#ffd98a", land: "#08080c" },
-  { scene: "night", symbol: "cross", sky: ["#060a1e", "#2a1650", "#784660"], glow: "#ffd6a0", land: "#0a0812" },
-  { scene: "sea", symbol: "none", sky: ["#2a1e50", "#a84670", "#ffb070"], glow: "#ffe0a0", land: "#120e26" },
-  { scene: "mountains", symbol: "none", sky: ["#1e3260", "#7a96c0", "#e8c8aa"], glow: "#fff0d0", land: "#121630" },
-  { scene: "field", symbol: "dove", sky: ["#3a5a9a", "#f0b890", "#ffe0b0"], glow: "#fff4d8", land: "#3a2a18" },
-  { scene: "clouds", symbol: "dove", sky: ["#164a96", "#5aa0dc", "#c0dcf4"], glow: "#fffbe8", land: "#1a3050" },
+  family({ sky: ["#121838", "#8a3c5a", "#ffb460"], glow: "#ffe2a0", land: "#1e1220" }, { scene: "sunrise", symbol: "cross" }, { scene: "rays", symbol: "none" }, { scene: "sea", symbol: "none" }, { scene: "mountains", symbol: "none" }),
+  family({ sky: ["#2a1e12", "#3a2a2a", "#c08a50"], glow: "#ffd98a", land: "#0c0a10" }, { scene: "rays", symbol: "crown" }, { scene: "sunrise", symbol: "none" }, { scene: "night", symbol: "cross" }, { scene: "field", symbol: "none" }),
+  family({ sky: ["#060a1e", "#2a1650", "#784660"], glow: "#ffd6a0", land: "#0a0812" }, { scene: "night", symbol: "cross" }, { scene: "sea", symbol: "none" }, { scene: "rays", symbol: "none" }, { scene: "mountains", symbol: "none" }),
+  family({ sky: ["#2a1e50", "#a84670", "#ffb070"], glow: "#ffe0a0", land: "#120e26" }, { scene: "sea", symbol: "none" }, { scene: "sunrise", symbol: "dove" }, { scene: "clouds", symbol: "none" }, { scene: "night", symbol: "none" }),
+  family({ sky: ["#1e3260", "#7a96c0", "#e8c8aa"], glow: "#fff0d0", land: "#121630" }, { scene: "mountains", symbol: "none" }, { scene: "sunrise", symbol: "cross" }, { scene: "clouds", symbol: "dove" }, { scene: "sea", symbol: "none" }),
+  family({ sky: ["#3a5a9a", "#f0b890", "#ffe0b0"], glow: "#fff4d8", land: "#3a2a18" }, { scene: "field", symbol: "dove" }, { scene: "sunrise", symbol: "none" }, { scene: "rays", symbol: "book" }, { scene: "mountains", symbol: "none" }),
+  family({ sky: ["#164a96", "#5aa0dc", "#c0dcf4"], glow: "#fffbe8", land: "#1a3050" }, { scene: "clouds", symbol: "dove" }, { scene: "sea", symbol: "none" }, { scene: "mountains", symbol: "none" }, { scene: "rays", symbol: "none" }),
 ];
 
 const HEX = /^#[0-9a-f]{6}$/i;
 
+function cleanVariant(raw: unknown): Variant | null {
+  const o = (raw ?? {}) as Record<string, unknown>;
+  const scene = SCENES.find((x) => x === o.scene);
+  if (!scene) return null;
+  return { scene, symbol: SYMBOLS.find((x) => x === o.symbol) ?? "none" };
+}
+
 function cleanDesign(raw: Record<string, unknown> | null): Design | null {
   if (!raw) return null;
-  const scene = SCENES.find((s) => s === raw.scene);
-  const symbol = SYMBOLS.find((s) => s === raw.symbol) ?? "none";
   const sky = Array.isArray(raw.sky) ? raw.sky.filter((c): c is string => typeof c === "string" && HEX.test(c)) : [];
   const glow = typeof raw.glow === "string" && HEX.test(raw.glow) ? raw.glow : null;
   const land = typeof raw.land === "string" && HEX.test(raw.land) ? raw.land : null;
-  if (!scene || sky.length < 3 || !glow || !land) return null;
-  return { scene, symbol, sky: [sky[0], sky[1], sky[2]], glow, land };
+  const variants = (Array.isArray(raw.variants) ? raw.variants : [raw]).map(cleanVariant).filter((v): v is Variant => Boolean(v)).slice(0, 5);
+  if (sky.length < 3 || !glow || !land || !variants.length) return null;
+  return { sky: [sky[0], sky[1], sky[2]], glow, land, variants };
 }
 
 /** This month's picture style (made once per month, and again if the themes change). */
@@ -59,11 +73,11 @@ export async function monthDesign(day = todayInGhana()): Promise<Design> {
     if (saved && saved.theme_key === key) return cleanDesign(saved.design as Record<string, unknown>) ?? fallback;
     if (!themes.year && !themes.month) return fallback;
 
-    const system = `You design the background picture for Bible verse images shared on WhatsApp by a church in Ghana. Pick a style that fits the theme. Return ONLY JSON:
-{"scene": one of ${JSON.stringify(SCENES)}, "symbol": one of ${JSON.stringify(SYMBOLS)}, "sky": ["#rrggbb" top, "#rrggbb" middle, "#rrggbb" near the horizon], "glow": "#rrggbb" light of the sun or heaven, "land": "#rrggbb" dark colour of the hills or sea}
-Rules: beautiful, hopeful, eye-catching colours; the land colour must be dark; white writing must stay readable; match the meaning (e.g. new beginnings → sunrise, Holy Spirit → dove or flame, kingdom/victory → crown, the Word → book, the cross/salvation → cross, peace → sea or clouds, faithfulness at night → night).`;
+    const system = `You design the background picture for Bible verse images shared on WhatsApp by a church in Ghana. Make a family of 4 pictures for the month: they share the same colours so they clearly belong together, but each shows a different scene. The FIRST is the main picture of the month. Return ONLY JSON:
+{"sky": ["#rrggbb" top, "#rrggbb" middle, "#rrggbb" near the horizon], "glow": "#rrggbb" light of the sun or heaven, "land": "#rrggbb" dark colour of the hills or sea, "variants": [{"scene": one of ${JSON.stringify(SCENES)}, "symbol": one of ${JSON.stringify(SYMBOLS)}}, … 4 items, all different scenes]}
+Rules: beautiful, hopeful, eye-catching colours; the land colour must be dark; white writing must stay readable; the main picture must match the meaning (e.g. new beginnings → sunrise, Holy Spirit → dove or flame, kingdom/victory → crown, the Word → book, the cross/salvation → cross, peace → sea or clouds, faithfulness at night → night).`;
     const prompt = `Theme of the year: ${themes.year ? `${themes.year.theme}${themes.year.scripture ? ` (${themes.year.scripture})` : ""}` : "(none)"}\nTheme of the month: ${themes.month ? `${themes.month.theme}${themes.month.scripture ? ` (${themes.month.scripture})` : ""}` : "(none)"}`;
-    const design = cleanDesign(await askJson(system, prompt, 400));
+    const design = cleanDesign(await askJson(system, prompt, 700));
     if (!design) return saved ? (cleanDesign(saved.design as Record<string, unknown>) ?? fallback) : fallback;
     await client.from("bible_backdrops").upsert({ period, theme_key: key, design });
     return design;
@@ -116,7 +130,11 @@ const SYMBOL_PATHS: Record<Exclude<SymbolName, "none">, string> = {
 /** The background picture as SVG, varied by `seed` (each verse looks a little different). */
 export function backdropSvg(design: Design, W: number, H: number, seed: number) {
   const r = rng(seed);
-  const { scene, symbol, sky, glow, land } = design;
+  // Every other verse uses the month's main picture; the rest use its sister scenes.
+  const pick = seed % 2 === 0 || design.variants.length === 1 ? 0 : 1 + ((seed >>> 1) % (design.variants.length - 1));
+  const { scene, symbol } = design.variants[pick];
+  const { glow, land } = design;
+  const sky: [string, string, string] = pick === 0 ? design.sky : [design.sky[0], mix(design.sky[1], glow, 0.08 * pick), design.sky[2]];
   const horizon = scene === "rays" || scene === "clouds" || scene === "night" ? 0.86 : 0.6 + r() * 0.06;
   const sunX = W * (0.25 + r() * 0.5);
   const sunY = scene === "rays" ? -H * 0.04 : scene === "clouds" ? H * 0.06 : scene === "night" ? H * 0.22 : H * (horizon - 0.02);

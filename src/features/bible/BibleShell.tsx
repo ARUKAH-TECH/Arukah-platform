@@ -41,7 +41,7 @@ export function SearchBox({ q = "", dark = false }: { q?: string; dark?: boolean
       <input
         name="q"
         defaultValue={q}
-        placeholder="Search: a word, or John 3:16"
+        placeholder="Search: a word, John 3:16 or a question"
         aria-label="Search the Bible"
         className={`min-w-0 flex-1 rounded-full border px-4 py-2.5 text-base ${dark ? "border-white/20 bg-white/10 text-white placeholder:text-white/50" : "border-black/15 bg-white dark:border-white/15 dark:bg-zinc-900"}`}
       />
