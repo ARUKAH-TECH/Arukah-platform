@@ -16,7 +16,7 @@ interface SharePictureProps {
   className?: string;
 }
 
-export function SharePicture({ image, text, fileName = "repent-online-ministries.png", dark = false, className = "" }: SharePictureProps) {
+export function SharePicture({ image, text, fileName = "repent-online-ministries", dark = false, className = "" }: SharePictureProps) {
   const [state, setState] = useState<"idle" | "busy" | "saved" | "failed">("idle");
   const ref = useRef<HTMLButtonElement>(null);
   const ready = useRef<{ url: string; blob: Promise<Blob> } | null>(null);
@@ -55,7 +55,9 @@ export function SharePicture({ image, text, fileName = "repent-online-ministries
     setState("busy");
     try {
       const blob = await load();
-      const file = new File([blob], fileName, { type: "image/png" });
+      const type = blob.type === "image/png" ? "image/png" : "image/jpeg";
+      const name = `${fileName.replace(/\.(png|jpe?g)$/, "")}.${type === "image/png" ? "png" : "jpg"}`;
+      const file = new File([blob], name, { type });
       const nav = navigator as Navigator & { canShare?: (data: ShareData) => boolean };
       if (typeof nav.share === "function" && nav.canShare?.({ files: [file] })) {
         try {
@@ -72,7 +74,7 @@ export function SharePicture({ image, text, fileName = "repent-online-ministries
       }
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.download = fileName;
+      link.download = name;
       document.body.appendChild(link);
       link.click();
       link.remove();
