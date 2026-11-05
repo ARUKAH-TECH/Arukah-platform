@@ -206,3 +206,13 @@ export async function writeDevotionalNow(_prev: CmsFormState, formData: FormData
   refresh();
   redirect(`/admin/bible/devotionals/${data.id}?saved=draft`);
 }
+
+export async function sendTestNotificationNow(_prev: CmsFormState): Promise<CmsFormState> {
+  await requireAdmin();
+  const { sendTestNotification } = await import("@/server/push");
+  const result = await sendTestNotification();
+  if (!result) return { status: "error", message: "Notifications aren't ready yet. Please try again in a minute." };
+  await audit("bible.push_test", result);
+  if (result.sent === 0 && result.failed === 0) return { status: "error", message: "No phone has turned on the daily devotional yet. Turn it on from zivarukah.com/bible first." };
+  return { status: "saved", message: `Sent to ${result.sent} phone${result.sent === 1 ? "" : "s"}${result.failed ? ` (${result.failed} didn't receive it)` : ""}. Check your phone.` };
+}
