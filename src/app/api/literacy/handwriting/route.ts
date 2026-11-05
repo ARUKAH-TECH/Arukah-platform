@@ -95,6 +95,10 @@ export async function POST(request: Request) {
     });
     if (!res.ok) {
       console.error("[literacy-ai] upstream", res.status);
+      if (res.status === 401 || res.status === 403) {
+        // Account paused (e.g. needs credit): say so honestly instead of "busy".
+        return reply(origin, { ok: false, message: "The AI check is switched off for now. All the other practice still works, and a parent or teacher can mark this writing." }, 503);
+      }
       return reply(origin, { ok: false, message: "The AI checker is busy. Please try again shortly." }, 502);
     }
     const data = (await res.json()) as { output?: string };
