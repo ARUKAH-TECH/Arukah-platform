@@ -1,6 +1,6 @@
 // R.O.M Bible Guide (zivarukah.com/bible). Keeps the Bible pages you have opened,
 // so they still open without internet. Newest version first when online.
-const CACHE = "ziv-bible-v3";
+const CACHE = "ziv-bible-v3"; // keep the name: changing it wipes saved chapters
 const START = ["/bible", "/bible/books", "/bible-icons/icon-192.png"];
 
 self.addEventListener("install", (event) => {
@@ -38,19 +38,41 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  // Bible pages: from the internet when possible, else the saved copy.
+  // Bible pages: from the internet, but if the connection is slow (no answer
+  // within 3 seconds) show the saved copy straight away, and save the fresh
+  // page for next time when it arrives.
   if (request.mode === "navigate" && url.pathname.startsWith("/bible")) {
+    const network = fetch(request).then((res) => {
+      if (res.ok) {
+        const copy = res.clone();
+        caches.open(CACHE).then((c) => c.put(url.pathname, copy));
+      }
+      return res;
+    });
+    const saved = () => caches.match(url.pathname).then((hit) => hit || caches.match("/bible"));
     event.respondWith(
-      fetch(request)
-        .then((res) => {
-          if (res.ok) {
-            const copy = res.clone();
-            caches.open(CACHE).then((c) => c.put(url.pathname, copy));
+      new Promise((resolve) => {
+        let done = false;
+        const finish = (res) => {
+          if (!done && res) {
+            done = true;
+            resolve(res);
           }
-          return res;
-        })
-        .catch(() => caches.match(url.pathname).then((hit) => hit || caches.match("/bible"))),
+        };
+        const timer = setTimeout(() => caches.match(url.pathname).then(finish), 3000); // only this exact page
+        network
+          .then((res) => {
+            clearTimeout(timer);
+            finish(res);
+          })
+          .catch(() => {
+            clearTimeout(timer);
+            saved().then((hit) => (hit ? finish(hit) : finish(Response.error())));
+          });
+        // If there is no saved copy yet, keep waiting for the internet.
+      }),
     );
+    event.waitUntil(network.catch(() => {}));
   }
 });
 

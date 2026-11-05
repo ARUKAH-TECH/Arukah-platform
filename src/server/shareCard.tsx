@@ -24,7 +24,7 @@ async function logo(ministry: boolean) {
   // Literal paths so Vercel bundles both files with this function.
   const data = ministry
     ? await readFile(join(process.cwd(), "public/branding/ministry/repent-logo-share.png"))
-    : await readFile(join(process.cwd(), "public/branding/arukah/arukah-logo-transparent.png"));
+    : await readFile(join(process.cwd(), "public/branding/arukah/arukah-logo-share.png"));
   return `data:image/png;base64,${data.toString("base64")}`;
 }
 
@@ -134,7 +134,7 @@ export async function renderCard(content: CardContent, shape: keyof typeof CARD_
           display: "flex",
           flexDirection: "column",
           padding: wide ? "34px 50px 30px" : "56px 70px 56px",
-          background: "linear-gradient(160deg, #14110c 0%, #2a2210 60%, #3b2f14 100%)",
+          background: "linear-gradient(180deg, #14110c 0%, #2a2210 60%, #3b2f14 100%)",
           color: "#ffffff",
         }}
       >
