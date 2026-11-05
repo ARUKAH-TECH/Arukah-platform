@@ -13,7 +13,7 @@ import { GallerySection } from "@/features/gallery/GallerySection";
 import { QuoteOfTheDay } from "@/features/quote/QuoteOfTheDay";
 import { ShareButtons } from "@/components/ui/ShareButtons";
 import { verseOfTheDay } from "@/server/bible";
-import { shareCardHref } from "@/lib/bible";
+import { shareCardHref, shareLinkPath } from "@/lib/bible";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
@@ -219,7 +219,7 @@ export default async function Home() {
                 className="mt-6"
                 dark
                 label="Share"
-                url={`${SITE}/`}
+                url={`${SITE}${ministryVerse ? shareLinkPath(ministryVerse.ref) : "/"}`}
                 title="Repent Online Ministries"
                 image={ministryVerse ? shareCardHref(ministryVerse.ref) : undefined}
                 message={ministryVerse ? `✝️ *Repent Online Ministries*\n\n“${ministryVerse.verses.map((v) => v.text).join(" ")}”\n— ${ministryVerse.label} (KJV)` : "✝️ *Repent Online Ministries*\n\nRescue the perishing. Follow, pray with us and support the outreach 👇"}

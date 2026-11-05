@@ -112,8 +112,10 @@ export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: str
       flash("Couldn't copy");
     }
   }
+  // Ranges like 16-17_19 ("_" instead of "," so WhatsApp keeps the whole link).
+  const shareLink = () => `/q/${slug}/${chapter}/${refText().split(":").pop()?.replace(/,/g, "_") ?? "1"}/${version}`;
   function share() {
-    const message = `📖 *${refText()}* (${short})\n\n${selected.map((n) => verses[n - 1]).join(" ")}\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇\n${SITE}/`;
+    const message = `📖 *${refText()}* (${short})\n\n${selected.map((n) => verses[n - 1]).join(" ")}\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇\n${SITE}${shareLink()}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener");
   }
   function highlight() {
@@ -225,7 +227,7 @@ export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: str
             </button>
             <SharePicture
               image={`/api/share-card?b=${slug}&c=${chapter}&v=${selected.join(",")}&t=${version}`}
-              text={`📖 ${refText()} (${short})\nOpen R.O.M Bible Guide on our homepage 👇\n${SITE}/`}
+              text={`📖 ${refText()} (${short})\nOpen R.O.M Bible Guide on our homepage 👇\n${SITE}${shareLink()}`}
               fileName={`${slug}-${chapter}.png`}
             />
             <button type="button" onClick={highlight} className="rounded-full bg-yellow-200 px-3 py-2 text-sm font-semibold text-black">

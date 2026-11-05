@@ -9,7 +9,7 @@ import { InstallBible } from "@/features/bible/BibleApp";
 import { BookGrid } from "@/features/bible/BookGrid";
 import { verseOfTheDay } from "@/server/bible";
 import { latestDevotional, listSeries } from "@/db/bible";
-import { chapterHref, shareCardHref } from "@/lib/bible";
+import { chapterHref, shareCardHref, shareLinkPath } from "@/lib/bible";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
@@ -62,7 +62,7 @@ export default async function BibleHome() {
                 <ListenButton text={`${verseText} ${verse.label}.`} />
                 <ShareButtons
                   label="Share"
-                  url={`${SITE}/`}
+                  url={`${SITE}${shareLinkPath(verse.ref)}`}
                   title="Verse of the day"
                   image={shareCardHref(verse.ref)}
                   message={`📖 *Verse of the day*\n\n“${verseText}”\n— ${verse.label} (KJV)\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇`}
