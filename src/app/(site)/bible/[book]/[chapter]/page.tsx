@@ -48,7 +48,25 @@ export default async function ChapterPage({ params }: PageProps<"/bible/[book]/[
             ← {book.name}: all chapters
           </Link>
           <h1 className="mt-2 text-3xl font-bold tracking-tight">{label}</h1>
-          <p className="text-sm text-foreground/60">King James Version</p>
+          <p className="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-foreground/60">
+            <span>King James Version</span>
+            <span>
+              Compare:{" "}
+              {["NIV", "AMP", "NKJV"].map((v, i) => (
+                <span key={v}>
+                  {i > 0 && " · "}
+                  <a
+                    href={`https://www.biblegateway.com/passage/?search=${encodeURIComponent(`${book.name} ${chapter}`)}&version=${v}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="font-semibold text-brand-primary-text underline"
+                  >
+                    {v}
+                  </a>
+                </span>
+              ))}
+            </span>
+          </p>
           <div className="mt-2">
             <ChapterReader slug={slug} label={label} chapter={chapter} verses={verses} />
           </div>

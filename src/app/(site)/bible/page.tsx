@@ -90,6 +90,18 @@ export default async function BibleHome() {
           </section>
         </div>
 
+        <section className="mb-10 rounded-3xl bg-[#14110c] p-6 text-white">
+          <p className="text-xs font-semibold uppercase tracking-wider text-[#e3a82a]">🧭 Bible research</p>
+          <h2 className="mt-2 text-2xl font-bold tracking-tight">What does the Bible say about…?</h2>
+          <p className="mt-1 text-white/75">Type a topic such as forgiveness, faith or prayer: its meaning, key words, teaching points and supporting scriptures.</p>
+          <form action="/bible/topics" className="mt-4 flex max-w-xl gap-2">
+            <input name="q" required minLength={3} maxLength={60} placeholder="e.g. forgiveness" aria-label="Topic" className="min-w-0 flex-1 rounded-full border border-white/20 bg-white/10 px-4 py-2.5 text-base text-white placeholder:text-white/50" />
+            <button type="submit" className="rounded-full bg-[#e3a82a] px-5 py-2.5 text-sm font-semibold text-[#14110c]">
+              Research
+            </button>
+          </form>
+        </section>
+
         {series.length > 0 && (
           <section className="pb-10">
             <div className="flex flex-wrap items-end justify-between gap-3">
