@@ -100,23 +100,8 @@ export async function todaysNotification() {
   };
 }
 
-/**
- * Sends today's notification to every phone that asked for it — once a day.
- * Waits for the day's devotional until 6:35am, then sends anyway (verse of the day).
- */
-export async function sendDailyNotification(now = new Date()) {
-  if (now.getUTCHours() < 6) return { status: "too-early" };
-  const note = await todaysNotification();
-  const late = now.getUTCHours() > 6 || now.getUTCMinutes() >= 35;
-  if (!note.devotional && !late) return { status: "waiting-for-devotional" };
-
+async function wakeAll(keys: Keys) {
   const client = createServiceClient();
-  // Claim the day first, so two runs never both send.
-  const { error: claim } = await client.from("bible_push_log").insert({ day: note.day });
-  if (claim) return { status: claim.code === "23505" ? "already-sent" : "log-failed" };
-
-  const keys = await pushKeys();
-  if (!keys) return { status: "no-keys" };
   const { data: rows } = await client.from("bible_push").select("endpoint").limit(5000);
   const endpoints = (rows ?? []).map((r) => r.endpoint as string);
   let sent = 0;
@@ -134,6 +119,44 @@ export async function sendDailyNotification(now = new Date()) {
     });
   }
   if (gone.length) await client.from("bible_push").delete().in("endpoint", gone);
+  return { sent, failed, removed: gone.length };
+}
+
+/** For Admin: how many phones get the notification, and the last days sent. */
+export async function pushStats() {
+  const client = createServiceClient();
+  const [{ count }, { data: log }] = await Promise.all([
+    client.from("bible_push").select("endpoint", { count: "exact", head: true }),
+    client.from("bible_push_log").select("day, sent, failed").order("day", { ascending: false }).limit(5),
+  ]);
+  return { phones: count ?? 0, log: (log ?? []) as { day: string; sent: number; failed: number }[] };
+}
+
+/** Admin test: sends today's notification to every subscribed phone now (doesn't use up the daily send). */
+export async function sendTestNotification() {
+  const keys = await pushKeys();
+  if (!keys) return null;
+  return wakeAll(keys);
+}
+
+/**
+ * Sends today's notification to every phone that asked for it — once a day.
+ * Waits for the day's devotional until 6:35am, then sends anyway (verse of the day).
+ */
+export async function sendDailyNotification(now = new Date()) {
+  if (now.getUTCHours() < 6) return { status: "too-early" };
+  const note = await todaysNotification();
+  const late = now.getUTCHours() > 6 || now.getUTCMinutes() >= 35;
+  if (!note.devotional && !late) return { status: "waiting-for-devotional" };
+
+  const client = createServiceClient();
+  // Claim the day first, so two runs never both send.
+  const { error: claim } = await client.from("bible_push_log").insert({ day: note.day });
+  if (claim) return { status: claim.code === "23505" ? "already-sent" : "log-failed" };
+
+  const keys = await pushKeys();
+  if (!keys) return { status: "no-keys" };
+  const { sent, failed, removed } = await wakeAll(keys);
   await client.from("bible_push_log").update({ sent, failed }).eq("day", note.day);
-  return { status: "sent", sent, failed, removed: gone.length };
+  return { status: "sent", sent, failed, removed };
 }

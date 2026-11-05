@@ -2,7 +2,7 @@
 
 import { useActionState } from "react";
 import { initialCmsFormState } from "@/features/admin/cms/shared";
-import { saveBibleSettings, writeDevotionalNow } from "@/features/admin/cms/bibleActions";
+import { saveBibleSettings, sendTestNotificationNow, writeDevotionalNow } from "@/features/admin/cms/bibleActions";
 import { fieldClasses, primaryButtonClasses, secondaryButtonClasses } from "@/features/admin/ui";
 
 export interface ThemeRow {
@@ -65,6 +65,22 @@ export function WriteNowForm({ day }: { day: string }) {
       </button>
       {state.status === "error" && (
         <p role="alert" className="w-full text-sm text-red-700">
+          {state.message}
+        </p>
+      )}
+    </form>
+  );
+}
+
+export function TestNotificationForm({ phones }: { phones: number }) {
+  const [state, action, pending] = useActionState(sendTestNotificationNow, initialCmsFormState);
+  return (
+    <form action={action} className="flex flex-wrap items-center gap-3">
+      <button type="submit" disabled={pending} className={secondaryButtonClasses}>
+        {pending ? "🔔 Sending…" : `🔔 Send a test now to ${phones} phone${phones === 1 ? "" : "s"}`}
+      </button>
+      {state.status !== "idle" && state.message && (
+        <p role={state.status === "error" ? "alert" : "status"} className={`w-full text-sm ${state.status === "error" ? "text-red-700" : "text-green-700 dark:text-green-400"}`}>
           {state.message}
         </p>
       )}
