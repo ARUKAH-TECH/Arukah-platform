@@ -228,7 +228,7 @@ export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: str
             <SharePicture
               image={`/api/share-card?b=${slug}&c=${chapter}&v=${selected.join(",")}&t=${version}`}
               text={`📖 ${refText()} (${short})\nOpen R.O.M Bible Guide on our homepage 👇\n${SITE}${shareLink()}`}
-              fileName={`${slug}-${chapter}.png`}
+              fileName={`${slug}-${chapter}`}
             />
             <button type="button" onClick={highlight} className="rounded-full bg-yellow-200 px-3 py-2 text-sm font-semibold text-black">
               🖍 Highlight

@@ -116,6 +116,39 @@ export async function cardContent(req: CardRequest): Promise<CardContent | null>
   return { text, source, ministry };
 }
 
+// Scenic backgrounds (public/share-bg/<name>-tall.jpg / -wide.jpg).
+const BACKGROUNDS = ["sunrise-hills", "god-rays", "starry-cross", "ocean-sunset", "misty-mountains", "golden-bokeh", "desert-dunes", "bright-sky"];
+
+/** The same verse always gets the same background; different verses get different ones. */
+function pickBackground(seed: string) {
+  let h = 0;
+  for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
+  return BACKGROUNDS[h % BACKGROUNDS.length];
+}
+
+async function background(seed: string, shape: "tall" | "wide") {
+  try {
+    const res = await fetch(`${SITE}/share-bg/${pickBackground(seed)}-${shape}.jpg`, { cache: "force-cache" });
+    if (!res.ok) return null;
+    return `data:image/jpeg;base64,${Buffer.from(await res.arrayBuffer()).toString("base64")}`;
+  } catch {
+    return null;
+  }
+}
+
+/** PNG → JPEG (about 5× smaller for picture backgrounds). Falls back to the PNG. */
+async function asJpeg(png: Response, headers: Record<string, string>) {
+  const buffer = Buffer.from(await png.arrayBuffer());
+  try {
+    const sharp = (await import("sharp")).default;
+    const jpeg = await sharp(buffer).jpeg({ quality: 82, mozjpeg: true }).toBuffer();
+    return new Response(new Uint8Array(jpeg), { headers: { ...headers, "Content-Type": "image/jpeg" } });
+  } catch (error) {
+    console.error("[share-card] jpeg", error instanceof Error ? error.message : "error");
+    return new Response(new Uint8Array(buffer), { headers: { ...headers, "Content-Type": "image/png" } });
+  }
+}
+
 export async function renderCard(content: CardContent, shape: keyof typeof CARD_SIZES = "tall", headers: Record<string, string> = {}) {
   const wide = shape === "wide";
   const { source, ministry } = content;
@@ -123,40 +156,63 @@ export async function renderCard(content: CardContent, shape: keyof typeof CARD_
   const text = wide && content.text.length > 280 ? `${content.text.slice(0, 280).replace(/\s+\S*$/, "")}…` : content.text;
   const W = CARD_SIZES[shape].width;
   const H = CARD_SIZES[shape].height;
-  const logoSrc = await logo(ministry);
-  const size = wide ? Math.round(fontSize(text.length) * 0.62) : fontSize(text.length);
-  return new ImageResponse(
+  const [logoSrc, bgSrc] = await Promise.all([logo(ministry), background(source + text.slice(0, 40), shape)]);
+  const size = wide ? Math.round(fontSize(text.length) * 0.6) : fontSize(text.length);
+  const shadow = "0 2px 12px rgba(0,0,0,0.85)";
+  const png = new ImageResponse(
     (
-      <div
-        style={{
-          width: "100%",
-          height: "100%",
-          display: "flex",
-          flexDirection: "column",
-          padding: wide ? "34px 50px 30px" : "56px 70px 56px",
-          background: "linear-gradient(180deg, #14110c 0%, #2a2210 60%, #3b2f14 100%)",
-          color: "#ffffff",
-        }}
-      >
-        {/* Top: name on the left, app logo on the top right. */}
-        <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "flex-start" }}>
-          <div style={{ display: "flex", flexDirection: "column", marginTop: 20 }}>
-            <div style={{ display: "flex", fontSize: wide ? 30 : 40, fontWeight: 700, letterSpacing: 2, color: "#e3a82a" }}>{ministry ? "R.O.M BIBLE GUIDE" : "ZIVARUKAH BOOKS"}</div>
-            <div style={{ display: "flex", fontSize: wide ? 22 : 28, color: "rgba(255,255,255,0.7)", marginTop: 6 }}>{ministry ? "Repent Online Ministries" : "Quote of the day"}</div>
+      <div style={{ width: "100%", height: "100%", display: "flex", position: "relative", background: "#14110c", color: "#ffffff" }}>
+        {bgSrc && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img src={bgSrc} alt="" width={W} height={H} style={{ position: "absolute", top: 0, left: 0, width: W, height: H, objectFit: "cover" }} />
+        )}
+        {/* Darkens the picture a little so the words are easy to read. */}
+        <div
+          style={{
+            position: "absolute",
+            top: 0,
+            left: 0,
+            width: W,
+            height: H,
+            display: "flex",
+            background: "linear-gradient(180deg, rgba(0,0,0,0.55) 0%, rgba(0,0,0,0.25) 30%, rgba(0,0,0,0.25) 70%, rgba(0,0,0,0.65) 100%)",
+          }}
+        />
+        <div style={{ position: "relative", width: "100%", height: "100%", display: "flex", flexDirection: "column", padding: wide ? "28px 44px 24px" : "56px 64px 52px" }}>
+          {/* Top: name on the left, app logo on the top right. */}
+          <div style={{ display: "flex", width: "100%", justifyContent: "space-between", alignItems: "flex-start" }}>
+            <div style={{ display: "flex", flexDirection: "column", marginTop: wide ? 8 : 20 }}>
+              <div style={{ display: "flex", fontSize: wide ? 28 : 40, fontWeight: 700, letterSpacing: 2, color: "#f0c050", textShadow: shadow }}>{ministry ? "R.O.M BIBLE GUIDE" : "ZIVARUKAH BOOKS"}</div>
+              <div style={{ display: "flex", fontSize: wide ? 20 : 28, color: "rgba(255,255,255,0.9)", marginTop: 6, textShadow: shadow }}>{ministry ? "Repent Online Ministries" : "Quote of the day"}</div>
+            </div>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={logoSrc} alt="" width={wide ? (ministry ? 150 : 120) : ministry ? 270 : 210} height={wide ? (ministry ? 106 : 80) : ministry ? 191 : 140} style={{ objectFit: "contain" }} />
           </div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src={logoSrc} alt="" width={wide ? (ministry ? 170 : 130) : ministry ? 270 : 210} height={wide ? (ministry ? 120 : 87) : ministry ? 191 : 140} style={{ objectFit: "contain" }} />
-        </div>
-        <div style={{ display: "flex", flex: 1, flexDirection: "column", alignItems: "center", justifyContent: "center", width: "100%" }}>
-          <div style={{ display: "flex", fontSize: wide ? 80 : 130, lineHeight: 1, color: "#e3a82a", marginBottom: wide ? -10 : -16 }}>“</div>
-          <div style={{ display: "flex", fontSize: size, lineHeight: 1.35, textAlign: "center", justifyContent: "center" }}>{text}</div>
-          <div style={{ display: "flex", marginTop: wide ? 16 : 36, fontSize: wide ? 28 : 38, fontWeight: 700, color: "#e3a82a", textAlign: "center" }}>{source}</div>
-        </div>
-        <div style={{ display: "flex", width: "100%", justifyContent: "center", alignItems: "center", borderTop: "2px solid rgba(227,168,42,0.5)", paddingTop: wide ? 14 : 24, fontSize: wide ? 24 : 32, fontWeight: 700, color: "#ffffff" }}>
-          Read more at zivarukah.com
+          <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", width: "100%" }}>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                width: "100%",
+                padding: wide ? "14px 28px 18px" : "28px 40px 40px",
+                borderRadius: wide ? 22 : 36,
+                background: "rgba(10,8,5,0.45)",
+                border: "2px solid rgba(240,192,80,0.35)",
+              }}
+            >
+              <div style={{ display: "flex", fontSize: wide ? 64 : 120, lineHeight: 1, color: "#f0c050", marginBottom: wide ? -8 : -16 }}>“</div>
+              <div style={{ display: "flex", fontSize: size, lineHeight: 1.35, textAlign: "center", justifyContent: "center", textShadow: shadow }}>{text}</div>
+              <div style={{ display: "flex", marginTop: wide ? 12 : 32, fontSize: wide ? 26 : 38, fontWeight: 700, color: "#f0c050", textAlign: "center", textShadow: shadow }}>{source}</div>
+            </div>
+          </div>
+          <div style={{ display: "flex", width: "100%", justifyContent: "center", alignItems: "center", fontSize: wide ? 22 : 32, fontWeight: 700, color: "#ffffff", textShadow: shadow }}>
+            Read more at zivarukah.com
+          </div>
         </div>
       </div>
     ),
-    { width: W, height: H, headers },
+    { width: W, height: H },
   );
+  return asJpeg(png, headers);
 }
