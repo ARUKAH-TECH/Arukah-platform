@@ -9,7 +9,12 @@ import "server-only";
 const TEXT = "https://fal.run/openrouter/router";
 const MODEL = process.env.FAL_TEXT_MODEL || "google/gemini-2.5-flash";
 
-const GEMINI_MODEL = process.env.GEMINI_MODEL || "gemini-2.5-flash";
+// Google retires model names for new keys, so try a short list in order and
+// remember the first one that answers.
+const GEMINI_MODELS = [process.env.GEMINI_MODEL?.trim(), "gemini-3.8-flash", "gemini-flash-latest", "gemini-3.6-flash", "gemini-3.5-flash-lite", "gemini-2.5-flash"].filter(
+  (m, i, all): m is string => Boolean(m) && all.indexOf(m) === i,
+);
+let workingModel: string | null = null;
 
 export function aiAvailable() {
   return Boolean(process.env.GEMINI_API_KEY?.trim() || process.env.FAL_KEY?.trim());
@@ -27,27 +32,36 @@ function parseJson(output: string): Record<string, unknown> | null {
 export async function askGemini(system: string, prompt: string, maxTokens = 2500, images: { mime: string; base64: string }[] = []): Promise<Record<string, unknown> | null> {
   const key = process.env.GEMINI_API_KEY?.trim();
   if (!key) return null;
-  try {
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${GEMINI_MODEL}:generateContent`, {
-      method: "POST",
-      headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: system }] },
-        contents: [{ role: "user", parts: [...images.map((i) => ({ inlineData: { mimeType: i.mime, data: i.base64 } })), { text: prompt }] }],
-        generationConfig: { temperature: 0.5, maxOutputTokens: maxTokens, responseMimeType: "application/json", thinkingConfig: { thinkingBudget: 0 } },
-      }),
-      signal: AbortSignal.timeout(55_000),
-    });
-    if (!res.ok) {
-      console.error("[ai] gemini", res.status, (await res.text().catch(() => "")).slice(0, 200));
+  const models = workingModel ? [workingModel, ...GEMINI_MODELS.filter((m) => m !== workingModel)] : GEMINI_MODELS;
+  for (const model of models) {
+    try {
+      const generationConfig: Record<string, unknown> = { temperature: 0.5, maxOutputTokens: maxTokens, responseMimeType: "application/json" };
+      if (model.startsWith("gemini-2.5")) generationConfig.thinkingConfig = { thinkingBudget: 0 };
+      else generationConfig.maxOutputTokens = maxTokens + 4000; // room for the model's thinking
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: "POST",
+        headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          systemInstruction: { parts: [{ text: system }] },
+          contents: [{ role: "user", parts: [...images.map((i) => ({ inlineData: { mimeType: i.mime, data: i.base64 } })), { text: prompt }] }],
+          generationConfig,
+        }),
+        signal: AbortSignal.timeout(55_000),
+      });
+      if (!res.ok) {
+        console.error("[ai] gemini", model, res.status, (await res.text().catch(() => "")).slice(0, 200));
+        if (res.status === 404 || res.status === 400) continue; // model not offered to this key: try the next
+        return null;
+      }
+      workingModel = model;
+      const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[] };
+      return parseJson((data.candidates?.[0]?.content?.parts ?? []).filter((p) => !p.thought).map((p) => p.text ?? "").join(""));
+    } catch (error) {
+      console.error("[ai] gemini failed", model, error instanceof Error ? error.message : "error");
       return null;
     }
-    const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string }[] } }[] };
-    return parseJson((data.candidates?.[0]?.content?.parts ?? []).map((p) => p.text ?? "").join(""));
-  } catch (error) {
-    console.error("[ai] gemini failed", error instanceof Error ? error.message : "error");
-    return null;
   }
+  return null;
 }
 
 export async function askJson(system: string, prompt: string, maxTokens = 2500): Promise<Record<string, unknown> | null> {
