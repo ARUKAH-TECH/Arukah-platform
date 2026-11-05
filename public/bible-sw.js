@@ -1,6 +1,6 @@
-// Holy Bible app (zivarukah.com/bible). Keeps the Bible pages you have opened,
+// R.O.M Bible Guide (zivarukah.com/bible). Keeps the Bible pages you have opened,
 // so they still open without internet. Newest version first when online.
-const CACHE = "ziv-bible-v2";
+const CACHE = "ziv-bible-v3";
 const START = ["/bible", "/bible/books", "/bible-icons/icon-192.png"];
 
 self.addEventListener("install", (event) => {
@@ -52,4 +52,29 @@ self.addEventListener("fetch", (event) => {
         .catch(() => caches.match(url.pathname).then((hit) => hit || caches.match("/bible"))),
     );
   }
+});
+
+// Daily devotional notification. The push itself carries nothing: we fetch
+// today's devotional and scripture from the site and show them.
+self.addEventListener("push", (event) => {
+  event.waitUntil(
+    fetch("/api/bible/today", { cache: "no-store" })
+      .then((res) => (res.ok ? res.json() : null))
+      .catch(() => null)
+      .then((note) =>
+        self.registration.showNotification((note && note.title) || "R.O.M Bible Guide", {
+          body: (note && note.body) || "Today's devotional and scripture are ready. Tap to read.",
+          icon: "/bible-icons/icon-192.png",
+          tag: "rom-daily",
+          renotify: true,
+          data: { url: (note && note.url) || "/bible" },
+        }),
+      ),
+  );
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = (event.notification.data && event.notification.data.url) || "/bible";
+  event.waitUntil(self.clients.openWindow(url));
 });
