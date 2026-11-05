@@ -2,10 +2,12 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import { readAloud, speechSupported } from "@/features/bible/speech";
+import { BIBLE_VERSIONS, type BibleVersionId } from "@/config/bibleVersions";
 
 const LAST = "zivarukah-bible:last";
 const MARKS = "zivarukah-bible:highlights";
 const SIZE = "zivarukah-bible:size";
+const VERSION = "zivarukah-bible:version";
 const SITE = "https://zivarukah.com";
 
 function readJson<T>(key: string, fallback: T): T {
@@ -26,7 +28,12 @@ function writeJson(key: string, value: unknown) {
 const SIZES = ["text-base leading-8", "text-lg leading-9", "text-xl leading-10", "text-2xl leading-[2.75rem]"];
 
 /** One chapter: tap verses to copy, share or highlight them; listen to the chapter. Everything is kept on this device. */
-export function ChapterReader({ slug, label, chapter, verses }: { slug: string; label: string; chapter: number; verses: string[] }) {
+export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: string; label: string; chapter: number; verses: string[] }) {
+  const [version, setVersion] = useState<BibleVersionId>("kjv");
+  const [other, setOther] = useState<string[] | null>(null);
+  const [loadingVersion, setLoadingVersion] = useState(false);
+  const verses = version === "kjv" || !other ? kjv : other;
+  const short = BIBLE_VERSIONS.find((v) => v.id === version)?.short ?? "KJV";
   const key = `${slug}.${chapter}`;
   const [selected, setSelected] = useState<number[]>([]);
   const [marks, setMarks] = useState<number[]>([]);
@@ -40,9 +47,33 @@ export function ChapterReader({ slug, label, chapter, verses }: { slug: string; 
     setCanSpeak(speechSupported());
     setMarks(readJson<Record<string, number[]>>(MARKS, {})[key] ?? []);
     setSize(Math.min(3, Math.max(0, readJson<number>(SIZE, 1))));
+    const saved = readJson<string>(VERSION, "kjv");
+    if (BIBLE_VERSIONS.some((v) => v.id === saved)) setVersion(saved as BibleVersionId);
     writeJson(LAST, { slug, chapter, label, at: Date.now() });
     return () => stop.current?.();
   }, [key, slug, chapter, label]);
+
+  // Another version: load this book's text once (it is then cached for offline use).
+  useEffect(() => {
+    if (version === "kjv") return setOther(null);
+    let cancelled = false;
+    setLoadingVersion(true);
+    fetch(`/bible-versions/${version}/${slug}.json`)
+      .then((r) => (r.ok ? (r.json() as Promise<string[][]>) : Promise.reject()))
+      .then((book) => !cancelled && setOther(book[chapter - 1] ?? null))
+      .catch(() => !cancelled && (setOther(null), setVersion("kjv")))
+      .finally(() => !cancelled && setLoadingVersion(false));
+    return () => {
+      cancelled = true;
+    };
+  }, [version, slug, chapter]);
+
+  function chooseVersion(id: BibleVersionId) {
+    stop.current?.();
+    setReading(null);
+    setVersion(id);
+    writeJson(VERSION, id);
+  }
 
   // Keep the verse being read on screen.
   useEffect(() => {
@@ -74,7 +105,7 @@ export function ChapterReader({ slug, label, chapter, verses }: { slug: string; 
 
   async function copy() {
     try {
-      await navigator.clipboard.writeText(`${selectedText()}\n— ${refText()} (KJV)`);
+      await navigator.clipboard.writeText(`${selectedText()}\n— ${refText()} (${short})`);
       flash("Copied ✓");
     } catch {
       flash("Couldn't copy");
@@ -82,7 +113,7 @@ export function ChapterReader({ slug, label, chapter, verses }: { slug: string; 
   }
   function share() {
     const first = selected[0] ?? 1;
-    const message = `📖 *${refText()}* (KJV)\n\n${selected.map((n) => verses[n - 1]).join(" ")}\n\nRead more 👇\n${SITE}/bible/${slug}/${chapter}#v${first}`;
+    const message = `📖 *${refText()}* (${short})\n\n${selected.map((n) => verses[n - 1]).join(" ")}\n\nRead more 👇\n${SITE}/bible/${slug}/${chapter}#v${first}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener");
   }
   function highlight() {
@@ -100,7 +131,7 @@ export function ChapterReader({ slug, label, chapter, verses }: { slug: string; 
     stop.current?.();
     setSelected([]);
     stop.current = readAloud(
-      verses.slice(from),
+      verses.slice(from).map((t) => t || " "),
       (i) => setReading(from + i),
       () => {
         setReading(null);
@@ -132,6 +163,21 @@ export function ChapterReader({ slug, label, chapter, verses }: { slug: string; 
               ⏹ Stop
             </button>
           ))}
+        <label className="flex items-center gap-1 text-sm">
+          <span className="sr-only">Bible version</span>
+          <select
+            value={version}
+            onChange={(e) => chooseVersion(e.target.value as BibleVersionId)}
+            className="rounded-full border border-black/15 bg-white px-3 py-2 text-sm font-semibold dark:border-white/15 dark:bg-zinc-900"
+          >
+            {BIBLE_VERSIONS.map((v) => (
+              <option key={v.id} value={v.id}>
+                {v.short}
+              </option>
+            ))}
+          </select>
+        </label>
+        {loadingVersion && <span className="text-xs text-foreground/60">Loading…</span>}
         <span className="ml-auto flex items-center gap-1">
           <button type="button" onClick={() => resize(-1)} aria-label="Smaller text" className="h-9 w-9 rounded-full border border-black/15 text-sm font-bold dark:border-white/15">
             A−
@@ -142,7 +188,9 @@ export function ChapterReader({ slug, label, chapter, verses }: { slug: string; 
         </span>
       </div>
 
-      <p className="mt-4 text-xs text-foreground/60">Tap a verse to copy, share, highlight or listen from there.</p>
+      <p className="mt-4 text-xs text-foreground/60">
+        {BIBLE_VERSIONS.find((v) => v.id === version)?.name}. Tap a verse to copy, share, highlight or listen from there.
+      </p>
       <div className={`mt-4 font-serif ${SIZES[size]}`}>
         {verses.map((text, i) => {
           const n = i + 1;
@@ -159,7 +207,7 @@ export function ChapterReader({ slug, label, chapter, verses }: { slug: string; 
               className={`scroll-mt-32 cursor-pointer rounded px-0.5 target:bg-amber-100 dark:target:bg-amber-900/40 ${reading === i ? "bg-sky-100 dark:bg-sky-900/40" : ""} ${isMark ? "bg-yellow-200/80 dark:bg-yellow-700/40" : ""} ${isSel ? "underline decoration-brand-primary decoration-2 underline-offset-4" : ""}`}
             >
               <sup className="mr-1 font-sans text-[0.65em] font-bold text-brand-primary-text">{n}</sup>
-              {text}{" "}
+              {text || <em className="text-sm text-foreground/50">(not in this version: some ancient manuscripts leave it out)</em>}{" "}
             </span>
           );
         })}

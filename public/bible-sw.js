@@ -1,6 +1,6 @@
 // Holy Bible app (zivarukah.com/bible). Keeps the Bible pages you have opened,
 // so they still open without internet. Newest version first when online.
-const CACHE = "ziv-bible-v1";
+const CACHE = "ziv-bible-v2";
 const START = ["/bible", "/bible/books", "/bible-icons/icon-192.png"];
 
 self.addEventListener("install", (event) => {
@@ -24,7 +24,7 @@ self.addEventListener("fetch", (event) => {
   if (url.origin !== self.location.origin) return;
 
   // Build files never change once published: cache first.
-  if (url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/bible-icons/")) {
+  if (url.pathname.startsWith("/_next/static/") || url.pathname.startsWith("/bible-icons/") || url.pathname.startsWith("/bible-versions/")) {
     event.respondWith(
       caches.match(request).then(
         (hit) =>
