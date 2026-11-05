@@ -13,6 +13,6 @@ export async function GET(request: Request) {
   const req: CardRequest = today ? { kind: "today" } : { kind: "verse", b: q.get("b") ?? "", c: q.get("c") ?? "", v: q.get("v") ?? "", t: q.get("t") ?? "kjv" };
   const content = await cardContent(req);
   if (!content) return new Response("Not found", { status: 404 });
-  const cache = today ? "public, max-age=600, s-maxage=1800" : "public, max-age=3600, s-maxage=604800";
+  const cache = today ? "public, max-age=600, s-maxage=1800" : "public, max-age=3600, s-maxage=86400";
   return renderCard(content, q.get("shape") === "wide" ? "wide" : "tall", { "Cache-Control": cache });
 }

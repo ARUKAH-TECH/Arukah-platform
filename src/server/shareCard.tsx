@@ -6,6 +6,7 @@ import { bookBySlug } from "@/config/bibleBooks";
 import { BIBLE_VERSIONS } from "@/config/bibleVersions";
 import { getChapter } from "@/server/bible";
 import { todaysQuote } from "@/features/quote/todaysQuote";
+import { backdropSvg, monthDesign } from "@/server/backdrop";
 
 // The share picture: a Bible verse (or today's quote) with the R.O.M Bible
 // Guide logo on the top right. The words always come from our own Bible files
@@ -116,22 +117,23 @@ export async function cardContent(req: CardRequest): Promise<CardContent | null>
   return { text, source, ministry };
 }
 
-// Scenic backgrounds (public/share-bg/<name>-tall.jpg / -wide.jpg).
-const BACKGROUNDS = ["sunrise-hills", "god-rays", "starry-cross", "ocean-sunset", "misty-mountains", "golden-bokeh", "desert-dunes", "bright-sky"];
-
-/** The same verse always gets the same background; different verses get different ones. */
-function pickBackground(seed: string) {
+/** Number from text, so the same verse always gets the same variation. */
+function hash(seed: string) {
   let h = 0;
   for (let i = 0; i < seed.length; i++) h = (h * 31 + seed.charCodeAt(i)) >>> 0;
-  return BACKGROUNDS[h % BACKGROUNDS.length];
+  return h;
 }
 
-async function background(seed: string, shape: "tall" | "wide") {
+/** This month's background (style chosen from the month's theme), drawn for this verse. */
+async function background(seed: string, W: number, H: number) {
   try {
-    const res = await fetch(`${SITE}/share-bg/${pickBackground(seed)}-${shape}.jpg`, { cache: "force-cache" });
-    if (!res.ok) return null;
-    return `data:image/jpeg;base64,${Buffer.from(await res.arrayBuffer()).toString("base64")}`;
-  } catch {
+    const design = await monthDesign();
+    const svg = backdropSvg(design, W, H, hash(seed));
+    const sharp = (await import("sharp")).default;
+    const jpeg = await sharp(Buffer.from(svg)).jpeg({ quality: 86 }).toBuffer();
+    return `data:image/jpeg;base64,${jpeg.toString("base64")}`;
+  } catch (error) {
+    console.error("[share-card] background", error instanceof Error ? error.message : "error");
     return null;
   }
 }
@@ -156,7 +158,7 @@ export async function renderCard(content: CardContent, shape: keyof typeof CARD_
   const text = wide && content.text.length > 280 ? `${content.text.slice(0, 280).replace(/\s+\S*$/, "")}…` : content.text;
   const W = CARD_SIZES[shape].width;
   const H = CARD_SIZES[shape].height;
-  const [logoSrc, bgSrc] = await Promise.all([logo(ministry), background(source + text.slice(0, 40), shape)]);
+  const [logoSrc, bgSrc] = await Promise.all([logo(ministry), background(source + text.slice(0, 40), W, H)]);
   const size = wide ? Math.round(fontSize(text.length) * 0.6) : fontSize(text.length);
   const shadow = "0 2px 12px rgba(0,0,0,0.85)";
   const png = new ImageResponse(
