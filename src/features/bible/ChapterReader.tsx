@@ -113,7 +113,7 @@ export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: str
     }
   }
   // Ranges like 16-17_19 ("_" instead of "," so WhatsApp keeps the whole link).
-  const shareLink = () => `/q/${slug}/${chapter}/${refText().split(":").pop()?.replace(/,/g, "_") ?? "1"}/${version}`;
+  const shareLink = () => `/q/v/${slug}/${chapter}/${refText().split(":").pop()?.replace(/,/g, "_") ?? "1"}/${version}`;
   function share() {
     const message = `📖 *${refText()}* (${short})\n\n${selected.map((n) => verses[n - 1]).join(" ")}\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇\n${SITE}${shareLink()}`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener");
