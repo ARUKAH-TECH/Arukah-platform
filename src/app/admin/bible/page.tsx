@@ -45,6 +45,9 @@ export default async function AdminBiblePage({ searchParams }: PageProps<"/admin
         </Link>
       </p>
       {deleted === "1" && <p className="mt-4 text-sm text-green-700 dark:text-green-400">Deleted.</p>}
+      <Link href="/admin/bible/quotes" className={`${secondaryButtonClasses} mt-4`}>
+        ✍️ My quotes &amp; photos
+      </Link>
 
       <section className="mt-8 rounded-2xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
         <h2 className="text-lg font-semibold">🎯 Themes and the automatic 6:00am devotional</h2>

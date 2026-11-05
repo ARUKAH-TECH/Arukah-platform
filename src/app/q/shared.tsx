@@ -32,7 +32,9 @@ export async function SharedVerse({ req }: { req: CardRequest }) {
   const picture =
     req.kind === "verse"
       ? `/api/share-card?b=${encodeURIComponent(req.b)}&c=${encodeURIComponent(req.c)}&v=${encodeURIComponent(req.v)}&t=${encodeURIComponent(req.t)}`
-      : "/api/share-card?quote=today";
+      : req.kind === "founder"
+        ? `/api/share-card?fq=${encodeURIComponent(req.id)}`
+        : "/api/share-card?quote=today";
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-[#14110c] p-6 text-center text-white">
       {/* Straight on to the homepage (keeps ?utm_source so visits from WhatsApp are counted). */}

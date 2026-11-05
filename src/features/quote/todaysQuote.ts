@@ -1,7 +1,9 @@
 import { getPublishedBooks } from "@/db/books";
+import { listFounderQuotes } from "@/db/founderQuotes";
+import { FOUNDER } from "@/config/founder";
 
 // A new line every day (midnight, Ghana time = UTC): days alternate between
-// a line from one of our books (the "Lines readers love" in Admin → Books)
+// a line from one of our books, the founder's own quotes (with his photo), (the "Lines readers love" in Admin → Books)
 // and a Bible verse for Repent Online Ministries. Adding highlights to a book
 // adds them to the rotation automatically.
 
@@ -10,7 +12,9 @@ export interface Quote {
   source: string;
   href: string;
   linkLabel: string;
-  kind: "book" | "verse";
+  kind: "book" | "verse" | "founder";
+  /** For the founder's own quotes. */
+  id?: string;
 }
 
 // King James Version (public domain).
@@ -41,9 +45,13 @@ function pick<T>(list: T[], n: number) {
   return list[((n % list.length) + list.length) % list.length];
 }
 
+export function founderQuote(q: { id: string; text: string }): Quote {
+  return { id: q.id, text: q.text, source: FOUNDER.name, href: "/about", linkLabel: "About Shepherd Justice →", kind: "founder" };
+}
+
 export async function todaysQuote(): Promise<Quote> {
   const day = Math.floor(Date.now() / 86_400_000);
-  const books = await getPublishedBooks();
+  const [books, founder] = await Promise.all([getPublishedBooks(), listFounderQuotes()]);
   const bookLines: Quote[] = books.flatMap((book) =>
     book.highlights
       .filter((line) => line.trim().length > 0)
@@ -55,7 +63,7 @@ export async function todaysQuote(): Promise<Quote> {
         kind: "book" as const,
       })),
   );
-  if (bookLines.length > 0 && day % 2 === 0) return pick(bookLines, day / 2);
-  return pick(VERSES, Math.floor(day / 2));
+  // Take turns: a Bible verse, a book line, one of the founder's quotes.
+  const pools = [VERSES, bookLines, founder.map(founderQuote)].filter((p) => p.length > 0);
+  return pick(pools[day % pools.length], Math.floor(day / pools.length));
 }
-
