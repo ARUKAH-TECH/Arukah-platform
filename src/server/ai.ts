@@ -50,8 +50,8 @@ export async function askGemini(system: string, prompt: string, maxTokens = 2500
       });
       if (!res.ok) {
         console.error("[ai] gemini", model, res.status, (await res.text().catch(() => "")).slice(0, 200));
-        if (res.status === 404 || res.status === 400) continue; // model not offered to this key: try the next
-        return null;
+        if (res.status === 401 || res.status === 403) return null; // key problem: no point trying other models
+        continue; // not offered to this key, busy or rate-limited: try the next model
       }
       workingModel = model;
       const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[] };
