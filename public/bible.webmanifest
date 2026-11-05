@@ -1,7 +1,7 @@
 {
   "id": "/bible",
-  "name": "Holy Bible · Repent Online Ministries",
-  "short_name": "Bible",
+  "name": "R.O.M Bible Guide · Repent Online Ministries",
+  "short_name": "R.O.M Bible",
   "description": "King James Bible with read-aloud, daily devotional and Bible studies with quizzes, from Repent Online Ministries.",
   "lang": "en-GH",
   "start_url": "/bible",

@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps<"/bible/[book]/[cha
   if (!book || !verses) return {};
   const label = nameOf(slug, Number(c));
   return {
-    title: { absolute: `${label} (KJV): Read Online with Audio | Repent Online Ministries` },
+    title: { absolute: `${label} (KJV): Read Online with Audio | R.O.M Bible Guide` },
     description: `${label} KJV: “${verses[0].slice(0, 120)}${verses[0].length > 120 ? "…" : ""}” Read the full chapter with read-aloud.`,
     alternates: { canonical: `/bible/${slug}/${c}` },
   };

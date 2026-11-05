@@ -83,6 +83,27 @@ export default async function Home() {
         }}
       />
       <AnnouncementBar branch="home" />
+      {/* Signpost to the Bible guide: links shared from the Bible land on this homepage. */}
+      <section id="bible" aria-label="R.O.M Bible Guide" data-brand="ministry" className="bg-[#14110c] text-white">
+        <Container>
+          <div className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="min-w-0">
+              <p className="font-bold text-[#f0c050]">📖 R.O.M Bible Guide</p>
+              <p className="text-sm text-white/75">
+                {ministryVerse ? <>Today: “{ministryVerse.verses.map((v) => v.text).join(" ").slice(0, 110)}{ministryVerse.verses.map((v) => v.text).join(" ").length > 110 ? "…" : ""}” ({ministryVerse.label})</> : "The Holy Bible, daily devotional, studies and topics. Free."}
+              </p>
+            </div>
+            <div className="flex shrink-0 flex-wrap gap-2 text-sm font-semibold">
+              <a href="/bible" className="rounded-full bg-[#e3a82a] px-4 py-2 text-[#14110c]">
+                Open the Bible guide →
+              </a>
+              <a href="/bible/devotionals" className="rounded-full border border-white/30 px-4 py-2">
+                🌅 Today&apos;s devotional
+              </a>
+            </div>
+          </div>
+        </Container>
+      </section>
       <AdBanner branch="home" />
       <Hero
         logo={brands.arukah.logo}
@@ -198,7 +219,7 @@ export default async function Home() {
                 className="mt-6"
                 dark
                 label="Share"
-                url={`${SITE}/ministry`}
+                url={`${SITE}/`}
                 title="Repent Online Ministries"
                 image={ministryVerse ? shareCardHref(ministryVerse.ref) : undefined}
                 message={ministryVerse ? `✝️ *Repent Online Ministries*\n\n“${ministryVerse.verses.map((v) => v.text).join(" ")}”\n— ${ministryVerse.label} (KJV)` : "✝️ *Repent Online Ministries*\n\nRescue the perishing. Follow, pray with us and support the outreach 👇"}

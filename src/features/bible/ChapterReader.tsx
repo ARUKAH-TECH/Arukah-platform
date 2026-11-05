@@ -113,8 +113,7 @@ export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: str
     }
   }
   function share() {
-    const first = selected[0] ?? 1;
-    const message = `📖 *${refText()}* (${short})\n\n${selected.map((n) => verses[n - 1]).join(" ")}\n\nRead more 👇\n${SITE}/bible/${slug}/${chapter}#v${first}`;
+    const message = `📖 *${refText()}* (${short})\n\n${selected.map((n) => verses[n - 1]).join(" ")}\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇\n${SITE}/`;
     window.open(`https://wa.me/?text=${encodeURIComponent(message)}`, "_blank", "noopener");
   }
   function highlight() {
@@ -226,7 +225,7 @@ export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: str
             </button>
             <SharePicture
               image={`/api/share-card?b=${slug}&c=${chapter}&v=${selected.join(",")}&t=${version}`}
-              text={`📖 ${refText()} (${short})\n${SITE}/bible/${slug}/${chapter}#v${selected[0] ?? 1}`}
+              text={`📖 ${refText()} (${short})\nOpen R.O.M Bible Guide on our homepage 👇\n${SITE}/`}
               fileName={`${slug}-${chapter}.png`}
             />
             <button type="button" onClick={highlight} className="rounded-full bg-yellow-200 px-3 py-2 text-sm font-semibold text-black">

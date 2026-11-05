@@ -4,7 +4,7 @@ import { BibleShell, SearchBox } from "@/features/bible/BibleShell";
 import { BookGrid } from "@/features/bible/BookGrid";
 
 export const metadata: Metadata = {
-  title: { absolute: "Books of the Bible (KJV) | Repent Online Ministries" },
+  title: { absolute: "Books of the Bible (KJV) | R.O.M Bible Guide" },
   description: "All 66 books of the King James Bible: choose a book and chapter to read online, with read-aloud.",
   alternates: { canonical: "/bible/books" },
 };

@@ -14,11 +14,11 @@ import { chapterHref, shareCardHref } from "@/lib/bible";
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
 export const metadata: Metadata = {
-  title: { absolute: "Holy Bible (KJV), Daily Devotional & Bible Studies | Repent Online Ministries" },
+  title: { absolute: "R.O.M Bible Guide: Holy Bible (KJV), Daily Devotional & Bible Studies | Repent Online Ministries" },
   description: "Read the King James Bible online with read-aloud, today's verse and devotional, and Bible studies with quizzes. Free, no sign-up. By Repent Online Ministries.",
   alternates: { canonical: "/bible" },
   openGraph: {
-    title: "Holy Bible, Daily Devotional & Bible Studies | Repent Online Ministries",
+    title: "R.O.M Bible Guide | Repent Online Ministries",
     description: "Read the King James Bible with read-aloud, today's verse and devotional, and Bible studies with quizzes. Free.",
   },
 };
@@ -34,7 +34,7 @@ export default async function BibleHome() {
       <section className="bg-[#14110c] py-12 text-white">
         <Container>
           <p className="text-xs font-semibold uppercase tracking-wider text-[#e3a82a]">Repent Online Ministries</p>
-          <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">The Holy Bible</h1>
+          <h1 className="mt-2 text-3xl font-bold tracking-tight sm:text-4xl">R.O.M Bible Guide</h1>
           <p className="mt-2 max-w-xl text-white/75">King James Version, with read-aloud. A daily devotional and Bible studies. Free, nothing to sign up for.</p>
           <div className="mt-6 flex flex-col gap-4">
             <SearchBox dark />
@@ -62,10 +62,10 @@ export default async function BibleHome() {
                 <ListenButton text={`${verseText} ${verse.label}.`} />
                 <ShareButtons
                   label="Share"
-                  url={`${SITE}/bible`}
+                  url={`${SITE}/`}
                   title="Verse of the day"
                   image={shareCardHref(verse.ref)}
-                  message={`📖 *Verse of the day*\n\n“${verseText}”\n— ${verse.label} (KJV)`}
+                  message={`📖 *Verse of the day*\n\n“${verseText}”\n— ${verse.label} (KJV)\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇`}
                 />
               </div>
             </section>
