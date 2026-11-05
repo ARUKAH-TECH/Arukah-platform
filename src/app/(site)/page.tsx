@@ -11,6 +11,9 @@ import { brands } from "@/config/brands";
 import { ProjectsSection } from "@/features/projects/ProjectsSection";
 import { GallerySection } from "@/features/gallery/GallerySection";
 import { QuoteOfTheDay } from "@/features/quote/QuoteOfTheDay";
+import { ShareButtons } from "@/components/ui/ShareButtons";
+import { verseOfTheDay } from "@/server/bible";
+import { shareCardHref } from "@/lib/bible";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
@@ -35,7 +38,7 @@ export const revalidate = 60;
 
 export default async function Home() {
   // Admin-edited text over the original wording (Admin → Page text).
-  const [t, { articles }] = await Promise.all([getPageText(homePage).then(textReader), listArticles({ limit: 3 })]);
+  const [t, { articles }, ministryVerse] = await Promise.all([getPageText(homePage).then(textReader), listArticles({ limit: 3 }), verseOfTheDay()]);
 
   return (
     <>
@@ -191,6 +194,15 @@ export default async function Home() {
                 </Button>
                 <Button href="/ministry/support">🙏 Support the outreach</Button>
               </div>
+              <ShareButtons
+                className="mt-6"
+                dark
+                label="Share"
+                url={`${SITE}/ministry`}
+                title="Repent Online Ministries"
+                image={ministryVerse ? shareCardHref(ministryVerse.ref) : undefined}
+                message={ministryVerse ? `✝️ *Repent Online Ministries*\n\n“${ministryVerse.verses.map((v) => v.text).join(" ")}”\n— ${ministryVerse.label} (KJV)` : "✝️ *Repent Online Ministries*\n\nRescue the perishing. Follow, pray with us and support the outreach 👇"}
+              />
             </div>
             <Image
               src={brands.ministry.logo.src}

@@ -8,6 +8,7 @@ import { ListenButton } from "@/features/quote/ListenButton";
 import { BibleShell } from "@/features/bible/BibleShell";
 import { Passages } from "@/features/bible/Passages";
 import { getDevotional } from "@/db/bible";
+import { parseReference, shareCardHref } from "@/lib/bible";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 export const revalidate = 600;
@@ -29,6 +30,7 @@ export async function generateMetadata({ params }: PageProps<"/bible/devotionals
 export default async function DevotionalPage({ params }: PageProps<"/bible/devotionals/[day]">) {
   const d = await getDevotional((await params).day);
   if (!d) notFound();
+  const firstRef = d.verseRef ? parseReference(d.verseRef.split(/[;\n]/)[0] ?? "") : null;
   const when = new Date(`${d.day}T12:00:00Z`).toLocaleDateString("en-GB", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
   return (
     <BibleShell active="devotionals">
@@ -61,6 +63,7 @@ export default async function DevotionalPage({ params }: PageProps<"/bible/devot
             label="Share"
             url={`${SITE}/bible/devotionals/${d.day}`}
             title={d.title}
+            image={firstRef ? shareCardHref(firstRef) : undefined}
             message={`🌅 *${d.title}*${d.verseRef ? ` (${d.verseRef})` : ""}\n\nToday's devotional from Repent Online Ministries 👇`}
           />
         </article>

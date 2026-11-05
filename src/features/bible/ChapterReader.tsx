@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { readAloud, speechSupported } from "@/features/bible/speech";
 import { BIBLE_VERSIONS, type BibleVersionId } from "@/config/bibleVersions";
+import { SharePicture } from "@/components/ui/SharePicture";
 
 const LAST = "zivarukah-bible:last";
 const MARKS = "zivarukah-bible:highlights";
@@ -223,6 +224,11 @@ export function ChapterReader({ slug, label, chapter, verses: kjv }: { slug: str
             <button type="button" onClick={share} className="rounded-full bg-[#25D366] px-3 py-2 text-sm font-semibold text-black">
               WhatsApp
             </button>
+            <SharePicture
+              image={`/api/share-card?b=${slug}&c=${chapter}&v=${selected.join(",")}&t=${version}`}
+              text={`📖 ${refText()} (${short})\n${SITE}/bible/${slug}/${chapter}#v${selected[0] ?? 1}`}
+              fileName={`${slug}-${chapter}.png`}
+            />
             <button type="button" onClick={highlight} className="rounded-full bg-yellow-200 px-3 py-2 text-sm font-semibold text-black">
               🖍 Highlight
             </button>
