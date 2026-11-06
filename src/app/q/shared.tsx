@@ -21,12 +21,15 @@ function pictureUrl(req: CardRequest, wide = false) {
 }
 
 // When the address doesn't point to real verses, the preview shows this one.
+// Link previews need a full address (WhatsApp fetches the picture itself).
+const SITE = process.env.SITE_URL || "https://zivarukah.com";
+
 const FALLBACK: CardRequest = { kind: "verse", b: "psalms", c: "119", v: "105", t: "kjv" };
 
 export async function sharedMetadata(req: CardRequest): Promise<Metadata> {
   const content = await cardContent(req);
   const title = content ? `${content.source}: R.O.M Bible Guide` : "R.O.M Bible Guide | ZIVARUKAH";
-  const image = { url: pictureUrl(content ? req : FALLBACK, true), ...CARD_SIZES.wide, type: "image/jpeg", alt: content ? `${content.source}: R.O.M Bible Guide` : "R.O.M Bible Guide" };
+  const image = { url: `${SITE}${pictureUrl(content ? req : FALLBACK, true)}`, ...CARD_SIZES.wide, type: "image/jpeg", alt: content ? `${content.source}: R.O.M Bible Guide` : "R.O.M Bible Guide" };
   const description = content ? `“${content.text.slice(0, 150)}${content.text.length > 150 ? "…" : ""}”` : "The Holy Bible, daily devotional and studies from Repent Online Ministries.";
   return {
     title: { absolute: title },
