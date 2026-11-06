@@ -26,6 +26,12 @@ const securityHeaders = [
 ];
 
 const nextConfig: NextConfig = {
+  // Bible text is read from disk only while building; the live site fetches it
+  // from its own static files. Never copy it into server functions (Vercel
+  // stores every function of every deployment: "Function Storage").
+  outputFileTracingExcludes: {
+    "/**": ["./public/bible-versions/**/*"],
+  },
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },

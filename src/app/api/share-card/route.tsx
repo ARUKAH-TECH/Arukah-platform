@@ -1,6 +1,8 @@
-import { cardContent, renderCard, type CardRequest } from "@/server/shareCard";
+import { cardContent, type CardRequest } from "@/server/shareCard";
+import { renderCard } from "@/server/shareCardImage";
 
-// The share picture (see src/server/shareCard.tsx).
+// The share picture (words: src/server/shareCard.tsx, drawing: shareCardImage.tsx).
+// It is also the link-preview picture for shared links (/q/...): &shape=wide.
 //   /api/share-card?b=john&c=3&v=16-17,19&t=kjv   verses of a chapter
 //   /api/share-card?quote=today                     today's verse / quote line
 //   /api/share-card?fq=<id>                         one of the founder's quotes (with his photo)

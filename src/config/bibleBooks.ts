@@ -1,4 +1,4 @@
-// The 66 books of the King James Version (public domain). Text: src/data/kjv/<slug>.json,
+// The 66 books of the King James Version (public domain). Text: public/bible-versions/kjv/<slug>.json,
 // an array of chapters, each an array of verses. Source: github.com/thiagobodruk/bible (en_kjv).
 
 export interface BibleBook {
