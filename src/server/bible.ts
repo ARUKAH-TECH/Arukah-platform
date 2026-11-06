@@ -2,18 +2,49 @@ import "server-only";
 import { BIBLE_BOOKS, bookBySlug } from "@/config/bibleBooks";
 import { parseReference, refLabel, type BibleRef } from "@/lib/bible";
 
-// The King James Version text (public domain), from src/data/kjv.
+// The King James Version text (public domain), from public/bible-versions/kjv
+// (the same place as the other versions).
+//
+// The text is deliberately NOT bundled into the server code: 66 books is about
+// 4 MB, and Vercel stored a copy inside every server function that reads the
+// Bible, on every deployment (the "Function Storage" warning, Nov 2026).
+// While the site is being built, the files are read from disk; once it is
+// live, they are fetched from the site's own static files (served from
+// Vercel's CDN, cached for a day).
 
 type Chapters = string[][];
 const cache = new Map<string, Chapters>();
+const SITE = process.env.SITE_URL || "https://zivarukah.com";
+// Built from parts so the build doesn't copy the folder into every function.
+const KJV_DIR = ["public", "bible-versions", "kjv"].join("/");
+
+async function fromDisk(slug: string): Promise<Chapters | null> {
+  try {
+    const { readFile } = await import("node:fs/promises");
+    const file = `${process.cwd()}/${KJV_DIR}/${slug}.json`;
+    return JSON.parse(await readFile(file, "utf8")) as Chapters;
+  } catch {
+    return null; // not on disk (the live site): use the website copy
+  }
+}
+
+async function fromSite(slug: string): Promise<Chapters | null> {
+  try {
+    const res = await fetch(`${SITE}/bible-versions/kjv/${slug}.json`, { next: { revalidate: 86400 } });
+    if (!res.ok) return null;
+    return (await res.json()) as Chapters;
+  } catch {
+    return null;
+  }
+}
 
 export async function loadBook(slug: string): Promise<Chapters | null> {
   if (!bookBySlug(slug)) return null;
   const hit = cache.get(slug);
   if (hit) return hit;
-  const mod = (await import(`@/data/kjv/${slug}.json`)) as { default: Chapters };
-  cache.set(slug, mod.default);
-  return mod.default;
+  const book = (await fromDisk(slug)) ?? (await fromSite(slug));
+  if (book) cache.set(slug, book);
+  return book;
 }
 
 export async function getChapter(slug: string, chapter: number): Promise<string[] | null> {
