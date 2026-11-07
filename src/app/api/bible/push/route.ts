@@ -44,7 +44,7 @@ async function endpointFrom(request: Request) {
 export async function POST(request: Request) {
   const { endpoint, p256dh, auth, error } = await endpointFrom(request);
   if (!endpoint) return NextResponse.json({ ok: false }, { status: error });
-  const row = p256dh && auth ? { endpoint, p256dh, auth } : { endpoint };
+  const row: { endpoint: string; p256dh?: string; auth?: string } = p256dh && auth ? { endpoint, p256dh, auth } : { endpoint };
   const { error: dbError } = await createServiceClient().from("bible_push").upsert(row, { onConflict: "endpoint" });
   return NextResponse.json({ ok: !dbError }, { status: dbError ? 500 : 200 });
 }
