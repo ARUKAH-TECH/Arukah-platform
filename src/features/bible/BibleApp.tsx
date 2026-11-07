@@ -81,7 +81,12 @@ export function DailyReminder({ dark = false }: { dark?: boolean }) {
     }
     navigator.serviceWorker.ready
       .then((reg) => reg.pushManager.getSubscription())
-      .then((sub) => setState(sub ? "on" : "off"))
+      .then((sub) => {
+        setState(sub ? "on" : "off");
+        // Keep the server's copy up to date (phones that signed up earlier
+        // didn't send their keys yet; the browser can also renew them).
+        if (sub) fetch("/api/bible/push", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(sub.toJSON()) }).catch(() => {});
+      })
       .catch(() => setState("off"));
   }, []);
 
@@ -98,7 +103,7 @@ export function DailyReminder({ dark = false }: { dark?: boolean }) {
       const { publicKey } = (await res.json()) as { publicKey?: string };
       if (!publicKey) throw new Error("key");
       const sub = (await reg.pushManager.getSubscription()) || (await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: keyBytes(publicKey) }));
-      const saved = await fetch("/api/bible/push", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ endpoint: sub.endpoint }) });
+      const saved = await fetch("/api/bible/push", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(sub.toJSON()) });
       if (!saved.ok) throw new Error("save");
       setState("on");
     } catch {
@@ -128,7 +133,7 @@ export function DailyReminder({ dark = false }: { dark?: boolean }) {
   if (state === "on")
     return (
       <p className={`flex flex-wrap items-center gap-2 text-sm ${note}`}>
-        <span className="font-semibold text-emerald-500">🔔 Daily devotional is on</span> (every morning around 6:00am)
+        <span className="font-semibold text-emerald-500">🔔 Daily devotional is on</span> (every morning at 6:00am)
         <button type="button" onClick={turnOff} className="underline">
           Turn off
         </button>

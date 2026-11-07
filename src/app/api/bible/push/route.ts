@@ -24,20 +24,28 @@ export async function GET() {
   return NextResponse.json({ ok: true, publicKey: keys.publicKey }, { headers: { "Cache-Control": "public, max-age=3600" } });
 }
 
+const KEY = /^[A-Za-z0-9_-]{80,100}$/;
+const AUTH = /^[A-Za-z0-9_-]{16,32}$/;
+
 async function endpointFrom(request: Request) {
   if (limited(request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "anon")) return { error: 429 };
   try {
-    const body = (await request.json()) as { endpoint?: unknown };
-    return validEndpoint(body.endpoint) ? { endpoint: body.endpoint } : { error: 400 };
+    const body = (await request.json()) as { endpoint?: unknown; keys?: { p256dh?: unknown; auth?: unknown } };
+    if (!validEndpoint(body.endpoint)) return { error: 400 };
+    // The phone's public keys, so the notification text can travel inside the push.
+    const p256dh = typeof body.keys?.p256dh === "string" && KEY.test(body.keys.p256dh) ? body.keys.p256dh : null;
+    const auth = typeof body.keys?.auth === "string" && AUTH.test(body.keys.auth) ? body.keys.auth : null;
+    return { endpoint: body.endpoint, p256dh, auth };
   } catch {
     return { error: 400 };
   }
 }
 
 export async function POST(request: Request) {
-  const { endpoint, error } = await endpointFrom(request);
+  const { endpoint, p256dh, auth, error } = await endpointFrom(request);
   if (!endpoint) return NextResponse.json({ ok: false }, { status: error });
-  const { error: dbError } = await createServiceClient().from("bible_push").upsert({ endpoint }, { onConflict: "endpoint", ignoreDuplicates: true });
+  const row = p256dh && auth ? { endpoint, p256dh, auth } : { endpoint };
+  const { error: dbError } = await createServiceClient().from("bible_push").upsert(row, { onConflict: "endpoint" });
   return NextResponse.json({ ok: !dbError }, { status: dbError ? 500 : 200 });
 }
 

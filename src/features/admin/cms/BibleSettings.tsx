@@ -31,7 +31,7 @@ export function BibleSettingsForm({ themes, mode }: { themes: ThemeRow[]; mode: 
         </fieldset>
       ))}
       <label className="text-sm">
-        At 6:00am, if there is no devotional for the day
+        At 5:30am, if you haven't published a devotional for the day by 5:00am
         <select name="autoMode" defaultValue={mode} className={fieldClasses}>
           <option value="publish">Write one on these themes and publish it</option>
           <option value="draft">Write one as a draft for me to check</option>

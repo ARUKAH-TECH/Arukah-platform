@@ -77,7 +77,8 @@ Do not mention that you are an AI. Do not invent quotes or stories about real pe
 /** Today's automatic devotional, if none was published. Safe to call many times. */
 export async function runDailyDevotional(now = new Date()): Promise<{ status: string; id?: string }> {
   const day = todayInGhana();
-  if (now.getUTCHours() < 6) return { status: "too-early" }; // 6:00am Ghana time
+  // The owner publishes by 5:00am; from 5:30am (Ghana = UTC) the system writes one if there is none.
+  if (now.getUTCHours() * 60 + now.getUTCMinutes() < 5 * 60 + 25) return { status: "too-early" };
   const client = createServiceClient();
   const { data: setting } = await client.from("bible_settings").select("value").eq("key", "auto_devotional").maybeSingle();
   const mode = setting?.value ?? "publish";

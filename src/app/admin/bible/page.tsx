@@ -50,9 +50,9 @@ export default async function AdminBiblePage({ searchParams }: PageProps<"/admin
       </Link>
 
       <section className="mt-8 rounded-2xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
-        <h2 className="text-lg font-semibold">🎯 Themes and the automatic 6:00am devotional</h2>
+        <h2 className="text-lg font-semibold">🎯 Themes and the automatic devotional</h2>
         <p className="mt-1 text-sm text-foreground/60">
-          Every morning at 6:00am (Ghana time), if no devotional is published for the day, one is written on these themes with AI and its Bible verses are
+          Publish your devotional by 5:00am. If none is published for the day, at 5:30am (Ghana time) one is written on these themes with AI and its Bible verses are
           checked against the KJV.
         </p>
         <div className="mt-4">
@@ -83,8 +83,8 @@ export default async function AdminBiblePage({ searchParams }: PageProps<"/admin
       <section className="mt-8 rounded-2xl border border-black/10 bg-white p-4 dark:border-white/10 dark:bg-zinc-900">
         <h2 className="text-lg font-semibold">🔔 Daily notifications</h2>
         <p className="mt-1 text-sm text-foreground/60">
-          {push.phones} phone{push.phones === 1 ? "" : "s"} get the morning notification (around 6:00am) with the devotional and its scripture. If no devotional is
-          published by 6:35am, they get the verse of the day.
+          {push.phones} phone{push.phones === 1 ? "" : "s"} get the notification at 6:00am every morning with the devotional and its scripture (yours, or the one
+          written at 5:30am).
         </p>
         {push.log.length > 0 && (
           <p className="mt-1 text-xs text-foreground/60">
