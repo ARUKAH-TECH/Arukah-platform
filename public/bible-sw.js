@@ -83,22 +83,32 @@ self.addEventListener("fetch", (event) => {
   }
 });
 
-// Daily devotional notification. The push itself carries nothing: we fetch
-// today's devotional and scripture from the site and show them.
+// Daily devotional notification. The text normally travels inside the push;
+// if not (older sign-ups), it is fetched from the site, waiting at most 8 s.
+function todaysNote(event) {
+  try {
+    const data = event.data ? event.data.json() : null;
+    if (data && data.title) return Promise.resolve(data);
+  } catch (e) {
+    // not JSON: fetch instead
+  }
+  const ask = fetch("/api/bible/today", { cache: "no-store" }).then((res) => (res.ok ? res.json() : null));
+  const wait = new Promise((resolve) => setTimeout(() => resolve(null), 8000));
+  return Promise.race([ask, wait]).catch(() => null);
+}
+
 self.addEventListener("push", (event) => {
   event.waitUntil(
-    fetch("/api/bible/today", { cache: "no-store" })
-      .then((res) => (res.ok ? res.json() : null))
-      .catch(() => null)
-      .then((note) =>
-        self.registration.showNotification((note && note.title) || "R.O.M Bible Guide", {
-          body: (note && note.body) || "Today's devotional and scripture are ready. Tap to read.",
-          icon: "/bible-icons/icon-192.png",
-          tag: "rom-daily",
-          renotify: true,
-          data: { url: (note && note.url) || "/bible" },
-        }),
-      ),
+    todaysNote(event).then((note) =>
+      self.registration.showNotification((note && note.title) || "R.O.M Bible Guide", {
+        body: (note && note.body) || "Today's devotional and scripture are ready. Tap to read.",
+        icon: "/bible-icons/icon-192.png",
+        tag: "rom-daily",
+        renotify: true,
+        requireInteraction: true,
+        data: { url: (note && note.url) || "/bible" },
+      }),
+    ),
   );
 });
 

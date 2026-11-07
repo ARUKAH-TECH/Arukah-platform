@@ -1,13 +1,14 @@
 import "server-only";
-import { createPrivateKey, generateKeyPairSync, sign, type JsonWebKey } from "node:crypto";
+import { createCipheriv, createECDH, createHmac, createPrivateKey, generateKeyPairSync, randomBytes, sign, type JsonWebKey } from "node:crypto";
 import { createServiceClient } from "@/lib/supabase/service";
 import { getDevotional } from "@/db/bible";
 import { getPassage, todayInGhana, verseOfTheDay } from "@/server/bible";
 
 // Daily devotional notifications for R.O.M Bible Guide (standard web push).
-// The push carries no data: the phone wakes up, asks /api/bible/today for
-// the day's devotional and scripture, and shows it. So nothing personal is
-// sent anywhere, and no third-party service or extra package is needed.
+// The notification text (title, scripture, link — public content only) travels
+// inside the push, encrypted for that phone (RFC 8291), so it shows even when
+// the phone limits background internet. Phones without saved keys get an
+// empty push and fetch /api/bible/today instead. No extra package needed.
 // The site's key pair is made here on first use and kept in the database
 // (service key only), so no secret has to be copied by hand.
 
@@ -65,11 +66,48 @@ function vapidHeader(endpoint: string, keys: Keys) {
 }
 
 /** Wakes one phone. Returns the push service's status code (0 = network error). */
-async function wake(endpoint: string, keys: Keys) {
+const hmac = (key: Buffer, data: Buffer) => createHmac("sha256", key).update(data).digest();
+
+/** Encrypts the message for one phone (Web Push "aes128gcm", RFC 8291 / 8188). */
+export function encryptPayload(plain: Buffer, p256dh: string, auth: string) {
+  const uaPublic = fromB64url(p256dh);
+  const authSecret = fromB64url(auth);
+  const ecdh = createECDH("prime256v1");
+  const asPublic = ecdh.generateKeys();
+  const shared = ecdh.computeSecret(uaPublic);
+  const ikm = hmac(hmac(authSecret, shared), Buffer.concat([Buffer.from("WebPush: info\0"), uaPublic, asPublic, Buffer.from([1])]));
+  const salt = randomBytes(16);
+  const prk = hmac(salt, ikm);
+  const cek = hmac(prk, Buffer.from("Content-Encoding: aes128gcm\0\x01", "binary")).subarray(0, 16);
+  const nonce = hmac(prk, Buffer.from("Content-Encoding: nonce\0\x01", "binary")).subarray(0, 12);
+  const cipher = createCipheriv("aes-128-gcm", cek, nonce);
+  const body = Buffer.concat([cipher.update(Buffer.concat([plain, Buffer.from([2])])), cipher.final(), cipher.getAuthTag()]);
+  const header = Buffer.alloc(21);
+  salt.copy(header, 0);
+  header.writeUInt32BE(4096, 16);
+  header.writeUInt8(asPublic.length, 20);
+  return Buffer.concat([header, asPublic, body]);
+}
+
+interface Phone {
+  endpoint: string;
+  p256dh?: string | null;
+  auth?: string | null;
+}
+
+async function wake(phone: Phone, keys: Keys, message?: Buffer) {
+  const { endpoint } = phone;
   try {
+    const withText = message && phone.p256dh && phone.auth;
     const res = await fetch(endpoint, {
       method: "POST",
-      headers: { Authorization: vapidHeader(endpoint, keys), TTL: String(18 * 3600), Urgency: "high" },
+      headers: {
+        Authorization: vapidHeader(endpoint, keys),
+        TTL: String(18 * 3600),
+        Urgency: "high",
+        ...(withText ? { "Content-Encoding": "aes128gcm", "Content-Type": "application/octet-stream" } : {}),
+      },
+      body: withText ? new Uint8Array(encryptPayload(message, phone.p256dh!, phone.auth!)) : undefined,
       signal: AbortSignal.timeout(10_000),
     });
     return res.status;
@@ -102,14 +140,17 @@ export async function todaysNotification() {
 
 async function wakeAll(keys: Keys) {
   const client = createServiceClient();
-  const { data: rows } = await client.from("bible_push").select("endpoint").limit(5000);
-  const endpoints = (rows ?? []).map((r) => r.endpoint as string);
+  const note = await todaysNotification();
+  const message = Buffer.from(JSON.stringify({ title: note.title, body: note.body, url: note.url }));
+  const { data: rows } = await client.from("bible_push").select("endpoint, p256dh, auth").limit(5000);
+  const phones = (rows ?? []) as Phone[];
+  const endpoints = phones.map((p) => p.endpoint);
   let sent = 0;
   let failed = 0;
   const gone: string[] = [];
   for (let i = 0; i < endpoints.length; i += 25) {
     const batch = endpoints.slice(i, i + 25);
-    const results = await Promise.all(batch.map((e) => wake(e, keys)));
+    const results = await Promise.all(phones.slice(i, i + 25).map((p) => wake(p, keys, message)));
     results.forEach((status, j) => {
       if (status >= 200 && status < 300) sent++;
       else {
@@ -140,14 +181,13 @@ export async function sendTestNotification() {
 }
 
 /**
- * Sends today's notification to every phone that asked for it — once a day.
- * Waits for the day's devotional until 6:35am, then sends anyway (verse of the day).
+ * Sends today's notification to every phone that asked for it — once a day, from 6:00am.
+ * (The devotional is written by 5:30am if the owner hasn't published one by 5:00am.)
  */
 export async function sendDailyNotification(now = new Date()) {
-  if (now.getUTCHours() < 6) return { status: "too-early" };
+  // 6:00am Ghana time (= UTC). A few minutes' grace for the scheduler.
+  if (now.getUTCHours() * 60 + now.getUTCMinutes() < 5 * 60 + 55) return { status: "too-early" };
   const note = await todaysNotification();
-  const late = now.getUTCHours() > 6 || now.getUTCMinutes() >= 35;
-  if (!note.devotional && !late) return { status: "waiting-for-devotional" };
 
   const client = createServiceClient();
   // Claim the day first, so two runs never both send.
