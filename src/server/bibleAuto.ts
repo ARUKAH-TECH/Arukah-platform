@@ -100,62 +100,130 @@ export async function runDailyDevotional(now = new Date()): Promise<{ status: st
 
 export interface TopicStudy {
   topic: string;
+  /** 2 = the deeper study (origin, benefits, examples…). Older saved studies are redone when opened. */
+  v?: number;
   meaning: string;
+  origin?: string;
   words: { word: string; language: string; sense: string }[];
   points: string[];
+  benefits?: string[];
+  examples?: { name: string; ref: string; lesson: string }[];
+  hard?: { question: string; answer: string }[];
+  apply?: string[];
+  prayer?: string;
   scriptures: { ref: string; note: string }[];
 }
+
+const STUDY_VERSION = 2;
 
 const TOPIC = /^[a-z][a-z '-]{1,59}$/;
 export const cleanTopic = (q: string) => q.toLowerCase().replace(/[^a-z '-]/g, " ").replace(/\s+/g, " ").trim().slice(0, 60);
 
-/** Meaning and supporting scriptures for a topic, cached so each topic is researched once. */
-export async function topicStudy(raw: string): Promise<TopicStudy | null> {
-  const topic = cleanTopic(raw);
-  if (!TOPIC.test(topic)) return null;
-  const client = createServiceClient();
-  const { data: cached } = await client.from("bible_topics").select("data").eq("topic", topic).maybeSingle();
-  if (cached) return cached.data as TopicStudy;
+const STUDY_FORMAT = `Return ONLY a JSON object:
+{"meaning": "...", "origin": "...", "words": [{"word": "...", "language": "Hebrew" or "Greek", "sense": "..."}], "points": ["..."], "benefits": ["..."], "examples": [{"name": "...", "ref": "Book C:V-V", "lesson": "..."}], "hard": [{"question": "...", "answer": "..."}], "apply": ["..."], "prayer": "...", "scriptures": [{"ref": "Book C:V" or "Book C:V-V", "note": "..."}]}
+- meaning: MEANING_RULE
+- origin: 70 to 130 words on where it comes from: its first appearance in Scripture, how it develops from the Old Testament to the New, and the background in Bible times (culture, customs, history) that helps understand it.
+- words: 1 to 4 key original-language words (transliterated) with their meaning; only well-known, accurate ones; empty list if unsure.
+- points: 4 to 6 teaching points (one or two sentences each) a preacher could use.
+- benefits: 3 to 6 benefits, blessings or promises for those who live it (or dangers of ignoring it), each one sentence.
+- examples: 2 to 4 Bible people or events that show it, each with the passage and the lesson.
+- hard: 2 to 4 difficult questions, common misunderstandings or deeper aspects people struggle with, each answered from Scripture in 2 to 4 sentences. Where faithful Christians differ, say so gently without taking sides.
+- apply: 3 to 5 practical ways to live it today (in the home, church, work, community).
+- prayer: a short prayer (2 to 3 sentences).
+- scriptures: 10 to 15 supporting KJV references from both Testaments, each with a one-sentence note on how it supports the teaching. Only real references; prefer well-known passages; keep ranges short (max 5 verses).
+Write in simple English, faithful to mainstream Christian teaching. No links, no emojis.`;
 
-  // A little protection against runaway costs.
-  const { count } = await client.from("bible_topics").select("topic", { count: "exact", head: true }).gte("created_at", new Date(Date.now() - 3600_000).toISOString());
-  if ((count ?? 0) >= 60) return null;
+const strings = (list: unknown, max: number, len: number) =>
+  (Array.isArray(list) ? list : [])
+    .slice(0, max)
+    .map((x) => cleanText(x, len))
+    .filter(Boolean);
 
-  const system = `You are a careful Bible teacher helping pastors in Ghana prepare messages. For a topic, return ONLY a JSON object:
-{"meaning": "...", "words": [{"word": "...", "language": "Hebrew" or "Greek", "sense": "..."}], "points": ["..."], "scriptures": [{"ref": "Book C:V" or "Book C:V-V", "note": "..."}]}
-- meaning: 80 to 140 words: what the Bible teaches this topic means, in simple English, faithful to mainstream Christian teaching.
-- words: 1 to 3 key original-language words (transliterated) with a short sense. Only well-known, accurate ones; empty list if unsure.
-- points: 3 to 5 short teaching points (one sentence each) a preacher could use.
-- scriptures: 8 to 12 supporting KJV references from both Testaments, each with a one-sentence note on how it supports the topic. Only real references; prefer well-known passages; keep ranges short (max 5 verses).
-No links, no emojis. If the topic is not a Bible or Christian-life topic, return {"meaning": "", "words": [], "points": [], "scriptures": []}.`;
-  const out = await askJson(system, `Topic: ${topic}`, 3000);
-  if (!out) return null;
-  const meaning = cleanText(out.meaning, 1500);
+/** Turns the AI's answer into a checked study (every Bible reference must exist in the KJV). */
+async function buildStudy(topic: string, out: Record<string, unknown>): Promise<TopicStudy | null> {
+  const meaning = cleanText(out.meaning, 2000);
   const scriptures: TopicStudy["scriptures"] = [];
   for (const s of Array.isArray(out.scriptures) ? out.scriptures : []) {
     const o = (s ?? {}) as Record<string, unknown>;
     const [ref] = await validRefs([o.ref], 1);
-    if (ref && !scriptures.some((x) => x.ref === ref)) scriptures.push({ ref, note: cleanText(o.note, 240) });
-    if (scriptures.length >= 12) break;
+    if (ref && !scriptures.some((x) => x.ref === ref)) scriptures.push({ ref, note: cleanText(o.note, 260) });
+    if (scriptures.length >= 15) break;
   }
   if (!meaning || scriptures.length < 2) return null;
-  const study: TopicStudy = {
+  const examples: NonNullable<TopicStudy["examples"]> = [];
+  for (const e of (Array.isArray(out.examples) ? out.examples : []).slice(0, 4)) {
+    const o = (e ?? {}) as Record<string, unknown>;
+    const [ref] = await validRefs([o.ref], 1);
+    const name = cleanText(o.name, 80);
+    const lesson = cleanText(o.lesson, 320);
+    if (name && lesson) examples.push({ name, ref: ref ?? "", lesson });
+  }
+  return {
     topic,
+    v: STUDY_VERSION,
     meaning,
+    origin: cleanText(out.origin, 1200),
     words: (Array.isArray(out.words) ? out.words : [])
-      .slice(0, 3)
+      .slice(0, 4)
       .map((w) => {
         const o = (w ?? {}) as Record<string, unknown>;
-        return { word: cleanText(o.word, 40), language: cleanText(o.language, 20), sense: cleanText(o.sense, 200) };
+        return { word: cleanText(o.word, 40), language: cleanText(o.language, 20), sense: cleanText(o.sense, 240) };
       })
       .filter((w) => w.word && w.sense),
-    points: (Array.isArray(out.points) ? out.points : []).slice(0, 5).map((p) => cleanText(p, 240)).filter(Boolean),
+    points: strings(out.points, 6, 320),
+    benefits: strings(out.benefits, 6, 260),
+    examples,
+    hard: (Array.isArray(out.hard) ? out.hard : [])
+      .slice(0, 4)
+      .map((h) => {
+        const o = (h ?? {}) as Record<string, unknown>;
+        return { question: cleanText(o.question, 200), answer: cleanText(o.answer, 700) };
+      })
+      .filter((h) => h.question && h.answer),
+    apply: strings(out.apply, 5, 260),
+    prayer: cleanText(out.prayer, 500),
     scriptures,
   };
-  await client.from("bible_topics").upsert({ topic, data: study });
+}
+
+/**
+ * A deep study (meaning, origin, original words, teaching points, benefits,
+ * Bible examples, hard questions, application, prayer, scriptures), saved so
+ * each topic/question is researched once. Older, shorter saved studies are
+ * redone when opened (the old one is kept if the AI is unavailable).
+ */
+async function deepStudy(table: "bible_topics" | "bible_questions", column: "topic" | "question", key: string, system: string, prompt: string): Promise<TopicStudy | null> {
+  const client = createServiceClient();
+  const { data: cached } = await client.from(table).select("data").eq(column, key).maybeSingle();
+  const old = cached ? (cached.data as TopicStudy) : null;
+  if (old && (old.v ?? 1) >= STUDY_VERSION) return old;
+
+  // A little protection against runaway costs (new studies per hour).
+  if (!old) {
+    const { count } = await client.from(table).select(column, { count: "exact", head: true }).gte("created_at", new Date(Date.now() - 3600_000).toISOString());
+    if ((count ?? 0) >= 60) return null;
+  }
+
+  let study: TopicStudy | null = null;
+  const started = Date.now();
+  for (let attempt = 0; attempt < 2 && !study && Date.now() - started < 60_000; attempt++) {
+    const out = await askJson(system, prompt, 6000);
+    if (out) study = await buildStudy(key, out);
+  }
+  if (!study) return old;
+  await client.from(table).upsert({ [column]: key, data: study });
   return study;
 }
 
+/** A deep study of a Bible topic ("forgiveness"). */
+export async function topicStudy(raw: string): Promise<TopicStudy | null> {
+  const topic = cleanTopic(raw);
+  if (!TOPIC.test(topic)) return null;
+  const system = `You are a careful, deep Bible teacher helping pastors and Bible students in Ghana study a topic thoroughly.
+${STUDY_FORMAT.replace("MEANING_RULE", "130 to 200 words: what the topic is and what the Bible teaches about it.")}
+Answer any topic connected with God, the Bible, faith, the church, Christian living, morals or family life from a Bible perspective. Only if it has nothing at all to do with these, return {"meaning": "", "scriptures": []}.`;
+  return deepStudy("bible_topics", "topic", topic, system, `Topic: ${topic}`);
+}
 // ---- Bible questions ("Who is a Christian?") --------------------------------
 
 const QUESTION_WORDS = /^(who|what|whats|why|how|when|where|which|is|are|was|were|can|could|should|does|do|did|will|would|must|may|shall|explain|tell)\b/;
@@ -183,48 +251,12 @@ export function keyWords(raw: string) {
     .filter((w) => w.length > 2 && !STOP.has(w));
 }
 
-/** An answer from Scripture to a Bible question, with KJV verses (checked), cached. */
+/** A deep answer from Scripture to a Bible question ("Who is a Christian?"). */
 export async function questionStudy(raw: string): Promise<TopicStudy | null> {
   const question = cleanQuestion(raw);
   if (!/^[a-z0-9][a-z0-9 '-]{2,139}$/.test(question)) return null;
-  const client = createServiceClient();
-  const { data: cached } = await client.from("bible_questions").select("data").eq("question", question).maybeSingle();
-  if (cached) return cached.data as TopicStudy;
-
-  const { count } = await client.from("bible_questions").select("question", { count: "exact", head: true }).gte("created_at", new Date(Date.now() - 3600_000).toISOString());
-  if ((count ?? 0) >= 60) return null;
-
-  const system = `You are a careful Bible teacher helping pastors and believers in Ghana. Answer the question from the Bible. Return ONLY a JSON object:
-{"meaning": "...", "words": [{"word": "...", "language": "Hebrew" or "Greek", "sense": "..."}], "points": ["..."], "scriptures": [{"ref": "Book C:V" or "Book C:V-V", "note": "..."}]}
-- meaning: the answer, 100 to 180 words, in simple English, faithful to mainstream Christian teaching. Let Scripture speak; where Christians differ, say so gently without taking sides.
-- words: 0 to 3 key original-language words (transliterated) only if well known and accurate.
-- points: 3 to 6 short points (one sentence each) that a preacher could teach.
-- scriptures: 8 to 12 KJV references from both Testaments that back the answer, each with a one-sentence note on how it supports it. Only real references; prefer well-known passages; keep ranges short (max 5 verses).
-No links, no emojis. If the question is not about the Bible, God or the Christian life, return {"meaning": "", "words": [], "points": [], "scriptures": []}.`;
-  const out = await askJson(system, `Question: ${raw.trim().slice(0, 160)}`, 3200);
-  if (!out) return null;
-  const meaning = cleanText(out.meaning, 1800);
-  const scriptures: TopicStudy["scriptures"] = [];
-  for (const s of Array.isArray(out.scriptures) ? out.scriptures : []) {
-    const o = (s ?? {}) as Record<string, unknown>;
-    const [ref] = await validRefs([o.ref], 1);
-    if (ref && !scriptures.some((x) => x.ref === ref)) scriptures.push({ ref, note: cleanText(o.note, 240) });
-    if (scriptures.length >= 12) break;
-  }
-  if (!meaning || scriptures.length < 2) return null;
-  const study: TopicStudy = {
-    topic: question,
-    meaning,
-    words: (Array.isArray(out.words) ? out.words : [])
-      .slice(0, 3)
-      .map((w) => {
-        const o = (w ?? {}) as Record<string, unknown>;
-        return { word: cleanText(o.word, 40), language: cleanText(o.language, 20), sense: cleanText(o.sense, 200) };
-      })
-      .filter((w) => w.word && w.sense),
-    points: (Array.isArray(out.points) ? out.points : []).slice(0, 6).map((p) => cleanText(p, 240)).filter(Boolean),
-    scriptures,
-  };
-  await client.from("bible_questions").upsert({ question, data: study });
-  return study;
+  const system = `You are a careful, deep Bible teacher helping pastors and believers in Ghana. Answer the question thoroughly from the Bible.
+${STUDY_FORMAT.replace("MEANING_RULE", "the answer, 150 to 230 words, clear and direct, letting Scripture speak.")}
+Answer any question connected with God, the Bible, faith, the church and its history, Christian living, morals or family life from a Bible perspective. Only if it has nothing at all to do with these, return {"meaning": "", "scriptures": []}.`;
+  return deepStudy("bible_questions", "question", question, system, `Question: ${raw.trim().slice(0, 160)}`);
 }
