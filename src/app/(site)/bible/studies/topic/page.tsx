@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { after } from "next/server";
 import Link from "next/link";
 import { Container } from "@/components/ui/Container";
 import { ShareButtons } from "@/components/ui/ShareButtons";
@@ -7,7 +8,7 @@ import { Quiz } from "@/features/bible/Quiz";
 import { StudyTopicSearch } from "@/features/bible/StudyTopicSearch";
 import { chapterHref, parseReference } from "@/lib/bible";
 import { getPassage } from "@/server/bible";
-import { cleanStudyTopic, topicBibleStudy } from "@/server/bibleTopicStudy";
+import { cleanStudyTopic, prepareTopicStudy, savedTopicStudy } from "@/server/bibleTopicStudy";
 
 // A full Bible study on any topic: explain, examine, benefits, negatives,
 // hard questions, discussion, application, quiz — researched once and saved.
@@ -36,9 +37,18 @@ function RefLink({ refText }: { refText: string }) {
 }
 
 export default async function TopicStudyPage({ searchParams }: PageProps<"/bible/studies/topic">) {
-  const raw = String((await searchParams).q ?? "");
+  const params = await searchParams;
+  const raw = String(params.q ?? "");
   const q = cleanStudyTopic(raw);
-  const study = q.length >= 2 ? await topicBibleStudy(raw) : null;
+  const saved = q.length >= 2 ? await savedTopicStudy(raw) : ({ state: "none" } as const);
+  let state = saved.state;
+  // Not studied yet (or "try again"): prepare it in the background while this page
+  // shows "preparing…" and refreshes itself every 15 seconds.
+  if (q.length >= 2 && (state === "none" || (state === "failed" && params.retry === "1"))) {
+    after(() => prepareTopicStudy(raw).catch(() => false));
+    state = "preparing";
+  }
+  const study = saved.state === "ready" ? saved.study : null;
   const memory = study ? await getPassage(study.memoryVerse) : null;
   const passages = study ? await Promise.all(study.examine.map(async (e) => ({ ...e, passage: await getPassage(e.ref) }))) : [];
   const scriptures = study ? await Promise.all(study.scriptures.map(async (s) => ({ ...s, passage: await getPassage(s.ref) }))) : [];
@@ -55,10 +65,27 @@ export default async function TopicStudyPage({ searchParams }: PageProps<"/bible
             <StudyTopicSearch defaultValue={study ? "" : q} />
           </div>
 
-          {q && !study && (
-            <p className="mt-6 rounded-2xl bg-amber-50 p-4 text-amber-900 dark:bg-amber-500/10 dark:text-amber-200">
-              Couldn&apos;t prepare a study on “{q}” just now. Check the spelling or try a Bible topic (for example fasting, forgiveness, the Holy Spirit), or try again in a few minutes.
-            </p>
+          {state === "preparing" && (
+            <div className="mt-6 rounded-2xl bg-[#14110c] p-6 text-center text-white">
+              <meta httpEquiv="refresh" content="15" />
+              <p className="text-4xl">📚</p>
+              <p className="mt-3 text-lg font-bold">Preparing a full Bible study on “{q}”…</p>
+              <p className="mt-1 text-sm text-white/75">
+                Checking the Scriptures, a Bible dictionary and other Christian sources. This takes one to two minutes the first time. This page refreshes by
+                itself; you can also leave and come back.
+              </p>
+              <a href={`/bible/studies/topic?q=${encodeURIComponent(q)}`} className="mt-4 inline-block rounded-full bg-[#e3a82a] px-5 py-2 font-semibold text-[#14110c]">
+                Refresh now
+              </a>
+            </div>
+          )}
+          {state === "failed" && (
+            <div className="mt-6 rounded-2xl bg-amber-50 p-4 text-amber-900 dark:bg-amber-500/10 dark:text-amber-200">
+              <p>Couldn&apos;t prepare a study on “{q}” just now (the free AI may be busy). Please try again in a few minutes.</p>
+              <a href={`/bible/studies/topic?q=${encodeURIComponent(q)}&retry=1`} className="mt-2 inline-block font-semibold underline">
+                Try again
+              </a>
+            </div>
           )}
 
           {study && (
