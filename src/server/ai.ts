@@ -33,7 +33,10 @@ export async function askGemini(system: string, prompt: string, maxTokens = 2500
   const key = process.env.GEMINI_API_KEY?.trim();
   if (!key) return null;
   const models = workingModel ? [workingModel, ...GEMINI_MODELS.filter((m) => m !== workingModel)] : GEMINI_MODELS;
+  const deadline = Date.now() + 100_000; // stop trying after ~100 s in total
   for (const model of models) {
+    const left = deadline - Date.now();
+    if (left < 8_000) break;
     try {
       const generationConfig: Record<string, unknown> = { temperature: 0.5, maxOutputTokens: maxTokens, responseMimeType: "application/json" };
       if (model.startsWith("gemini-2.5")) generationConfig.thinkingConfig = { thinkingBudget: 0 };
@@ -46,19 +49,22 @@ export async function askGemini(system: string, prompt: string, maxTokens = 2500
           contents: [{ role: "user", parts: [...images.map((i) => ({ inlineData: { mimeType: i.mime, data: i.base64 } })), { text: prompt }] }],
           generationConfig,
         }),
-        signal: AbortSignal.timeout(55_000),
+        signal: AbortSignal.timeout(Math.min(60_000, left)),
       });
       if (!res.ok) {
         console.error("[ai] gemini", model, res.status, (await res.text().catch(() => "")).slice(0, 200));
         if (res.status === 401 || res.status === 403) return null; // key problem: no point trying other models
         continue; // not offered to this key, busy or rate-limited: try the next model
       }
-      workingModel = model;
       const data = (await res.json()) as { candidates?: { content?: { parts?: { text?: string; thought?: boolean }[] } }[] };
-      return parseJson((data.candidates?.[0]?.content?.parts ?? []).filter((p) => !p.thought).map((p) => p.text ?? "").join(""));
+      const parsed = parseJson((data.candidates?.[0]?.content?.parts ?? []).filter((p) => !p.thought).map((p) => p.text ?? "").join(""));
+      if (parsed) {
+        workingModel = model;
+        return parsed;
+      }
+      console.error("[ai] gemini", model, "answer was not complete JSON"); // e.g. cut off: try the next model
     } catch (error) {
-      console.error("[ai] gemini failed", model, error instanceof Error ? error.message : "error");
-      return null;
+      console.error("[ai] gemini failed", model, error instanceof Error ? error.message : "error"); // timeout: try the next model
     }
   }
   return null;

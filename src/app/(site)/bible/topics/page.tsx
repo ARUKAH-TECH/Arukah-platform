@@ -9,7 +9,7 @@ import { cleanQuestion, cleanTopic, isQuestion, keyWords, questionStudy, topicSt
 import { createPublicClient } from "@/lib/supabase/public";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
-export const maxDuration = 60;
+export const maxDuration = 300; // a deep study can take the AI a minute or two the first time
 
 export async function generateMetadata({ searchParams }: PageProps<"/bible/topics">): Promise<Metadata> {
   const raw = String((await searchParams).q ?? "");
@@ -107,7 +107,28 @@ export default async function TopicsPage({ searchParams }: PageProps<"/bible/top
 
           {study && (
             <div className="mt-8 flex flex-col gap-8">
-              <section>
+              {/* Quick links to each part of the study. */}
+              <nav aria-label="On this page" className="flex flex-wrap gap-2 text-sm">
+                {[
+                  ["meaning", asking ? "Answer" : "Meaning"],
+                  study.origin ? ["origin", "Origin"] : null,
+                  study.points.length ? ["points", "Teaching"] : null,
+                  study.benefits?.length ? ["benefits", "Benefits"] : null,
+                  study.examples?.length ? ["examples", "Bible examples"] : null,
+                  study.hard?.length ? ["hard", "Hard questions"] : null,
+                  study.apply?.length ? ["apply", "Living it"] : null,
+                  ["scriptures", "Scriptures"],
+                  study.prayer ? ["prayer", "Prayer"] : null,
+                ]
+                  .filter((x): x is string[] => Boolean(x))
+                  .map(([id, label]) => (
+                    <a key={id} href={`#${id}`} className="rounded-full border border-brand-primary-text/40 px-3 py-1 hover:bg-brand-primary/10">
+                      {label}
+                    </a>
+                  ))}
+              </nav>
+
+              <section id="meaning" className="scroll-mt-24">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">{asking ? "Answer from the Bible" : "Meaning"}</h2>
                 <p className="mt-2 text-lg leading-8">{study.meaning}</p>
                 {study.words.length > 0 && (
@@ -121,8 +142,15 @@ export default async function TopicsPage({ searchParams }: PageProps<"/bible/top
                 )}
               </section>
 
+              {study.origin && (
+                <section id="origin" className="scroll-mt-24">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">Origin &amp; background</h2>
+                  <p className="mt-2 leading-8">{study.origin}</p>
+                </section>
+              )}
+
               {study.points.length > 0 && (
-                <section>
+                <section id="points" className="scroll-mt-24">
                   <h2 className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">{asking ? "Key points" : "Teaching points"}</h2>
                   <ol className="mt-2 ml-6 list-decimal space-y-2">
                     {study.points.map((p) => (
@@ -132,7 +160,68 @@ export default async function TopicsPage({ searchParams }: PageProps<"/bible/top
                 </section>
               )}
 
-              <section>
+              {study.benefits && study.benefits.length > 0 && (
+                <section id="benefits" className="scroll-mt-24">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">Benefits &amp; promises</h2>
+                  <ul className="mt-2 flex flex-col gap-2">
+                    {study.benefits.map((b) => (
+                      <li key={b} className="flex gap-2">
+                        <span aria-hidden="true">✅</span>
+                        <span>{b}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              {study.examples && study.examples.length > 0 && (
+                <section id="examples" className="scroll-mt-24">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">Examples in the Bible</h2>
+                  <ul className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
+                    {study.examples.map((e) => {
+                      const er = e.ref ? parseReference(e.ref) : null;
+                      return (
+                        <li key={e.name} className="rounded-2xl bg-black/5 p-4 dark:bg-white/10">
+                          <p className="font-bold">{e.name}</p>
+                          {er && (
+                            <Link href={chapterHref(er.book.slug, er.chapter, er.from)} className="text-sm font-semibold text-brand-primary-text underline">
+                              {e.ref}
+                            </Link>
+                          )}
+                          <p className="mt-1 text-sm leading-6">{e.lesson}</p>
+                        </li>
+                      );
+                    })}
+                  </ul>
+                </section>
+              )}
+
+              {study.hard && study.hard.length > 0 && (
+                <section id="hard" className="scroll-mt-24">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">Hard questions &amp; deeper aspects</h2>
+                  <div className="mt-3 flex flex-col gap-3">
+                    {study.hard.map((h) => (
+                      <details key={h.question} className="rounded-2xl border border-black/10 p-4 dark:border-white/10" open>
+                        <summary className="cursor-pointer font-semibold">{h.question}</summary>
+                        <p className="mt-2 leading-7 text-foreground/80">{h.answer}</p>
+                      </details>
+                    ))}
+                  </div>
+                </section>
+              )}
+
+              {study.apply && study.apply.length > 0 && (
+                <section id="apply" className="scroll-mt-24">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">Living it today</h2>
+                  <ul className="mt-2 ml-6 list-disc space-y-2">
+                    {study.apply.map((a) => (
+                      <li key={a}>{a}</li>
+                    ))}
+                  </ul>
+                </section>
+              )}
+
+              <section id="scriptures" className="scroll-mt-24">
                 <h2 className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">Supporting scriptures (KJV)</h2>
                 <ul className="mt-3 flex flex-col gap-3">
                   {passages.map(({ ref, note, passage }) => {
@@ -150,6 +239,13 @@ export default async function TopicsPage({ searchParams }: PageProps<"/bible/top
                 </ul>
               </section>
 
+              {study.prayer && (
+                <section id="prayer" className="scroll-mt-24 rounded-2xl bg-[#14110c] p-5 text-white">
+                  <h2 className="text-xs font-semibold uppercase tracking-wider text-[#f0c050]">🙏 Prayer</h2>
+                  <p className="mt-2 font-serif text-lg leading-8">{study.prayer}</p>
+                </section>
+              )}
+
               <p className="text-xs text-foreground/60">
                 Prepared with the help of AI and checked against the King James text: every verse shown is quoted from the KJV. Always study each passage in its context.
               </p>
@@ -157,7 +253,7 @@ export default async function TopicsPage({ searchParams }: PageProps<"/bible/top
                 label="Share"
                 url={`${SITE}/`}
                 title={asking ? title : `${title} in the Bible`}
-                message={`📖 *${asking ? title : `What the Bible says about ${q}`}*\n\n${asking ? "The answer" : "Meaning"} and ${study.scriptures.length} supporting scriptures.\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇`}
+                message={`📖 *${asking ? title : `What the Bible says about ${q}`}*\n\n${asking ? "The answer" : "Meaning"}, origin, benefits, Bible examples, hard questions and ${study.scriptures.length} supporting scriptures.\n\n📖 Open *R.O.M Bible Guide* on our homepage 👇`}
               />
             </div>
           )}
