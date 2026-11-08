@@ -103,3 +103,58 @@ export function cleanText(value: unknown, max: number) {
     .trim()
     .slice(0, max);
 }
+
+
+export interface GroundedNotes {
+  text: string;
+  sources: { title: string; uri: string }[];
+  /** Google's "search suggestions" box, which must be shown with grounded answers. */
+  searchHtml: string;
+}
+
+/**
+ * Research notes from Google Search (Gemini "grounding"). Free only on some
+ * models (Gemini 2.5 Flash / Flash-Lite, up to 500 a day); returns null when
+ * not available, so callers carry on without it.
+ */
+export async function askGeminiGrounded(prompt: string): Promise<GroundedNotes | null> {
+  const key = process.env.GEMINI_API_KEY?.trim();
+  if (!key) return null;
+  for (const model of ["gemini-2.5-flash-lite", "gemini-2.5-flash"]) {
+    try {
+      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+        method: "POST",
+        headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
+        body: JSON.stringify({
+          contents: [{ role: "user", parts: [{ text: prompt }] }],
+          tools: [{ google_search: {} }],
+          generationConfig: { temperature: 0.3, maxOutputTokens: 1600, thinkingConfig: { thinkingBudget: 0 } },
+        }),
+        signal: AbortSignal.timeout(40_000),
+      });
+      if (!res.ok) {
+        console.error("[ai] grounded", model, res.status, (await res.text().catch(() => "")).slice(0, 160));
+        continue;
+      }
+      const data = (await res.json()) as {
+        candidates?: {
+          content?: { parts?: { text?: string }[] };
+          groundingMetadata?: { searchEntryPoint?: { renderedContent?: string }; groundingChunks?: { web?: { uri?: string; title?: string } }[] };
+        }[];
+      };
+      const c = data.candidates?.[0];
+      const text = (c?.content?.parts ?? []).map((p) => p.text ?? "").join("").trim();
+      if (!text) continue;
+      const sources: GroundedNotes["sources"] = [];
+      for (const ch of c?.groundingMetadata?.groundingChunks ?? []) {
+        const uri = ch.web?.uri ?? "";
+        const title = (ch.web?.title ?? "").slice(0, 120);
+        if (uri.startsWith("https://") && title && !sources.some((x) => x.title === title)) sources.push({ title, uri });
+      }
+      return { text: text.slice(0, 6000), sources: sources.slice(0, 10), searchHtml: (c?.groundingMetadata?.searchEntryPoint?.renderedContent ?? "").slice(0, 20000) };
+    } catch (error) {
+      console.error("[ai] grounded failed", model, error instanceof Error ? error.message : "error");
+    }
+  }
+  return null;
+}

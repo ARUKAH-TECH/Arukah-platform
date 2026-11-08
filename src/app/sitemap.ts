@@ -81,15 +81,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   let researched: MetadataRoute.Sitemap = [];
   try {
     const client = createPublicClient();
-    const [{ data: topics }, { data: questions }] = await Promise.all([
+    const [{ data: topics }, { data: questions }, { data: studies }] = await Promise.all([
       client.from("bible_topics").select("topic").limit(2000),
       client.from("bible_questions").select("question").limit(2000),
+      client.from("bible_topic_studies").select("topic").limit(2000),
     ]);
     researched = [...(topics ?? []).map((r) => r.topic as string), ...(questions ?? []).map((r) => r.question as string)].map((q) => ({
       url: `${baseUrl}/bible/topics?q=${encodeURIComponent(q)}`,
       changeFrequency: "yearly" as const,
       priority: 0.5,
     }));
+    researched.push(...(studies ?? []).map((r) => ({ url: `${baseUrl}/bible/studies/topic?q=${encodeURIComponent(r.topic as string)}`, changeFrequency: "yearly" as const, priority: 0.5 })));
   } catch {
     // the rest of the sitemap still works
   }
