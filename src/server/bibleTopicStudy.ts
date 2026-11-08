@@ -71,22 +71,26 @@ async function eastonEntries(topic: string) {
 
 const UA = { "User-Agent": "ZIVARUKAH-BibleGuide/1.0 (https://zivarukah.com/bible)" };
 
-/** A short summary of the best Wikipedia article on the topic (Christian context). */
+/** A short summary of the Wikipedia article on the topic, only if its title really matches. */
 async function wikipedia(topic: string) {
+  const words = topic.split(" ").filter((w) => w.length > 2).map((w) => w.replace(/(ness|ings?|es|s)$/, ""));
+  const matches = (title: string) => words.some((w) => title.toLowerCase().includes(w));
   try {
-    const search = await fetch(`https://en.wikipedia.org/w/rest.php/v1/search/page?q=${encodeURIComponent(`${topic} Bible Christianity`)}&limit=3`, {
-      headers: UA,
-      signal: AbortSignal.timeout(8000),
-      next: { revalidate: 86400 },
-    });
-    if (!search.ok) return null;
-    const pages = ((await search.json()) as { pages?: { key: string; title: string }[] }).pages ?? [];
-    for (const page of pages) {
-      const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(page.key)}`, { headers: UA, signal: AbortSignal.timeout(8000), next: { revalidate: 86400 } });
-      if (!res.ok) continue;
-      const s = (await res.json()) as { type?: string; title?: string; extract?: string; content_urls?: { desktop?: { page?: string } } };
-      if (s.type === "disambiguation" || !s.extract) continue;
-      return { title: s.title ?? page.title, text: s.extract.slice(0, 1800), url: s.content_urls?.desktop?.page ?? `https://en.wikipedia.org/wiki/${encodeURIComponent(page.key)}` };
+    for (const query of [`${topic} in Christianity`, `${topic} Bible`, topic]) {
+      const search = await fetch(`https://en.wikipedia.org/w/rest.php/v1/search/page?q=${encodeURIComponent(query)}&limit=5`, {
+        headers: UA,
+        signal: AbortSignal.timeout(8000),
+        next: { revalidate: 86400 },
+      });
+      if (!search.ok) continue;
+      const pages = (((await search.json()) as { pages?: { key: string; title: string }[] }).pages ?? []).filter((p) => matches(p.title));
+      for (const page of pages.slice(0, 2)) {
+        const res = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(page.key)}`, { headers: UA, signal: AbortSignal.timeout(8000), next: { revalidate: 86400 } });
+        if (!res.ok) continue;
+        const s = (await res.json()) as { type?: string; title?: string; extract?: string; content_urls?: { desktop?: { page?: string } } };
+        if (s.type === "disambiguation" || !s.extract) continue;
+        return { title: s.title ?? page.title, text: s.extract.slice(0, 1800), url: s.content_urls?.desktop?.page ?? `https://en.wikipedia.org/wiki/${encodeURIComponent(page.key)}` };
+      }
     }
   } catch {
     // carry on without it
