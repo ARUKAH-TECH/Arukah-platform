@@ -110,15 +110,13 @@ const strings = (list: unknown, max: number, len: number) =>
     .map((x) => cleanText(x, len))
     .filter(Boolean);
 
-const FORMAT = `Return ONLY a JSON object with these keys:
+// The study is written in two halves at the same time (faster, and each answer
+// stays short enough not to be cut off).
+const FORMAT_A = `Return ONLY a JSON object with these keys:
 {"title": "...", "overview": "...", "explain": "...", "background": "...",
  "words": [{"word": "...", "language": "Hebrew" or "Greek", "sense": "..."}],
  "examine": [{"ref": "Book C:V-V", "title": "...", "observe": "...", "interpret": "...", "apply": "..."}],
- "benefits": ["..."], "negatives": ["..."],
- "hard": [{"question": "...", "answer": "..."}], "views": "...",
- "discussion": ["..."], "apply": ["..."], "memoryVerse": "Book C:V", "summary": "...", "prayer": "...",
- "quiz": [{"question": "...", "options": ["...", "...", "...", "..."], "answer": 0, "why": "..."}],
- "scriptures": [{"ref": "Book C:V" or "Book C:V-V", "note": "..."}]}
+ "benefits": ["..."], "negatives": ["..."]}
 - title: a clear study title.
 - overview: 100 to 160 words: what the topic is and why it matters for a Christian.
 - explain: 180 to 280 words: a full explanation of what the Bible teaches about it.
@@ -126,18 +124,25 @@ const FORMAT = `Return ONLY a JSON object with these keys:
 - words: 1 to 4 key Hebrew/Greek words (transliterated) with meanings; only well-known, accurate ones.
 - examine: 4 to 6 key passages studied one by one: what it says (observe), what it means (interpret), what to do (apply), 1 to 3 sentences each.
 - benefits: 4 to 6 benefits, blessings or promises of living it rightly.
-- negatives: 4 to 6 negatives: dangers and consequences of neglecting it, ways it is misused or abused, and false teachings about it.
-- hard: 3 to 5 difficult questions or deeper aspects, each answered from Scripture in 2 to 4 sentences.
+- negatives: 4 to 6 negatives: dangers and consequences of neglecting it, ways it is misused or abused, and false teachings about it.`;
+
+const FORMAT_B = `Return ONLY a JSON object with these keys:
+{"hard": [{"question": "...", "answer": "..."}], "views": "...",
+ "discussion": ["..."], "apply": ["..."], "memoryVerse": "Book C:V", "summary": "...", "prayer": "...",
+ "quiz": [{"question": "...", "options": ["...", "...", "...", "..."], "answer": 0, "why": "..."}],
+ "scriptures": [{"ref": "Book C:V" or "Book C:V-V", "note": "..."}]}
+- hard: 3 to 5 difficult questions or deeper aspects of the topic, each answered from Scripture in 2 to 4 sentences.
 - views: if faithful Christians hold different views on part of this topic, explain them fairly in 60 to 120 words without taking sides; otherwise "".
 - discussion: 5 to 8 questions for a Bible study group.
 - apply: 3 to 5 practical steps for this week.
 - memoryVerse: one key verse reference.
-- summary: 50 to 90 words.
+- summary: 50 to 90 words summing up what the Bible teaches on the topic.
 - prayer: 2 to 3 sentences.
-- quiz: 5 multiple-choice questions on the study, 4 options each, answer = index (0-3) of the right option, why = one sentence with a reference.
-- scriptures: 10 to 15 supporting KJV references from both Testaments, each with a one-sentence note.
-Rules: Scripture is the final authority; use the research notes only for background and only where they agree with the Bible; never copy them word for word. Only real Bible references, short ranges (max 6 verses). Simple English. No links, no emojis.
-Answer any topic connected with God, the Bible, faith, the church and its history, Christian living, morals or family. Only if it has nothing at all to do with these, return {"title": "", "explain": "", "scriptures": []}.`;
+- quiz: 5 multiple-choice questions on what the Bible teaches about the topic, 4 options each, answer = index (0-3) of the right option, why = one sentence with a reference.
+- scriptures: 10 to 15 supporting KJV references from both Testaments, each with a one-sentence note.`;
+
+const RULES = `Rules: Scripture is the final authority; use the research notes only for background and only where they agree with the Bible; never copy them word for word. Only real Bible references, short ranges (max 6 verses). Simple English. No links, no emojis.
+Answer any topic connected with God, the Bible, faith, the church and its history, Christian living, morals or family. Only if it has nothing at all to do with these, return {}.`;
 
 async function build(topic: string, out: Record<string, unknown>, sources: TopicBibleStudy["sources"], searchHtml: string): Promise<TopicBibleStudy | null> {
   const explain = cleanText(out.explain, 2600);
@@ -200,16 +205,33 @@ async function build(topic: string, out: Record<string, unknown>, sources: Topic
   };
 }
 
-/** The saved study, or a new one researched and written now (null if not possible). */
-export async function topicBibleStudy(raw: string): Promise<TopicBibleStudy | null> {
+export type StudyState = { state: "ready"; study: TopicBibleStudy } | { state: "preparing" } | { state: "failed" } | { state: "none" };
+
+/** What is saved for a topic: the study, "being prepared", "failed recently" or nothing. */
+export async function savedTopicStudy(raw: string): Promise<StudyState> {
   const topic = cleanStudyTopic(raw);
-  if (!KEY.test(topic)) return null;
+  if (!KEY.test(topic)) return { state: "none" };
+  const { data } = await createServiceClient().from("bible_topic_studies").select("data").eq("topic", topic).maybeSingle();
+  const d = data?.data as (Partial<TopicBibleStudy> & { pending?: number; failed?: number }) | undefined;
+  if (!d) return { state: "none" };
+  if (d.explain) return { state: "ready", study: d as TopicBibleStudy };
+  if (d.pending && Date.now() - d.pending < 4 * 60_000) return { state: "preparing" };
+  if (d.failed && Date.now() - d.failed < 10 * 60_000) return { state: "failed" };
+  return { state: "none" };
+}
+
+/**
+ * Researches and writes the study, then saves it. Runs in the background
+ * (the page shows "preparing" and refreshes itself). Returns true if saved.
+ */
+export async function prepareTopicStudy(raw: string): Promise<boolean> {
+  const topic = cleanStudyTopic(raw);
+  if (!KEY.test(topic)) return false;
   const client = createServiceClient();
-  const { data: cached } = await client.from("bible_topic_studies").select("data").eq("topic", topic).maybeSingle();
-  if (cached) return cached.data as TopicBibleStudy;
 
   const { count } = await client.from("bible_topic_studies").select("topic", { count: "exact", head: true }).gte("created_at", new Date(Date.now() - 3600_000).toISOString());
-  if ((count ?? 0) >= 40) return null;
+  if ((count ?? 0) >= 40) return false;
+  await client.from("bible_topic_studies").upsert({ topic, data: { pending: Date.now() } });
 
   // 1. Research, all at once.
   const [dictionary, wiki, google] = await Promise.all([
@@ -232,16 +254,22 @@ export async function topicBibleStudy(raw: string): Promise<TopicBibleStudy | nu
     ...(google?.sources ?? []).map((s) => ({ name: s.title, url: s.uri })),
   ];
 
-  // 2. Write the study from Scripture, with the notes as background.
-  const system = `You are an experienced, careful Bible teacher preparing a complete Bible study for churches and Bible study groups in Ghana.\n${FORMAT}`;
+  // 2. Write the study from Scripture, in two halves at the same time.
+  const intro = "You are an experienced, careful Bible teacher preparing a complete Bible study for churches and Bible study groups in Ghana.";
   const prompt = `Topic: ${raw.trim().slice(0, 120)}\n\nResearch notes (background only; may contain mistakes):\n${notes || "(none found)"}`;
-  let study: TopicBibleStudy | null = null;
-  const started = Date.now();
-  for (let attempt = 0; attempt < 2 && !study && Date.now() - started < 60_000; attempt++) {
-    const out = await askJson(system, prompt, 8000);
-    if (out) study = await build(topic, out, sources, google?.searchHtml ?? "");
+  const half = async (format: string, tokens: number) => {
+    for (let attempt = 0; attempt < 2; attempt++) {
+      const out = await askJson(`${intro}\n${format}\n${RULES}`, prompt, tokens);
+      if (out && Object.keys(out).length) return out;
+    }
+    return null;
+  };
+  const [a, b] = await Promise.all([half(FORMAT_A, 4500), half(FORMAT_B, 4500)]);
+  const study = a && b ? await build(topic, { ...a, ...b }, sources, google?.searchHtml ?? "") : null;
+  if (!study) {
+    await client.from("bible_topic_studies").upsert({ topic, data: { failed: Date.now() } });
+    return false;
   }
-  if (!study) return null;
   await client.from("bible_topic_studies").upsert({ topic, data: study });
-  return study;
+  return true;
 }

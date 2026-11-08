@@ -40,17 +40,28 @@ export async function askGemini(system: string, prompt: string, maxTokens = 2500
     try {
       const generationConfig: Record<string, unknown> = { temperature: 0.5, maxOutputTokens: maxTokens, responseMimeType: "application/json" };
       if (model.startsWith("gemini-2.5")) generationConfig.thinkingConfig = { thinkingBudget: 0 };
-      else generationConfig.maxOutputTokens = maxTokens + 4000; // room for the model's thinking
-      const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
-        method: "POST",
-        headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: system }] },
-          contents: [{ role: "user", parts: [...images.map((i) => ({ inlineData: { mimeType: i.mime, data: i.base64 } })), { text: prompt }] }],
-          generationConfig,
-        }),
-        signal: AbortSignal.timeout(Math.min(60_000, left)),
-      });
+      else {
+        generationConfig.maxOutputTokens = maxTokens + 2000; // room for the model's (short) thinking
+        generationConfig.thinkingConfig = { thinkingLevel: "low" }; // much faster answers
+      }
+      const send = (config: Record<string, unknown>) =>
+        fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+          method: "POST",
+          headers: { "x-goog-api-key": key, "Content-Type": "application/json" },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: system }] },
+            contents: [{ role: "user", parts: [...images.map((i) => ({ inlineData: { mimeType: i.mime, data: i.base64 } })), { text: prompt }] }],
+            generationConfig: config,
+          }),
+          signal: AbortSignal.timeout(Math.min(60_000, Math.max(5_000, deadline - Date.now()))),
+        });
+      let res = await send(generationConfig);
+      if (res.status === 400 && generationConfig.thinkingConfig && !model.startsWith("gemini-2.5")) {
+        // This model doesn't accept the thinking setting: ask again without it.
+        const { thinkingConfig: _drop, ...plain } = generationConfig;
+        void _drop;
+        res = await send({ ...plain, maxOutputTokens: maxTokens + 4000 });
+      }
       if (!res.ok) {
         console.error("[ai] gemini", model, res.status, (await res.text().catch(() => "")).slice(0, 200));
         if (res.status === 401 || res.status === 403) return null; // key problem: no point trying other models
