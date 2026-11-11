@@ -19,7 +19,8 @@ self.addEventListener("activate", (event) => {
       .then((keys) => Promise.all(keys.filter((k) => k.startsWith("ziv-bible-") && k !== CACHE).map((k) => caches.delete(k))))
       // Start loading the page while the app wakes up (faster on slow phones).
       .then(() => (self.registration.navigationPreload ? self.registration.navigationPreload.enable().catch(() => {}) : null))
-      .then(() => self.clients.claim()),
+      .then(() => self.clients.claim())
+      .then(() => sendKeys()),
   );
 });
 
@@ -116,4 +117,33 @@ self.addEventListener("notificationclick", (event) => {
   event.notification.close();
   const url = (event.notification.data && event.notification.data.url) || "/bible";
   event.waitUntil(self.clients.openWindow(url));
+});
+
+// Give the site this phone's notification keys (so the devotional text can
+// travel inside the notification), whenever this worker starts or the
+// browser renews the subscription.
+function sendKeys() {
+  return self.registration.pushManager
+    .getSubscription()
+    .then((sub) =>
+      sub
+        ? fetch("/api/bible/push", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(sub.toJSON()) })
+        : null,
+    )
+    .catch(() => {});
+}
+
+self.addEventListener("pushsubscriptionchange", (event) => {
+  event.waitUntil(
+    fetch("/api/bible/push")
+      .then((res) => res.json())
+      .then(({ publicKey }) => {
+        if (!publicKey) return null;
+        const raw = atob(publicKey.replace(/-/g, "+").replace(/_/g, "/") + "===".slice((publicKey.length + 3) % 4));
+        const key = Uint8Array.from(raw, (c) => c.charCodeAt(0));
+        return self.registration.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: key });
+      })
+      .then(() => sendKeys())
+      .catch(() => {}),
+  );
 });
