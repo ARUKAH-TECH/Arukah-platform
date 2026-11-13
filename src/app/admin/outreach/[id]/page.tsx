@@ -20,7 +20,7 @@ export default async function EditOutreachPage({ params, searchParams }: PagePro
   const { data: item } = await supabase
     .from("outreaches")
     .select(
-      "id, slug, title, outreach_type, purpose, body, outreach_date, location, needs, facility_permission, status, publish_at, unpublish_at",
+      "id, slug, title, outreach_type, purpose, body, outreach_date, location, needs, goal_ghs, facility_permission, status, publish_at, unpublish_at",
     )
     .eq("id", id)
     .maybeSingle();
@@ -60,6 +60,7 @@ export default async function EditOutreachPage({ params, searchParams }: PagePro
             date: item.outreach_date,
             location: item.location,
             needs: item.needs,
+            goal: item.goal_ghs === null || item.goal_ghs === undefined ? null : Number(item.goal_ghs),
             facilityPermission: item.facility_permission,
             facilityPermissionNote: privateNote?.facility_permission_note ?? "",
             status: item.status,
