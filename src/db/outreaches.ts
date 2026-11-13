@@ -13,6 +13,8 @@ export interface PublicOutreach {
   needs: string[];
   /** Fundraising goal in cedis, if set. */
   goal: number | null;
+  /** First consent-cleared photo (our own /outreach-photo/ address), if any. */
+  cover?: string | null;
 }
 
 interface OutreachRow {
@@ -69,7 +71,27 @@ export async function getPublicOutreaches(limit = 24): Promise<PublicOutreach[]>
     console.error("[outreaches] public list failed", error.message);
     return [];
   }
-  return (data as OutreachRow[]).map(toOutreach);
+  const list = (data as OutreachRow[]).map(toOutreach);
+  return withCovers(client, list);
+}
+
+/** Adds each outreach's first photo. RLS only returns cleared photos of public outreaches. */
+async function withCovers(client: NonNullable<ReturnType<typeof safeClient>>, list: PublicOutreach[]) {
+  if (!list.length) return list;
+  const { data } = await client
+    .from("outreach_media")
+    .select("id, outreach_id")
+    .eq("kind", "image")
+    .in(
+      "outreach_id",
+      list.map((o) => o.id),
+    )
+    .order("created_at");
+  const first = new Map<string, string>();
+  for (const row of (data ?? []) as { id: string; outreach_id: string }[]) {
+    if (!first.has(row.outreach_id)) first.set(row.outreach_id, `/outreach-photo/${row.id}`);
+  }
+  return list.map((o) => ({ ...o, cover: first.get(o.id) ?? null }));
 }
 
 export async function getPublicOutreach(slug: string): Promise<PublicOutreach | null> {
