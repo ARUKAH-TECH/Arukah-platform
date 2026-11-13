@@ -216,3 +216,29 @@ export const advertisePage: PageDef = {
     },
   ],
 };
+
+export const socialPage: PageDef = {
+  id: "social",
+  label: "Social media links",
+  path: "/",
+  groups: [
+    {
+      title: "Your accounts (shown as buttons in the footer of every page, the homepage, Ministry and About)",
+      fields: [
+        {
+          key: "links",
+          label: "One full link per line, e.g. https://www.tiktok.com/@name. To add a new account later, just add a new line.",
+          kind: "list",
+          max: 300,
+          maxItems: 15,
+          default: [
+            "https://www.facebook.com/sarpong.justice.7792",
+            "https://www.youtube.com/@REPENTTV24",
+            "https://www.tiktok.com/@shepherdjusticesarpong",
+            "https://wa.me/ShepherdJusticeSarpongOduro",
+          ],
+        },
+      ],
+    },
+  ],
+};
