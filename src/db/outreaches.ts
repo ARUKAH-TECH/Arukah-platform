@@ -11,6 +11,8 @@ export interface PublicOutreach {
   date: string | null;
   location: string;
   needs: string[];
+  /** Fundraising goal in cedis, if set. */
+  goal: number | null;
 }
 
 interface OutreachRow {
@@ -23,9 +25,10 @@ interface OutreachRow {
   outreach_date: string | null;
   location: string;
   needs: string[];
+  goal_ghs: number | string | null;
 }
 
-const COLUMNS = "id, slug, title, outreach_type, purpose, body, outreach_date, location, needs";
+const COLUMNS = "id, slug, title, outreach_type, purpose, body, outreach_date, location, needs, goal_ghs";
 
 function toOutreach(row: OutreachRow): PublicOutreach {
   return {
@@ -38,6 +41,7 @@ function toOutreach(row: OutreachRow): PublicOutreach {
     date: row.outreach_date,
     location: row.location,
     needs: row.needs,
+    goal: row.goal_ghs === null || row.goal_ghs === undefined ? null : Number(row.goal_ghs),
   };
 }
 
@@ -125,4 +129,13 @@ export async function getPublicOutreachMedia(outreachId: string): Promise<Public
     width: row.width,
     height: row.height,
   }));
+}
+
+/** Total given so far (confirmed by Paystack) towards a public outreach. */
+export async function getOutreachRaised(outreachId: string): Promise<number> {
+  const client = safeClient();
+  if (!client) return 0;
+  const { data, error } = await client.rpc("outreach_raised", { p_outreach: outreachId });
+  if (error) return 0;
+  return Number(data ?? 0);
 }

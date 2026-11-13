@@ -3,7 +3,8 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
-import { getPublicOutreach, getPublicOutreachMedia } from "@/db/outreaches";
+import { getOutreachRaised, getPublicOutreach, getPublicOutreachMedia } from "@/db/outreaches";
+import { GivingProgress } from "@/features/outreach/GivingProgress";
 import { parseVideoLink } from "@/lib/video";
 import { formatOutreachDate, outreachTypeLabel } from "@/config/outreach";
 
@@ -31,7 +32,7 @@ export default async function OutreachPage({ params }: PageProps<"/ministry/outr
     .map((paragraph) => paragraph.trim())
     .filter(Boolean);
   const date = formatOutreachDate(outreach.date);
-  const media = await getPublicOutreachMedia(outreach.id);
+  const [media, raised] = await Promise.all([getPublicOutreachMedia(outreach.id), outreach.goal ? getOutreachRaised(outreach.id) : Promise.resolve(0)]);
   const photos = media.filter((item) => item.kind === "image");
   const videos = media
     .filter((item) => item.kind === "video_link")
@@ -148,8 +149,14 @@ export default async function OutreachPage({ params }: PageProps<"/ministry/outr
             </section>
           )}
 
+          {outreach.goal && (
+            <div className="mt-10">
+              <GivingProgress raised={raised} goal={outreach.goal} slug={outreach.slug} title="Help us reach the goal" />
+            </div>
+          )}
+
           <div className="mt-12 flex flex-wrap gap-3">
-            <Button href={`/ministry/support?outreach=${outreach.slug}`}>Support this outreach</Button>
+            <Button href={`/ministry/support?outreach=${outreach.slug}`}>💛 Donate to this outreach</Button>
             <Button href="/ministry#respond" variant="outline">
               Get in touch with the ministry
             </Button>

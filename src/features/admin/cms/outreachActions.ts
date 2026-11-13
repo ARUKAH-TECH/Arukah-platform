@@ -40,6 +40,8 @@ export async function saveOutreach(_prev: CmsFormState, formData: FormData): Pro
     .split(/\r?\n/)
     .map((line) => line.trim().slice(0, 200))
     .filter(Boolean);
+  const goalText = text(formData, "goal", 12).replace(/[, ]/g, "");
+  const goal = goalText ? Number(goalText) : null;
   const facilityPermission = formData.get("facilityPermission") === "on";
   const facilityPermissionNote = text(formData, "facilityPermissionNote", 300);
   const status = text(formData, "status", 20) as ProjectStatus;
@@ -50,6 +52,7 @@ export async function saveOutreach(_prev: CmsFormState, formData: FormData): Pro
   if (!slug) return { status: "error", message: "The web address needs at least one letter or number." };
   if (!OUTREACH_TYPE_IDS.includes(type)) return { status: "error", message: "Choose the type of outreach." };
   if (date && !/^\d{4}-\d{2}-\d{2}$/.test(date)) return { status: "error", message: "Enter a valid date." };
+  if (goal !== null && (!Number.isFinite(goal) || goal <= 0 || goal > 10_000_000)) return { status: "error", message: "Enter the goal as an amount in cedis, e.g. 5000." };
   if (needs.length > 30) return { status: "error", message: "The needs list can have at most 30 lines." };
   if (!PROJECT_STATUSES.includes(status)) return { status: "error", message: "Choose a status." };
   if (status === "scheduled" && !publishAt) {
@@ -79,6 +82,7 @@ export async function saveOutreach(_prev: CmsFormState, formData: FormData): Pro
     outreach_date: date || null,
     location,
     needs,
+    goal_ghs: goal,
     facility_permission: facilityPermission,
     status,
     publish_at: status === "published" && !publishAt ? new Date().toISOString() : publishAt,

@@ -14,6 +14,8 @@ import { QuoteOfTheDay } from "@/features/quote/QuoteOfTheDay";
 import { ShareButtons } from "@/components/ui/ShareButtons";
 import { verseOfTheDay } from "@/server/bible";
 import { shareCardHref, shareLinkPath } from "@/lib/bible";
+import { getOutreachRaised, getPublicOutreaches } from "@/db/outreaches";
+import { GivingProgress } from "@/features/outreach/GivingProgress";
 import { AnnouncementBar } from "@/features/announcements/AnnouncementBar";
 import { AdSlot } from "@/features/ads/AdSlot";
 import { AdBanner } from "@/features/ads/AdBanner";
@@ -38,7 +40,10 @@ export const revalidate = 60;
 
 export default async function Home() {
   // Admin-edited text over the original wording (Admin → Page text).
-  const [t, { articles }, ministryVerse] = await Promise.all([getPageText(homePage).then(textReader), listArticles({ limit: 3 }), verseOfTheDay()]);
+  const [t, { articles }, ministryVerse, outreachList] = await Promise.all([getPageText(homePage).then(textReader), listArticles({ limit: 3 }), verseOfTheDay(), getPublicOutreaches(20)]);
+  // A fundraising outreach (with a goal) for the "Give" card in the ministry section.
+  const campaignOutreach = outreachList.find((o) => o.goal);
+  const campaign = campaignOutreach ? { ...campaignOutreach, raised: await getOutreachRaised(campaignOutreach.id) } : null;
 
   return (
     <>
@@ -216,8 +221,13 @@ export default async function Home() {
                 <Button href="/ministry" variant="outline">
                   Visit the ministry
                 </Button>
-                <Button href="/ministry/support">🙏 Support the outreach</Button>
+                <Button href="/ministry/support">💛 Donate</Button>
               </div>
+              {campaign && (
+                <div className="mt-6 max-w-md">
+                  <GivingProgress raised={campaign.raised} goal={campaign.goal!} slug={campaign.slug} title={campaign.title} compact />
+                </div>
+              )}
               <ShareButtons
                 className="mt-6"
                 dark

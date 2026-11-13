@@ -22,6 +22,8 @@ export interface OutreachFormValues {
   date: string | null;
   location: string;
   needs: string[];
+  /** Fundraising goal in cedis (shows a progress bar on the site). */
+  goal?: number | null;
   facilityPermission: boolean;
   facilityPermissionNote: string;
   status: string;
@@ -110,6 +112,13 @@ export function OutreachForm({ outreach, justSaved }: { outreach: OutreachFormVa
           </label>
           <input id="location" name="location" maxLength={200} defaultValue={outreach.location} className={fieldClasses} />
         </div>
+      </div>
+
+      <div>
+        <label htmlFor="goal" className="block text-sm font-medium">
+          Fundraising goal (GH₵) <span className="font-normal text-foreground/60">(optional: shows &quot;raised so far&quot; with a progress bar)</span>
+        </label>
+        <input id="goal" name="goal" type="number" inputMode="decimal" min={1} step="1" defaultValue={outreach.goal ?? ""} placeholder="e.g. 5000" className={fieldClasses} />
       </div>
 
       <div>
