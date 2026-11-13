@@ -225,6 +225,12 @@ export default async function Home() {
               </div>
               {campaign && (
                 <div className="mt-6 max-w-md">
+                  {campaign.cover && (
+                    <a href={`/ministry/outreach/${campaign.slug}`} className="mb-3 block overflow-hidden rounded-2xl">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={campaign.cover} alt="" width={640} height={480} loading="lazy" className="aspect-[4/3] w-full object-cover" />
+                    </a>
+                  )}
                   <GivingProgress raised={campaign.raised} goal={campaign.goal!} slug={campaign.slug} title={campaign.title} compact />
                 </div>
               )}

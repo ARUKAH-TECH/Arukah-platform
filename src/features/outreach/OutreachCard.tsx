@@ -8,8 +8,12 @@ export function OutreachCard({ outreach }: { outreach: PublicOutreach }) {
   return (
     <Link
       href={`/ministry/outreach/${outreach.slug}`}
-      className="group flex flex-col gap-2 rounded-2xl border border-white/10 bg-zinc-900 p-5 transition-colors hover:border-brand-primary-text"
+      className="group flex flex-col gap-2 overflow-hidden rounded-2xl border border-white/10 bg-zinc-900 p-5 transition-colors hover:border-brand-primary-text"
     >
+      {outreach.cover && (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={outreach.cover} alt="" width={640} height={480} loading="lazy" className="-mx-5 -mt-5 mb-2 aspect-[4/3] w-[calc(100%+2.5rem)] max-w-none object-cover" />
+      )}
       <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
         {outreachTypeLabel(outreach.type)}
       </p>
