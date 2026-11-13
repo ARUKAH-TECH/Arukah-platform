@@ -55,7 +55,7 @@ export async function savePageText(_prev: CmsFormState, formData: FormData): Pro
   }
 
   await audit("page_text.update", { page: page.id, changedFields: Object.keys(content) });
-  revalidatePath(page.path);
+  revalidatePath(page.path, page.id === "social" ? "layout" : "page");
   revalidatePath("/admin/pages");
   revalidatePath(`/admin/pages/${page.id}`);
   return { status: "saved", message: "Saved. The page shows the new text now." };
@@ -75,7 +75,7 @@ export async function resetPageText(_prev: CmsFormState, formData: FormData): Pr
   }
 
   await audit("page_text.reset", { page: page.id });
-  revalidatePath(page.path);
+  revalidatePath(page.path, page.id === "social" ? "layout" : "page");
   revalidatePath("/admin/pages");
   revalidatePath(`/admin/pages/${page.id}`);
   return { status: "saved", message: "Reset. The page shows the original wording again." };

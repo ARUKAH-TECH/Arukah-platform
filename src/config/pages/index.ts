@@ -1,7 +1,7 @@
 import { homePage } from "./home";
 import { aboutPage } from "./about";
 import { techPage, wearPage, zivaPage } from "./divisions";
-import { advertisePage, booksPage, contactPage, mediaPage, ministryPage, projectsPage } from "./other";
+import { advertisePage, booksPage, contactPage, mediaPage, ministryPage, projectsPage, socialPage } from "./other";
 import type { PageDef } from "./types";
 
 export * from "./types";
@@ -18,10 +18,11 @@ export const EDITABLE_PAGES: PageDef[] = [
   projectsPage,
   contactPage,
   advertisePage,
+  socialPage,
 ];
 
 export function findPage(id: string): PageDef | undefined {
   return EDITABLE_PAGES.find((page) => page.id === id);
 }
 
-export { homePage, aboutPage, techPage, wearPage, zivaPage, mediaPage, booksPage, ministryPage, projectsPage, contactPage, advertisePage };
+export { homePage, aboutPage, techPage, wearPage, zivaPage, mediaPage, booksPage, ministryPage, projectsPage, contactPage, advertisePage, socialPage };
