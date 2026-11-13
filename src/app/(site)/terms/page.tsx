@@ -4,7 +4,7 @@ import { LegalPage } from "@/components/ui/LegalPage";
 
 export const metadata: Metadata = {
   title: "Terms of Use",
-  description: "The terms for using the ZIVARUKAH website, online programmes, books, adverts and the ZIVA Literacy app.",
+  description: "The terms for using the ZIVARUKAH website, online programmes, books, adverts and the ZIVA Learning app.",
   alternates: { canonical: "/terms" },
   openGraph: { title: "Terms of Use | ZIVARUKAH", description: "The terms for using the ZIVARUKAH website and services." },
 };
@@ -20,7 +20,7 @@ export default function TermsPage() {
         <h2>Who we are</h2>
         <p>
           ZIVARUKAH VENTURES is founded and led by Shepherd Justice Sarpong Oduro and is based in the Ashanti Region of Ghana. It includes ARUKAH TECH,
-          ARUKAH WEAR, ZIVA Online and Special Classes, the ZIVA Literacy app, ZIVARUKAH BOOKS and Repent Online Ministries.
+          ARUKAH WEAR, ZIVA Online and Special Classes, the ZIVA Learning app, ZIVARUKAH BOOKS and Repent Online Ministries.
         </p>
       </section>
 
@@ -56,7 +56,7 @@ export default function TermsPage() {
       </section>
 
       <section>
-        <h2>The ZIVA Literacy app</h2>
+        <h2>The ZIVA Learning app</h2>
         <ul>
           <li>The app at learn.zivarukah.com is free to use. It is a learning aid and does not replace a teacher, and it does not diagnose any learning difficulty.</li>
           <li>Parents and guardians are responsible for how children use it.</li>

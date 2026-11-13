@@ -9,7 +9,7 @@ export const ABOUT_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What does ZIVA mean?",
-    a: "ZIVA comes from the Hebrew ziv: light, radiance, brightness. In ZIVARUKAH it stands for the light of God. ZIVA is also the name of ZIVARUKAH's education branch: ZIVA Special Classes and the free ZIVA Literacy app, founded by Shepherd Justice Sarpong Oduro.",
+    a: "ZIVA comes from the Hebrew ziv: light, radiance, brightness. In ZIVARUKAH it stands for the light of God. ZIVA is also the name of ZIVARUKAH's education branch: ZIVA Special Classes and the free ZIVA Learning app, founded by Shepherd Justice Sarpong Oduro.",
   },
   {
     q: "What does ARUKAH mean?",
@@ -25,6 +25,6 @@ export const ABOUT_FAQ: { q: string; a: string }[] = [
   },
   {
     q: "What does ZIVARUKAH do?",
-    a: "ZIVARUKAH is a Ghanaian brand with several branches: ARUKAH TECH (software and management systems), ARUKAH WEAR (handcrafted footwear), ZIVA Special Classes and the free ZIVA Literacy app, ZIVARUKAH BOOKS, online programmes and Repent Online Ministries.",
+    a: "ZIVARUKAH is a Ghanaian brand with several branches: ARUKAH TECH (software and management systems), ARUKAH WEAR (handcrafted footwear), ZIVA Special Classes and the free ZIVA Learning app, ZIVARUKAH BOOKS, online programmes and Repent Online Ministries.",
   },
 ];

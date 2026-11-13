@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { createClient } from "@/lib/supabase/server";
 import { requireAdmin } from "@/server/auth";
 
-// Approve / hide / reply to comments posted in the ZIVA Literacy app.
+// Approve / hide / reply to comments posted in the ZIVA Learning app.
 // Approved comments become visible to everyone in the app (first name only).
 
 const ID = /^[0-9a-f-]{36}$/;

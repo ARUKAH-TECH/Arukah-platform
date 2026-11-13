@@ -21,7 +21,7 @@ export const homePage: PageDef = {
         { key: "techCard", label: "ARUKAH TECH card", kind: "text", max: 120, default: "Websites, software and management systems for churches, schools and businesses." },
         { key: "wearCard", label: "ARUKAH WEAR card", kind: "text", max: 120, default: "Handcrafted, Ghana-made footwear: slippers, sandals, custom and wholesale orders." },
         { key: "zivaCard", label: "ZIVA Special Classes card", kind: "text", max: 120, default: "Admissions open: special teaching from Primary 1 to SHS 3, at home or online." },
-        { key: "literacyCard", label: "ZIVA Literacy app card", kind: "text", max: 120, default: "A free app for reading, phonics, spelling and handwriting, KG to JHS. Works offline." },
+        { key: "literacyCard", label: "ZIVA Learning app card", kind: "text", max: 120, default: "A free app for reading, phonics, spelling and handwriting, KG to JHS. Works offline." },
         { key: "booksCard", label: "ZIVARUKAH BOOKS card", kind: "text", max: 120, default: "Books by Shepherd Justice Sarpong Oduro: read online, download or order in print." },
       ],
     },

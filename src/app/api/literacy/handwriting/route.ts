@@ -1,4 +1,4 @@
-// AI handwriting check for the ZIVA Literacy app (learn.zivarukah.com).
+// AI handwriting check for the ZIVA Learning app (learn.zivarukah.com).
 //
 // Privacy (children): the photo is passed straight to the AI service to read
 // it and is NOT stored here — no database row, no file, no log of the image.
@@ -73,7 +73,7 @@ export async function POST(request: Request) {
   const level = clip(body.level, 20) || "primary";
 
   const system = [
-    "You are a kind handwriting coach for children in Ghana (Kindergarten to JHS) using the ZIVA Literacy app.",
+    "You are a kind handwriting coach for children in Ghana (Kindergarten to JHS) using the ZIVA Learning app.",
     "Look at the photo of handwriting on paper. Compare it with the exercise text if one is given.",
     "Give short, encouraging, practical feedback a child and parent can act on.",
     "Never mention or suggest any learning difficulty, disability, condition or diagnosis (e.g. dyslexia, dysgraphia). Only talk about the writing itself.",

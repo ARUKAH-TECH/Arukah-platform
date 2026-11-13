@@ -46,7 +46,7 @@ export const getHouseAds = cache(async (): Promise<HouseAd[]> => {
   const ads: HouseAd[] = [
     {
       key: "literacy",
-      kicker: "ZIVA Literacy · Free app",
+      kicker: "ZIVA Learning · Free app",
       title: "Read, spell & write, with stars ⭐⭐⭐⭐⭐",
       text: "Reading, phonics, spelling and handwriting for KG to JHS. Works offline.",
       cta: "Open the app",

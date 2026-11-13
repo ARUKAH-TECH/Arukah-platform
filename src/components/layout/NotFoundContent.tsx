@@ -8,7 +8,7 @@ export function NotFoundContent() {
   const links = [
     { href: "/tech", label: "ARUKAH TECH" },
     { href: "/ziva", label: "ZIVA Special Classes" },
-    { href: "/literacy", label: "ZIVA Literacy app" },
+    { href: "/literacy", label: "ZIVA Learning app" },
     { href: "/books", label: "ZIVARUKAH BOOKS" },
     { href: "/programmes", label: "Online programmes" },
     { href: "/ministry", label: "Repent Online Ministries" },
