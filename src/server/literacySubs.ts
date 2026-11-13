@@ -3,7 +3,7 @@ import { createServiceClient } from "@/lib/supabase/service";
 import { initializeTransaction, toPesewas, verifyTransaction } from "@/server/paystack";
 import { quickPaymentsEnabled } from "@/server/quickPayments";
 
-// ZIVA Literacy monthly subscriptions (learn.zivarukah.com).
+// ZIVA Learning monthly subscriptions (learn.zivarukah.com).
 // The app creates a pending row (lit_sub_start, checks who is paying and the
 // price). Here we open Paystack for exactly that amount, then confirm with
 // Paystack before switching on one month (lit_sub_paid).
@@ -11,9 +11,9 @@ import { quickPaymentsEnabled } from "@/server/quickPayments";
 export const LIT_REF = /^ZL-[A-Z0-9]{10}$/;
 export const LEARN_URL = "https://learn.zivarukah.com";
 const PLAN_LABEL: Record<string, string> = {
-  student: "ZIVA Literacy: student, 1 month",
-  parent: "ZIVA Literacy: family, 1 month",
-  school: "ZIVA Literacy: school, 1 month",
+  student: "ZIVA Learning: student, 1 month",
+  parent: "ZIVA Learning: family, 1 month",
+  school: "ZIVA Learning: school, 1 month",
 };
 
 export async function startSubscription(reference: string): Promise<{ ok: true; url: string } | { ok: false; message: string }> {
@@ -29,7 +29,7 @@ export async function startSubscription(reference: string): Promise<{ ok: true; 
       amountGhs: Number(row.amount_ghs),
       reference,
       callbackUrl: `${site}/api/literacy/subscribe/done`,
-      metadata: { custom_fields: [{ display_name: "For", variable_name: "for", value: PLAN_LABEL[row.plan] ?? "ZIVA Literacy" }] },
+      metadata: { custom_fields: [{ display_name: "For", variable_name: "for", value: PLAN_LABEL[row.plan] ?? "ZIVA Learning" }] },
     });
     return { ok: true, url };
   } catch (error) {

@@ -20,7 +20,7 @@ export type ReaderAccess =
 
 const READ_DAYS = 365;
 const FREE_DAYS = 7;
-/** Free reading keys earned in ZIVA Literacy "Invite & earn". */
+/** Free reading keys earned in ZIVA Learning "Invite & earn". */
 export const FREE_KEY = /^ZF-[A-Z0-9]{10}$/;
 
 /** Signed-in admin (with two-factor) — they can preview any book's reader. */

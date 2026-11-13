@@ -132,7 +132,7 @@ export default async function Home() {
             <BusinessCard brand="ziva" name="ZIVA Special Classes" description={t.text("zivaCard")} href="/ziva" logo={brands.ziva.logo} />
             <BusinessCard
               brand="literacy"
-              name="ZIVA Literacy app"
+              name="ZIVA Learning app"
               description={t.text("literacyCard")}
               href="/literacy"
               logo={{ src: "/branding/ziva-literacy/logo.webp", width: 128, height: 128 }}

@@ -26,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s · ZIVARUKAH",
   },
   description:
-    "ZIVARUKAH (Hebrew: ZIVA, the light of God + ARUKAH, total restoration), founded by Shepherd Justice Sarpong Oduro in Ghana: ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Literacy app, ZIVARUKAH BOOKS and Repent Online Ministries.",
+    "ZIVARUKAH (Hebrew: ZIVA, the light of God + ARUKAH, total restoration), founded by Shepherd Justice Sarpong Oduro in Ghana: ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Learning app, ZIVARUKAH BOOKS and Repent Online Ministries.",
   applicationName: "ZIVARUKAH",
   // Search engine ownership codes, if the meta-tag method is used (set in Vercel).
   verification: {

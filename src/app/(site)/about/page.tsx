@@ -97,7 +97,7 @@ export default async function AboutPage() {
               <p className="mt-3 leading-7 text-foreground/75">{t.text("zivaText")}</p>
               <p className="mt-3 text-sm text-foreground/75">
                 Our ZIVA branches: <Link href="/ziva" className="font-semibold underline">ZIVA Special Classes</Link> and the free{" "}
-                <Link href="/literacy" className="font-semibold underline">ZIVA Literacy app</Link>.
+                <Link href="/literacy" className="font-semibold underline">ZIVA Learning app</Link>.
               </p>
             </div>
             <div id="arukah" className="rounded-2xl border border-black/10 bg-white p-6 shadow-sm dark:border-white/10 dark:bg-white/5">

@@ -35,7 +35,7 @@ export default async function ReadBookPage({ params, searchParams }: PageProps<"
             {(access.mode === "paid" || access.mode === "free") && <RememberReading slug={access.book.slug} reference={reference} />}
             {access.mode === "free" && (
               <p className="mt-4 rounded-xl bg-emerald-50 p-3 text-center text-sm text-emerald-950 dark:bg-emerald-950 dark:text-emerald-100">
-                🎁 Free reading key from ZIVA Literacy, open until{" "}
+                🎁 Free reading key from ZIVA Learning, open until{" "}
                 <strong>{new Date(access.expiresAt).toLocaleString("en-GB", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit", timeZone: "Africa/Accra" })}</strong>
                 .
               </p>

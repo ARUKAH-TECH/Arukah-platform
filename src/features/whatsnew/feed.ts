@@ -30,13 +30,13 @@ const LAUNCHES: NewsItem[] = [
     key: "app-literacy",
     kind: "app",
     label: "New app · Free",
-    title: "ZIVA Literacy & Handwriting Coach",
+    title: "ZIVA Learning",
     teaser: "Reading, phonics, spelling and handwriting for KG to JHS, with read-aloud, finger tracing and stars. Works offline.",
     cta: "Open the app →",
     href: LITERACY_URL,
     external: true,
     date: "2026-10-27T12:00:00Z",
-    image: { url: "/branding/ziva-literacy/logo.webp", alt: "ZIVA Literacy logo", width: 480, height: 480 },
+    image: { url: "/branding/ziva-literacy/logo.webp", alt: "ZIVA Learning logo", width: 480, height: 480 },
   },
 ];
 

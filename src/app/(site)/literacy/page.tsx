@@ -26,7 +26,7 @@ export default function LiteracyPage() {
         <div className="rounded-3xl bg-gradient-to-br from-[#0b69a8] to-[#0b3d91] p-8 text-white shadow-lg sm:p-12">
           <Image
             src="/branding/ziva-literacy/logo.webp"
-            alt="ZIVA Literacy: a sub of ZIVA Online and Special Classes"
+            alt="ZIVA Learning: part of ZIVA Online and Special Classes"
             width={160}
             height={160}
             priority
@@ -48,11 +48,11 @@ export default function LiteracyPage() {
             className="mt-6"
             label="Share with parents & teachers"
             url={LITERACY_URL}
-            title="ZIVA Literacy & Handwriting Coach"
-            message={"✏️ *ZIVA Literacy & Handwriting Coach*: FREE\n\nReading, phonics, spelling and handwriting practice for KG, Primary and JHS. Reads stories aloud, lets children trace letters with their finger and gives stars. Install it on your phone, works offline 👇"}
+            title="ZIVA Learning"
+            message={"✏️ *ZIVA Learning*: FREE\n\nReading, phonics, spelling and handwriting practice for KG, Primary and JHS. Reads stories aloud, lets children trace letters with their finger and gives stars. Install it on your phone, works offline 👇"}
           />
           <p className="mt-4 text-sm text-white/75">
-            On the app’s home page, tap <strong>Install</strong> (or Chrome menu ⋮ → Install app) to add a <strong>ZIVA Literacy</strong> icon to your phone.
+            On the app’s home page, tap <strong>Install</strong> (or Chrome menu ⋮ → Install app) to add a <strong>ZIVA Learning</strong> icon to your phone.
           </p>
         </div>
 
