@@ -81,6 +81,9 @@ export function Footer() {
         <div className="mt-10">
           <p className="text-xs font-semibold uppercase tracking-wider text-foreground/60">Follow us</p>
           <SocialLinks className="mt-3" />
+          <Link href="/videos" className="mt-3 inline-block text-sm font-semibold underline hover:text-brand-primary-text">
+            ▶ Watch our videos
+          </Link>
         </div>
 
         <div className="mt-10 flex flex-col gap-3 border-t border-black/10 pt-6 text-xs text-foreground/60 sm:flex-row sm:items-center sm:justify-between dark:border-white/10">

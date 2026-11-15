@@ -7,12 +7,13 @@ import { getPublicProgrammes } from "@/db/programmes";
 import { BIBLE_BOOKS } from "@/config/bibleBooks";
 import { listDevotionals, listSeries } from "@/db/bible";
 import { createPublicClient } from "@/lib/supabase/public";
+import { getVideos } from "@/server/videos";
 
 // SITE_URL must be set to the real production domain before deploying —
 // otherwise the sitemap ships localhost URLs. See docs/ENVIRONMENT.md.
 const baseUrl = process.env.SITE_URL || "http://localhost:3000";
 
-const routes = ["", "/about", "/tech", "/footwear", "/ziva", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles", "/literacy", "/programmes", "/terms", "/refunds", "/bible", "/bible/books", "/bible/devotionals", "/bible/studies", "/bible/topics"];
+const routes = ["", "/about", "/tech", "/footwear", "/ziva", "/books", "/projects", "/ministry", "/ministry/outreach", "/ministry/support", "/contact", "/advertise", "/articles", "/literacy", "/programmes", "/terms", "/refunds", "/bible", "/bible/books", "/bible/devotionals", "/bible/studies", "/bible/topics", "/videos"];
 
 // Refreshed at most every hour, and immediately after an admin edit
 // (the CMS actions revalidate /sitemap.xml).
@@ -35,6 +36,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     changeFrequency: "monthly",
     priority: 0.6,
   }));
+
+  const videoPages: MetadataRoute.Sitemap = (await getVideos().catch(() => []))
+    .filter((v) => v.embedUrl)
+    .map((v) => ({ url: `${baseUrl}/videos/${v.key}`, lastModified: v.published ? new Date(v.published) : new Date(), changeFrequency: "yearly" as const, priority: 0.5 }));
 
   const outreaches = await getPublicOutreaches(500);
   const outreachPages: MetadataRoute.Sitemap = outreaches.map((outreach) => ({
@@ -96,5 +101,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     // the rest of the sitemap still works
   }
 
-  return [...pages, ...projectPages, ...outreachPages, ...bookPages, ...articlePages, ...programmePages, ...biblePages, ...devotionalPages, ...studyPages, ...researched];
+  return [...pages, ...videoPages, ...projectPages, ...outreachPages, ...bookPages, ...articlePages, ...programmePages, ...biblePages, ...devotionalPages, ...studyPages, ...researched];
 }
