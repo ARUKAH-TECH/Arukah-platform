@@ -1,4 +1,5 @@
 import "server-only";
+import { projectPhotos } from "@/config/projectPhotos";
 import { createPublicClient, mediaPublicUrl } from "@/lib/supabase/public";
 import type { BranchId } from "@/config/branches";
 
@@ -64,9 +65,10 @@ function toMedia(row: MediaRow): PublicMedia {
 }
 
 function toProject(row: ProjectRow): PublicProject {
-  const media = [...row.media_items]
-    .sort((a, b) => a.created_at.localeCompare(b.created_at))
-    .map(toMedia);
+  const media = [
+    ...projectPhotos(row.slug),
+    ...[...row.media_items].sort((a, b) => a.created_at.localeCompare(b.created_at)).map(toMedia),
+  ];
   const cover =
     media.find((item) => item.id === row.cover_media_id) ??
     media.find((item) => item.kind === "image") ??
