@@ -12,7 +12,7 @@ export interface StaticArticleImage {
 const IMAGES: Record<string, StaticArticleImage> = {
   "free-creative-arts-lessons-ghana": {
     url: "/works/articles/free-creative-arts-lessons-ghana.webp",
-    alt: "Free Creative Arts lessons for KG to JHS 3 in Ghana on ZIVA Learning: children drawing, modelling and painting",
+    alt: "Free Creative Arts lessons for Primary 1 to JHS 3 in Ghana on ZIVA Learning: children drawing, modelling and painting",
     width: 1536,
     height: 1024,
   },
