@@ -58,7 +58,7 @@ export default async function ArticlePage({ params }: PageProps<"/articles/[slug
           "@type": "Article",
           headline: article.title.slice(0, 110),
           description: description(article),
-          ...(article.image ? { image: [article.image.url] } : {}),
+          ...(article.image ? { image: [article.image.url.startsWith("/") ? `${SITE}${article.image.url}` : article.image.url] } : {}),
           datePublished: article.publishedAt,
           dateModified: article.updatedAt,
           author: { "@type": "Person", name: article.authorName || "ZIVARUKAH" },

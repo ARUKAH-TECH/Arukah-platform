@@ -1,5 +1,6 @@
 import "server-only";
 import { createPublicClient, mediaPublicUrl } from "@/lib/supabase/public";
+import { articleImage } from "@/config/articleImages";
 
 // Public reads. The database itself only returns published articles to
 // visitors (Row Level Security), so a draft can never leak through here.
@@ -44,7 +45,7 @@ function toSummary(row: any): ArticleSummary {
     category: cat ? { id: cat.id, slug: cat.slug, name: cat.name } : null,
     image: row.featured_image_path
       ? { url: mediaPublicUrl(row.featured_image_path), alt: row.featured_image_alt ?? "", width: row.featured_width, height: row.featured_height }
-      : null,
+      : articleImage(row.slug),
   };
 }
 
