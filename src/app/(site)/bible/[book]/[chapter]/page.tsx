@@ -21,8 +21,8 @@ export async function generateMetadata({ params }: PageProps<"/bible/[book]/[cha
   if (!book || !verses) return {};
   const label = nameOf(slug, Number(c));
   return {
-    title: { absolute: `${label} (KJV): Read Online with Audio | R.O.M Bible Guide` },
-    description: `${label} KJV: “${verses[0].slice(0, 120)}${verses[0].length > 120 ? "…" : ""}” Read the full chapter with read-aloud.`,
+    title: { absolute: `${label} KJV: Read, Listen & Compare Versions | R.O.M Bible Guide` },
+    description: `${label}: “${verses[0].slice(0, 95)}${verses[0].length > 95 ? "…" : ""}” Free: read the full chapter, listen aloud, compare KJV, BSB, WEB and more, and share verse pictures.`,
     alternates: { canonical: `/bible/${slug}/${c}` },
   };
 }
@@ -44,6 +44,20 @@ export default async function ChapterPage({ params }: PageProps<"/bible/[book]/[
     <BibleShell active="read">
       <Container>
         <article className="mx-auto max-w-3xl pb-28 pt-6">
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{
+              __html: JSON.stringify({
+                "@context": "https://schema.org",
+                "@type": "BreadcrumbList",
+                itemListElement: [
+                  { "@type": "ListItem", position: 1, name: "R.O.M Bible Guide", item: `${process.env.SITE_URL || "https://zivarukah.com"}/bible` },
+                  { "@type": "ListItem", position: 2, name: book.name, item: `${process.env.SITE_URL || "https://zivarukah.com"}/bible/${slug}` },
+                  { "@type": "ListItem", position: 3, name: nameOf(slug, chapter) },
+                ],
+              }),
+            }}
+          />
           <Link href={`/bible/${slug}`} className="text-sm text-foreground/60 hover:text-brand-primary-text">
             ← {book.name}: all chapters
           </Link>
