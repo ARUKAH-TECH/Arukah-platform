@@ -57,6 +57,7 @@ export default async function MinistryPage() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Button href="/bible">📖 Bible, devotionals &amp; studies</Button>
               <Button href="/ministry/support">🙏 Support the outreach</Button>
+              <Button href="/videos" variant="secondary">▶ Watch our videos</Button>
               <Button href="#respond" variant="outline">Get in touch</Button>
             </div>
           </div>
