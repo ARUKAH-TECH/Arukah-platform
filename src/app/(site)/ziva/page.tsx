@@ -50,6 +50,10 @@ export default async function ZivaPage() {
       />
       <ProgrammesSection branch="ziva" />
 
+      <div id="learners-work" className="scroll-mt-20">
+        <ProjectsSection branch="ziva" eyebrow="Our learners" title="Learners' work and projects" />
+      </div>
+
       <section id="admissions" className="scroll-mt-20 py-16">
         <Container>
           <div className="mx-auto max-w-4xl rounded-3xl border-2 border-brand-primary bg-white p-6 shadow-md sm:p-10 dark:bg-white/5">
@@ -157,7 +161,6 @@ export default async function ZivaPage() {
 
       <LiteracyPromo />
       <GallerySection branch="ziva" />
-      <ProjectsSection branch="ziva" />
       <SharePage
         path="/ziva"
         title="ZIVA Special Classes"
