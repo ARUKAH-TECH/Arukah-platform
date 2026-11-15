@@ -72,7 +72,7 @@ export default async function VideosPage() {
           </ul>
         )}
         <div className="mt-10">
-          <SharePage title={`Videos by ${FOUNDER.name}`} path="/videos" />
+          <SharePage title={`Videos by ${FOUNDER.name}`} path="/videos" message={`▶ *Videos by ${FOUNDER.name}*\nSermons, outreach and devotionals 👇`} />
         </div>
       </Container>
     </main>
