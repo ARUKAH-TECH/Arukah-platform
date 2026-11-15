@@ -16,6 +16,12 @@ const IMAGES: Record<string, StaticArticleImage> = {
     width: 1536,
     height: 1024,
   },
+  "how-to-read-the-bible-daily": {
+    url: "/works/articles/how-to-read-the-bible-daily.webp",
+    alt: "How to Read the Bible Daily: a simple 15-minute plan, with an open Bible on a desk (R.O.M Bible Guide)",
+    width: 1536,
+    height: 1024,
+  },
 };
 
 export const articleImage = (slug: string) => IMAGES[slug] ?? null;
