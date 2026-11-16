@@ -70,6 +70,30 @@ export default async function MinistryPage() {
           />
         </div>
 
+        <div id="what-we-do" className="border-t border-white/10 py-16">
+          <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">What we do</p>
+          <h2 className="mt-2 text-2xl font-semibold tracking-tight">Ministry work, online and in the community</h2>
+          <ul className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {[
+              { icon: "📖", title: "R.O.M Bible Guide", text: "Read and listen to the Bible free, compare versions and search any verse.", href: "/bible" },
+              { icon: "🌅", title: "Daily devotionals", text: "A short devotional every morning, with daily alerts on your phone.", href: "/bible/devotionals" },
+              { icon: "▶", title: "Videos and messages", text: "Preaching and teaching from our YouTube, TikTok and Facebook pages.", href: "/videos" },
+              { icon: "🤝", title: "Outreach", text: "Hospital, prison, street and community outreach to people in need.", href: "/ministry/outreach" },
+              { icon: "🗓️", title: "Online programmes", text: "Ministry programmes and trainings on Zoom and Google Meet.", href: "/programmes" },
+              { icon: "✍️", title: "Articles", text: "Faith and spiritual growth articles, such as how to read the Bible daily.", href: "/articles" },
+            ].map((item) => (
+              <li key={item.title}>
+                <a href={item.href} className="block h-full rounded-2xl border border-white/15 p-5 hover:border-brand-primary">
+                  <p className="text-2xl" aria-hidden="true">
+                    {item.icon}
+                  </p>
+                  <h3 className="mt-2 font-bold">{item.title} →</h3>
+                  <p className="mt-1 text-sm leading-6 text-white/70">{item.text}</p>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
 
         <div id="respond" className="border-t border-white/10 py-16">
           <p className="text-xs font-semibold uppercase tracking-wider text-brand-primary-text">
