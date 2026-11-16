@@ -174,6 +174,25 @@ export default async function TechPage() {
         </Container>
       </section>
 
+      <section className="pb-16">
+        <Container>
+          <div className="mx-auto max-w-3xl rounded-3xl bg-brand-primary p-8 text-center text-brand-on-primary shadow-md sm:p-10">
+            <h2 className="text-2xl font-bold tracking-tight sm:text-3xl">Ready to start your project?</h2>
+            <p className="mx-auto mt-3 max-w-xl leading-7 opacity-90">
+              Tell us what you need. We will discuss your idea, agree the features and give you a clear price before any work begins.
+            </p>
+            <a
+              href={whatsappLink("Hello ARUKAH TECH, I am ready to start a project. Here is what I need: ")}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center justify-center gap-2 rounded-full bg-[#25D366] px-7 py-3 font-bold text-black hover:opacity-90"
+            >
+              💬 Start my project on WhatsApp
+            </a>
+          </div>
+        </Container>
+      </section>
+
       <AdSlot branch="tech" />
 
 
