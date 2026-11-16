@@ -116,7 +116,7 @@ export const wearPage: PageDef = {
             "Wholesale orders",
           ],
         },
-        { key: "productsNote", label: "Small note", kind: "text", max: 200, default: "Prices depend on style, size and quantity. Message us on WhatsApp for a quote." },
+        { key: "productsNote", label: "Small note", kind: "text", max: 200, default: "Prices change with materials, style, size and quantity, so we give you the current price when you ask on WhatsApp." },
       ],
     },
     {
