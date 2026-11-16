@@ -22,7 +22,7 @@ const siteUrl = process.env.SITE_URL || "http://localhost:3000";
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: "ZIVARUKAH: Technology, Education, Footwear, Books & Ministry in Ghana",
+    default: "ZIVARUKAH: Technology, Education, Creative Wear, Books & Ministry in Ghana",
     template: "%s · ZIVARUKAH",
   },
   description:
@@ -34,7 +34,7 @@ export const metadata: Metadata = {
     other: process.env.BING_SITE_VERIFICATION ? { "msvalidate.01": process.env.BING_SITE_VERIFICATION } : undefined,
   },
   openGraph: {
-    title: "ZIVARUKAH: Technology, Education, Footwear, Books & Ministry",
+    title: "ZIVARUKAH: Technology, Education, Creative Wear, Books & Ministry",
     description: "Creating Solutions. Building Skills. Serving Communities. Founded by Shepherd Justice Sarpong Oduro in Ghana.",
     siteName: "ZIVARUKAH",
     type: "website",

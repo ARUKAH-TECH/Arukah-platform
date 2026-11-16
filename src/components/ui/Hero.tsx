@@ -12,11 +12,13 @@ interface HeroProps {
   title: string;
   tagline: string;
   supportingLine?: string;
+  /** Small trust line shown above the title, e.g. the registered business name. */
+  badge?: string;
   primaryCta?: HeroCta;
   secondaryCta?: HeroCta;
 }
 
-export function Hero({ logo, title, tagline, supportingLine, primaryCta, secondaryCta }: HeroProps) {
+export function Hero({ logo, title, tagline, supportingLine, badge, primaryCta, secondaryCta }: HeroProps) {
   return (
     <section id="top" className="py-20 sm:py-28">
       <Container>
@@ -28,6 +30,11 @@ export function Hero({ logo, title, tagline, supportingLine, primaryCta, seconda
             height={(140 * logo.height) / logo.width}
             priority
           />
+          {badge && (
+            <p className="inline-flex items-center gap-1.5 rounded-full border border-emerald-600/30 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-800 dark:border-emerald-400/30 dark:bg-emerald-400/10 dark:text-emerald-300">
+              <span aria-hidden="true">✓</span> {badge}
+            </p>
+          )}
           <h1 className="text-4xl font-bold tracking-tight text-foreground sm:text-5xl">
             {title}
           </h1>

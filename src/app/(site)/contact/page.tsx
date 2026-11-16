@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container } from "@/components/ui/Container";
 import { SectionHeading } from "@/components/ui/SectionHeading";
 import { ContactForm } from "@/features/contact/ContactForm";
+import { DivisionEnquiry } from "@/components/ui/DivisionEnquiry";
 import { MinistryForm } from "@/features/ministry/MinistryForm";
 import { WhatsAppContact } from "@/components/ui/WhatsAppContact";
 import { ONLINE_FORMS_ENABLED } from "@/config/forms";
@@ -10,9 +11,9 @@ import { getPageText, textReader } from "@/db/pageContent";
 
 export const metadata: Metadata = {
   title: "Contact",
-  description: "Contact ZIVARUKAH about software, websites, footwear, special classes, books, programmes or the ministry.",
+  description: "Contact ZIVARUKAH about software, websites, footwear and creative wear, special classes, books, programmes or the ministry.",
   alternates: { canonical: "/contact" },
-  openGraph: { title: "Contact | ZIVARUKAH", description: "Contact ZIVARUKAH about software, websites, footwear, special classes, books, programmes or the ministry." },
+  openGraph: { title: "Contact | ZIVARUKAH", description: "Contact ZIVARUKAH about software, websites, footwear and creative wear, special classes, books, programmes or the ministry." },
 };
 
 // Refreshed at most every minute, and immediately after an admin edit.
@@ -35,10 +36,15 @@ export default async function ContactPage() {
           {ONLINE_FORMS_ENABLED ? (
             <ContactForm />
           ) : (
-            <WhatsAppContact
-              message="Hello ZIVARUKAH, I would like to ask about "
-              note="Tell us what you need (software, websites, footwear, ZIVA classes, books or programmes) and we'll reply on WhatsApp."
-            />
+            <>
+              <DivisionEnquiry />
+              <div className="mt-8">
+                <WhatsAppContact
+                  message="Hello ZIVARUKAH, I would like to ask about "
+                  note="Or message us directly about anything: software, websites, footwear or branded wear, ZIVA classes, books or programmes."
+                />
+              </div>
+            </>
           )}
         </div>
       </Container>

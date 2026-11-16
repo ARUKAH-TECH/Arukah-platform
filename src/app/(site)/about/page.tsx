@@ -115,6 +115,46 @@ export default async function AboutPage() {
         </Container>
       </section>
 
+      {/* ── business information ── */}
+      <section id="business" className="border-t border-black/10 py-16 dark:border-white/10">
+        <Container>
+          <SectionHeading eyebrow="Business information" title="A registered Ghanaian business" align="center" />
+          <dl className="mx-auto mt-8 grid max-w-3xl grid-cols-1 gap-4 rounded-2xl border border-black/10 bg-white p-6 shadow-sm sm:grid-cols-2 dark:border-white/10 dark:bg-white/5">
+            <div>
+              <dt className="text-xs font-semibold uppercase tracking-wider text-foreground/60">Registered business name</dt>
+              <dd className="mt-1 font-bold">ZIVARUKAH VENTURES</dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold uppercase tracking-wider text-foreground/60">Registered with</dt>
+              <dd className="mt-1 font-bold">Office of the Registrar of Companies (ORC), Kumasi</dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold uppercase tracking-wider text-foreground/60">Founder</dt>
+              <dd className="mt-1 font-bold">{FOUNDER.name}</dd>
+            </div>
+            <div>
+              <dt className="text-xs font-semibold uppercase tracking-wider text-foreground/60">Location</dt>
+              <dd className="mt-1 font-bold">Ashanti Region, Ghana</dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="text-xs font-semibold uppercase tracking-wider text-foreground/60">Divisions</dt>
+              <dd className="mt-1 leading-7 text-foreground/80">
+                ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Learning app, ZIVARUKAH BOOKS and online programmes are divisions and brands of ZIVARUKAH VENTURES, not separately registered companies. Repent Online Ministries is the founder&apos;s online ministry, supported by ZIVARUKAH.
+              </dd>
+            </div>
+            <div className="sm:col-span-2">
+              <dt className="text-xs font-semibold uppercase tracking-wider text-foreground/60">Contact</dt>
+              <dd className="mt-1">
+                <Link href="/contact" className="font-semibold underline">
+                  Contact page
+                </Link>{" "}
+                · WhatsApp @ShepherdJusticeSarpongOduro
+              </dd>
+            </div>
+          </dl>
+        </Container>
+      </section>
+
       {/* ── the founder ── */}
       <section id="founder" className="border-t border-black/10 py-16 dark:border-white/10">
         <Container>

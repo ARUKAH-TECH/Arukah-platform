@@ -24,7 +24,11 @@ export const ABOUT_FAQ: { q: string; a: string }[] = [
     a: "ZIVARUKAH was founded and is led by Shepherd Justice Sarpong Oduro (legal name: Sarpong Oduro Justice), a Ghanaian minister, teacher and author based in the Ashanti Region. He also leads Repent Online Ministries and wrote The Wicked and Unforgiving Student.",
   },
   {
+    q: "Is ZIVARUKAH a registered business?",
+    a: "Yes. ZIVARUKAH VENTURES is a business name registered with the Office of the Registrar of Companies (ORC), Kumasi, Ghana. ARUKAH TECH, ARUKAH WEAR, ZIVA Special Classes, the ZIVA Learning app and ZIVARUKAH BOOKS are its divisions and brands.",
+  },
+  {
     q: "What does ZIVARUKAH do?",
-    a: "ZIVARUKAH is a Ghanaian brand with several branches: ARUKAH TECH (software and management systems), ARUKAH WEAR (handcrafted footwear), ZIVA Special Classes and the free ZIVA Learning app, ZIVARUKAH BOOKS, online programmes and Repent Online Ministries.",
+    a: "ZIVARUKAH is a Ghanaian brand with several branches: ARUKAH TECH (software and management systems), ARUKAH WEAR (Ghana-made footwear, clothing and branded wear), ZIVA Special Classes and the free ZIVA Learning app, ZIVARUKAH BOOKS, online programmes and Repent Online Ministries.",
   },
 ];

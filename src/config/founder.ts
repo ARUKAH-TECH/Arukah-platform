@@ -24,7 +24,7 @@ export const ORG_DESCRIPTION =
 /** The ZIVA… and ARUKAH… branches, each tied to ZIVARUKAH in search data. */
 export const BRANCHES = [
   { name: "ARUKAH TECH", alt: "Arukah Tech by ZIVARUKAH", path: "/tech", type: "Organization", description: "ARUKAH TECH, the technology branch of ZIVARUKAH: websites, software and management systems in Ghana." },
-  { name: "ARUKAH WEAR", alt: "Arukah Wear by ZIVARUKAH", path: "/footwear", type: "Organization", description: "ARUKAH WEAR, the footwear branch of ZIVARUKAH: handcrafted, Ghana-made footwear." },
+  { name: "ARUKAH WEAR", alt: "Arukah Wear by ZIVARUKAH", path: "/footwear", type: "Organization", description: "ARUKAH WEAR, the creative wear branch of ZIVARUKAH: Ghana-made footwear, clothing and branded wear." },
   { name: "ZIVA Special Classes", alt: "ZIVA Classes by ZIVARUKAH", path: "/ziva", type: "EducationalOrganization", description: "ZIVA Special Classes, the education branch of ZIVARUKAH: extra classes from Primary 1 to SHS 3, at home or online." },
   { name: "ZIVA Learning", alt: "ZIVA Literacy (old name)", path: "/literacy", type: "EducationalOrganization", description: "ZIVA Learning (formerly ZIVA Literacy), the free learning app by ZIVARUKAH for KG to JHS learners in Ghana (learn.zivarukah.com)." },
   { name: "ZIVARUKAH BOOKS", alt: "Zivarukah Books", path: "/books", type: "Organization", description: "ZIVARUKAH BOOKS: books by Shepherd Justice Sarpong Oduro, to read online, download or order in print." },
