@@ -14,6 +14,37 @@ import { techPage } from "@/config/pages";
 import { getPageText, textReader } from "@/db/pageContent";
 import { SharePage } from "@/components/ui/SharePage";
 import { CompletedWork } from "@/features/portfolio/CompletedWork";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { whatsappLink } from "@/config/forms";
+
+const QUOTE_FOR = [
+  { icon: "🌐", label: "A website", msg: "a website for my church / school / business" },
+  { icon: "⛪", label: "A church management system", msg: "a church management system" },
+  { icon: "🏫", label: "A school or business system", msg: "a management system for my school / business" },
+  { icon: "🛠️", label: "Fix or improve my website", msg: "fixing or improving my existing website" },
+];
+
+const STEPS = [
+  { title: "Tell us what you need", text: "Message us on WhatsApp: what the website or system is for and what it should do." },
+  { title: "Agree on the plan and price", text: "We suggest the pages and features, then agree the price and timeline with you before work starts." },
+  { title: "Review a preview", text: "You see and test a working preview, and ask for changes before anything goes live." },
+  { title: "Go live", text: "We publish it on your web address and show you how to use it." },
+];
+
+const TECH_FAQ = [
+  {
+    q: "How much does a website or management system cost?",
+    a: "It depends on the pages and features you need. Tell us what you want on WhatsApp and we will give you a clear quote before any work starts.",
+  },
+  {
+    q: "Do you build church management systems?",
+    a: "Yes. We built a church management system and a website for Bethel Inspiration Foundation. You can see them under Our work on this page.",
+  },
+  {
+    q: "Do you only work in Kumasi?",
+    a: "We are based in the Ashanti Region, and websites and systems can be planned and reviewed online, so we can work with churches, schools and businesses anywhere in Ghana.",
+  },
+];
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -41,7 +72,7 @@ export default async function TechPage() {
         logo={brands.tech.logo}
         title="ARUKAH TECH"
         tagline={t.text("heroTagline")}
-        primaryCta={{ label: "Discuss a project", href: "/contact" }}
+        primaryCta={{ label: "Request a quotation", href: "#quote" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
       <ProgrammesSection branch="tech" />
@@ -77,10 +108,69 @@ export default async function TechPage() {
           </div>
           <p className="mt-8 text-center text-sm text-foreground/70">
             Need a website or a management system for your church, school or business?{" "}
-            <Link href="/contact" className="font-semibold text-brand-primary-text underline">
-              Let&apos;s talk
+            <Link href="#quote" className="font-semibold text-brand-primary-text underline">
+              Request a quotation
             </Link>
           </p>
+        </Container>
+      </section>
+
+      <section id="quote" className="scroll-mt-20 bg-black/[0.03] py-16 dark:bg-white/[0.03]">
+        <Container>
+          <SectionHeading align="center" eyebrow="How it works" title="From your idea to a working website" />
+          <ol className="mx-auto mt-10 grid max-w-5xl grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+            {STEPS.map((step, i) => (
+              <li key={step.title} className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5">
+                <p className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-primary text-sm font-bold text-brand-on-primary">{i + 1}</p>
+                <h3 className="mt-3 font-bold">{step.title}</h3>
+                <p className="mt-1 text-sm leading-6 text-foreground/75">{step.text}</p>
+              </li>
+            ))}
+          </ol>
+
+          <h3 className="mt-12 text-center text-xl font-bold tracking-tight">Request a quotation</h3>
+          <p className="mt-1 text-center text-sm text-foreground/70">Choose one. WhatsApp opens with your request started; add the details and send.</p>
+          <ul className="mx-auto mt-5 grid max-w-3xl grid-cols-1 gap-3 sm:grid-cols-2">
+            {QUOTE_FOR.map((q) => (
+              <li key={q.label}>
+                <a
+                  href={whatsappLink(`Hello ARUKAH TECH, I would like a quotation for ${q.msg}. Details: `)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-3 rounded-xl border border-black/10 bg-white p-4 font-semibold shadow-sm hover:border-[#25D366] dark:border-white/10 dark:bg-white/5"
+                >
+                  <span className="text-xl" aria-hidden="true">
+                    {q.icon}
+                  </span>
+                  <span className="min-w-0 flex-1">{q.label}</span>
+                  <span className="text-sm text-[#128C7E]" aria-hidden="true">
+                    WhatsApp →
+                  </span>
+                </a>
+              </li>
+            ))}
+          </ul>
+        </Container>
+      </section>
+
+      <section id="faq" className="py-16">
+        <Container>
+          <JsonLd
+            data={{
+              "@context": "https://schema.org",
+              "@type": "FAQPage",
+              mainEntity: TECH_FAQ.map((f) => ({ "@type": "Question", name: f.q, acceptedAnswer: { "@type": "Answer", text: f.a } })),
+            }}
+          />
+          <SectionHeading align="center" eyebrow="Questions" title="Common questions" />
+          <dl className="mx-auto mt-8 flex max-w-3xl flex-col gap-4">
+            {TECH_FAQ.map((f) => (
+              <div key={f.q} className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5">
+                <dt className="font-bold">{f.q}</dt>
+                <dd className="mt-2 text-sm leading-6 text-foreground/80">{f.a}</dd>
+              </div>
+            ))}
+          </dl>
         </Container>
       </section>
 
