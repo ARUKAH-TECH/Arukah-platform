@@ -1,6 +1,6 @@
 // "Why choose us" points on the homepage. Only genuine strengths: no invented
 // numbers, awards or reviews.
-export const BUSINESS_REG_LINE = "ZIVARUKAH VENTURES · Registered business, ORC Kumasi";
+export const BUSINESS_REG_LINE = "Registered business · ORC, Kumasi";
 
 export const WHY_CHOOSE_US: { icon: string; title: string; text: string }[] = [
   {

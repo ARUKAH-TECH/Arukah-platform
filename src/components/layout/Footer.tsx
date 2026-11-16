@@ -23,10 +23,10 @@ export function Footer() {
                 height={32}
                 className="h-8 w-8 object-contain"
               />
-              <span className="text-base font-bold tracking-tight">ZIVARUKAH</span>
+              <span className="text-base font-bold tracking-tight">ZIVARUKAH VENTURES</span>
             </div>
             <p className="mt-2 text-xs font-semibold text-foreground/70">
-              ZIVARUKAH VENTURES · Registered business name, Office of the Registrar of Companies (ORC), Kumasi
+              Registered business name, Office of the Registrar of Companies (ORC), Kumasi
             </p>
             <p className="mt-3 max-w-xs text-sm leading-6 text-foreground/70">
               Creating Solutions. Building Skills. Serving Communities.

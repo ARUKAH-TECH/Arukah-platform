@@ -116,7 +116,7 @@ export default async function Home() {
       <AdBanner branch="home" />
       <Hero
         logo={brands.arukah.logo}
-        title="ZIVARUKAH"
+        title="ZIVARUKAH VENTURES"
         badge={BUSINESS_REG_LINE}
         tagline={t.text("heroTagline")}
         supportingLine={t.text("heroSupportingLine")}
