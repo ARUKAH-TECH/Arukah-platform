@@ -11,7 +11,7 @@ export const homePage: PageDef = {
       title: "Top of the page",
       fields: [
         { key: "heroTagline", label: "Tagline", kind: "text", max: 160, default: "Creating Solutions. Building Skills. Serving Communities." },
-        { key: "heroSupportingLine", label: "Line under the tagline", kind: "text", max: 120, default: "Technology • Education • Footwear • Books • Ministry" },
+        { key: "heroSupportingLine", label: "Line under the tagline", kind: "text", max: 120, default: "Technology • Education • Creative Wear • Books • Ministry" },
       ],
     },
     {
@@ -19,10 +19,16 @@ export const homePage: PageDef = {
       fields: [
         { key: "businessesTitle", label: "Heading", kind: "text", max: 100, default: "What ZIVARUKAH does" },
         { key: "techCard", label: "ARUKAH TECH card", kind: "text", max: 120, default: "Websites, software and management systems for churches, schools and businesses." },
-        { key: "wearCard", label: "ARUKAH WEAR card", kind: "text", max: 120, default: "Handcrafted, Ghana-made footwear: slippers, sandals, custom and wholesale orders." },
+        { key: "wearCard", label: "ARUKAH WEAR card", kind: "text", max: 120, default: "Creative, Ghana-made wear: footwear, clothing and custom branded wear. Wholesale welcome." },
         { key: "zivaCard", label: "ZIVA Special Classes card", kind: "text", max: 120, default: "Admissions open: special teaching from Primary 1 to SHS 3, at home or online." },
         { key: "literacyCard", label: "ZIVA Learning app card", kind: "text", max: 120, default: "A free app for reading, phonics, spelling and handwriting, KG to JHS. Works offline." },
         { key: "booksCard", label: "ZIVARUKAH BOOKS card", kind: "text", max: 120, default: "Books by Shepherd Justice Sarpong Oduro: read online, download or order in print." },
+      ],
+    },
+    {
+      title: "Why choose us",
+      fields: [
+        { key: "whyTitle", label: "Heading", kind: "text", max: 100, default: "Why work with ZIVARUKAH" },
       ],
     },
     {
@@ -48,7 +54,7 @@ export const homePage: PageDef = {
           kind: "textarea",
           max: 600,
           default:
-            "ZIVARUKAH brings technology, education, footwear, books and ministry together under one name, with one purpose: creating solutions, building skills and serving communities, spiritually and physically.",
+            "ZIVARUKAH VENTURES is a registered Ghanaian business. It brings technology, education, creative wear, books and ministry together under one name, with one purpose: creating solutions, building skills and serving communities, spiritually and physically.",
         },
       ],
     },
@@ -74,7 +80,7 @@ export const homePage: PageDef = {
           label: "Text",
           kind: "textarea",
           max: 300,
-          default: "A website, a management system, footwear, classes for your child or a book: message us on WhatsApp and we'll reply.",
+          default: "A website, a management system, footwear or branded wear, classes for your child or a book: send an enquiry or message us on WhatsApp.",
         },
       ],
     },

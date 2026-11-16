@@ -28,6 +28,7 @@ import { getPageText, textReader } from "@/db/pageContent";
 import { CompletedWork } from "@/features/portfolio/CompletedWork";
 import { listArticles } from "@/db/articles";
 import { ArticleCard } from "@/features/articles/ArticleCard";
+import { BUSINESS_REG_LINE, WHY_CHOOSE_US } from "@/config/whyChooseUs";
 
 const SITE = process.env.SITE_URL || "https://zivarukah.com";
 
@@ -115,10 +116,11 @@ export default async function Home() {
       <AdBanner branch="home" />
       <Hero
         logo={brands.arukah.logo}
-        title="ZIVARUKAH"
+        title="ZIVARUKAH VENTURES"
+        badge={BUSINESS_REG_LINE}
         tagline={t.text("heroTagline")}
         supportingLine={t.text("heroSupportingLine")}
-        primaryCta={{ label: "Explore ZIVARUKAH", href: "#businesses" }}
+        primaryCta={{ label: "Explore our services", href: "#businesses" }}
         secondaryCta={{ label: "Chat on WhatsApp", href: WHATSAPP_URL }}
       />
       <ProgrammesSection branch="home" compact />
@@ -140,6 +142,23 @@ export default async function Home() {
             <BusinessCard brand="books" name="ZIVARUKAH BOOKS" description={t.text("booksCard")} href="/books" logo={brands.arukah.logo} />
             <BusinessCard brand="books" name="Online programmes" description="Classes, trainings and ministry programmes on Zoom and Google Meet. Register for your code." href="/programmes" logo={brands.arukah.logo} />
           </div>
+        </Container>
+      </section>
+
+      <section id="why-us" className="scroll-mt-20 py-14">
+        <Container>
+          <SectionHeading eyebrow="Why choose us" title={t.text("whyTitle")} align="center" />
+          <ul className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {WHY_CHOOSE_US.map((item) => (
+              <li key={item.title} className="rounded-2xl border border-black/10 bg-white p-5 shadow-sm dark:border-white/10 dark:bg-white/5">
+                <p className="text-2xl" aria-hidden="true">
+                  {item.icon}
+                </p>
+                <h3 className="mt-2 font-bold">{item.title}</h3>
+                <p className="mt-1 text-sm leading-6 text-foreground/75">{item.text}</p>
+              </li>
+            ))}
+          </ul>
         </Container>
       </section>
 
@@ -266,6 +285,7 @@ export default async function Home() {
               <a href={WHATSAPP_URL} target="_blank" rel="noopener noreferrer" className="rounded-full bg-[#25D366] px-6 py-3 text-sm font-bold text-black">
                 💬 Chat on WhatsApp
               </a>
+              <Button href="/contact#enquiry">Send an enquiry</Button>
               <Button href="/contact" variant="outline">
                 All contact options
               </Button>

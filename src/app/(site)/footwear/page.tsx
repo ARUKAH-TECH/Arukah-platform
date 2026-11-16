@@ -17,11 +17,11 @@ import { SharePage } from "@/components/ui/SharePage";
 export const revalidate = 60;
 
 export const metadata: Metadata = {
-  title: "ARUKAH WEAR: Handcrafted, Ghana-Made Footwear",
+  title: "ARUKAH WEAR: Footwear, Clothing & Branded Wear in Ghana",
   description:
-    "ARUKAH WEAR makes quality handcrafted slippers, sandals and men's, women's and children's footwear in Ghana. Custom and wholesale orders welcome.",
+    "ARUKAH WEAR offers Ghana-made slippers, sandals and footwear, clothing and custom branded wear for churches, schools and events. Custom and wholesale orders welcome.",
   alternates: { canonical: "/footwear" },
-  openGraph: { title: "ARUKAH WEAR: Handcrafted, Ghana-Made Footwear | ZIVARUKAH", description: "ARUKAH WEAR makes quality handcrafted slippers, sandals and men's, women's and children's footwear in Ghana. Custom and wholesale orders welcome." },
+  openGraph: { title: "ARUKAH WEAR: Footwear, Clothing & Branded Wear | ZIVARUKAH", description: "ARUKAH WEAR offers Ghana-made slippers, sandals and footwear, clothing and custom branded wear for churches, schools and events. Custom and wholesale orders welcome." },
 };
 
 export default async function FootwearPage() {
@@ -36,7 +36,7 @@ export default async function FootwearPage() {
         logo={brands.footwear.logo}
         title="ARUKAH WEAR"
         tagline={t.text("heroTagline")}
-        primaryCta={{ label: "Enquire about wholesale", href: "/contact" }}
+        primaryCta={{ label: "Ask for a price", href: "/contact#enquiry" }}
         secondaryCta={{ label: "Back to ZIVARUKAH", href: "/" }}
       />
       <ProgrammesSection branch="wear" />
@@ -77,7 +77,7 @@ export default async function FootwearPage() {
       <SharePage
         path="/footwear"
         title="ARUKAH WEAR"
-        message={"👞 *ARUKAH WEAR*\n\nQuality footwear made with care 👇"}
+        message={"👟 *ARUKAH WEAR*\n\nFootwear, clothing and branded wear, made with care 👇"}
         heading="📣 Share ARUKAH WEAR"
       />
     </div>

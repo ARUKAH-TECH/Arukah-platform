@@ -41,9 +41,9 @@ const rules: FaqRule[] = [
       "Yes: ARUKAH TECH builds websites, custom software, and management systems. See /tech, or message us on WhatsApp to discuss your project.",
   },
   {
-    keywords: ["shoe", "shoes", "footwear", "slipper", "sandal", "wear", "retail", "wholesale"],
+    keywords: ["shoe", "shoes", "footwear", "slipper", "sandal", "wear", "retail", "wholesale", "t-shirt", "clothing", "clothes", "branded", "uniform"],
     answer:
-      "Yes: ARUKAH WEAR sells Ghana-made footwear at retail, and we take wholesale orders too. See /footwear for details.",
+      "Yes: ARUKAH WEAR sells Ghana-made footwear, clothing and custom branded wear, at retail and wholesale. See /footwear for details.",
   },
   {
     keywords: ["ziva", "special classes", "tuition", "school", "learn", "study", "class for my child"],

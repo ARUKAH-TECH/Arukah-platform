@@ -89,7 +89,7 @@ export const wearPage: PageDef = {
           label: "Tagline",
           kind: "textarea",
           max: 300,
-          default: "Home of classic and quality wears. Ghana-made footwear, crafted with attention to material and durability.",
+          default: "Home of creative, quality wears. Ghana-made footwear, clothing and custom branded wear, made with care.",
         },
       ],
     },
@@ -110,6 +110,9 @@ export const wearPage: PageDef = {
             "Women's footwear",
             "Children's footwear",
             "Custom footwear",
+            "T-shirts and clothing",
+            "Branded wear for churches, schools and events",
+            "Custom designs",
             "Wholesale orders",
           ],
         },
@@ -119,14 +122,14 @@ export const wearPage: PageDef = {
     {
       title: "Craftsmanship",
       fields: [
-        { key: "craftTitle", label: "Heading", kind: "text", max: 100, default: "Handcrafted, premium, Ghana-made" },
+        { key: "craftTitle", label: "Heading", kind: "text", max: 100, default: "Creative, quality, Ghana-made" },
         {
           key: "craftText",
           label: "Text",
           kind: "textarea",
           max: 400,
           default:
-            "Every pair is made with attention to material and quality, not shortcuts: durable footwear built to last, with style that holds up.",
+            "Every item is made with attention to material, design and quality, not shortcuts: wears built to last, with style that holds up.",
         },
       ],
     },
