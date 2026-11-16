@@ -16,6 +16,26 @@ import { SharePage } from "@/components/ui/SharePage";
 import { whatsappLink } from "@/config/forms";
 import { NursingClass } from "@/features/ziva/NursingClass";
 import { getPublicProgrammes, registrationState } from "@/db/programmes";
+import { FaqSection } from "@/components/ui/FaqSection";
+
+const ZIVA_FAQ = [
+  {
+    q: "Which classes do you teach?",
+    a: "Primary 1 to SHS 3. For Primary and JHS: Maths, Science, English, Creative Arts, Career Technology and R.M.E. For SHS: subjects such as Core Mathematics, Integrated Science, Economics, English, Literature, Geography, GKA and Leatherwork.",
+  },
+  {
+    q: "Who teaches the classes?",
+    a: "ZIVA Online and Special Classes was founded by Shepherd Justice Sarpong Oduro, an NTC-licensed Ghanaian teacher with a Bachelor in Basic Education.",
+  },
+  {
+    q: "Is it home tuition or online?",
+    a: "Both: home service or online classes, depending on where the learner lives.",
+  },
+  {
+    q: "How do I apply, and how much are the fees?",
+    a: "Tap Apply now on WhatsApp and send the learner's class, subjects, home or online, and your town. We reply with the details, including fees.",
+  },
+];
 
 // Refreshed at most every minute, and immediately after an admin edit.
 export const revalidate = 60;
@@ -155,6 +175,8 @@ export default async function ZivaPage() {
       </section>
       )}
 
+
+      <FaqSection items={ZIVA_FAQ} />
 
       <AdSlot branch="ziva" />
 
